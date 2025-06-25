@@ -20,6 +20,7 @@ const Logify = () => {
     { username: "Admin", password: "Admin123", role: "admin" },
     { username: "Teacher", password: "Teacher123", role: "teacher" },
     { username: "Student", password: "Student123", role: "student" },
+    { username: "Parents", password: "Parents123", role: "parents" },
   ];
   const navigate = useNavigate();
 
@@ -30,21 +31,24 @@ const Logify = () => {
     const user = users.find(
       (u) => u.username === username && u.password === password
     );
-  
+
     if (user) {
       // Based on role, show welcome
       if (user.role === "admin") {
         // alert("Welcome Admin");
-         navigate("/adminpanel");
+        navigate("/adminUser");
       } else if (user.role === "teacher") {
-        alert("Welcome Teacher");
-         navigate("/teacherpanel");
+        // alert("Welcome Teacher");
+        navigate("/teachersUser");
       } else if (user.role === "student") {
-        alert("Welcome Student");
-         navigate("/studentpanel");
+        // alert("Welcome Student");
+        navigate("/studentUsers");
+      } else if (user.role === "parents") {
+        // alert("Welcome Parents");
+        navigate("/parentsUsers");
+      } else {
+        alert("Invalid login");
       }
-    } else {
-      alert("Invalid login");
     }
   };
 

@@ -78,7 +78,7 @@ const Dashboard = () => {
 };
 
 // Final Page Component
-const AdminPanel = () => {
+const AdminUsers = () => {
   return (
     <Box>
       <CssBaseline />
@@ -90,4 +90,4 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel;
+export default AdminUsers;

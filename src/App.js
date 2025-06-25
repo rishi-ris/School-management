@@ -3,9 +3,10 @@ import {BrowserRouter as Routers,Routes,Route} from "react-router-dom";
 import Logify from './component/Logify';
 import SchoolFrontPage from './component/SchoolFrontPage';
 import SignUpPage from './component/SignUpPage';
-import StudentPanel from './panels/StudentPanel';
-import AdminPanel from './panels/AdminPanel';
-import TeacherPanel from './panels/TeacherPanel';
+import AdminUsers from './userPages/AdminUsers';
+import TeachersUser from './userPages/TeachersUser';
+import StudentUsers from './userPages/StudentUsers';
+import ParentsUsers from './userPages/ParentsUsers';
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
         <Route path='/' element={<SchoolFrontPage/>}></Route>
         <Route path='/logify' element={<Logify/>}></Route>
         <Route path='/signUp' element={<SignUpPage/>}></Route>
-        <Route path='/studentpanel' element={<StudentPanel/>}></Route>
-        <Route path='/adminpanel' element={<AdminPanel/>}></Route>
-        <Route path='/teacherpanel' element={<TeacherPanel/>}></Route>
+        <Route path='/studentUsers' element={<StudentUsers/>}></Route>
+        <Route path='/adminUser' element={<AdminUsers/>}></Route>
+        <Route path='/teachersUser' element={<TeachersUser/>}></Route>
+        <Route path='/parentsusers' element={<ParentsUsers/>}></Route>
       </Routes>
     </Routers>
   );
