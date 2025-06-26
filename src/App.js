@@ -7,7 +7,7 @@ import AdminUsers from './userPages/AdminUsers';
 import TeachersUser from './userPages/TeachersUser';
 import StudentUsers from './userPages/StudentUsers';
 import ParentsUsers from './userPages/ParentsUsers';
-
+import FeesPage from './userPages/FeesPage';
 function App() {
   return (
     <Routers>
@@ -19,6 +19,8 @@ function App() {
         <Route path='/adminUser' element={<AdminUsers/>}></Route>
         <Route path='/teachersUser' element={<TeachersUser/>}></Route>
         <Route path='/parentsusers' element={<ParentsUsers/>}></Route>
+        <Route path="/fees" element={<FeesPage />} />
+
       </Routes>
     </Routers>
   );

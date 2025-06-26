@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -8,6 +9,12 @@ import {
   CssBaseline,
   Grid,
   Typography,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Toolbar,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
@@ -19,6 +26,7 @@ import {
   Mail,
   Announcement,
   Class as ClassIcon,
+  Menu as MenuIcon,
 } from "@mui/icons-material";
 
 // Styled Card Component
@@ -47,16 +55,37 @@ const DashboardCard = ({ count, label, bgcolor, icon }) => {
   );
 };
 
-// Dashboard Component
+// Dashboard Data
 const dashboardData = [
-  { count: 3600, label: "Fees Collected", bgcolor: "#26a69a", icon: <Payment /> },
-  { count: 14, label: "Student", bgcolor: "#ef5350", icon: <School /> },
-  { count: 9, label: "Teacher", bgcolor: "#1e88e5", icon: <Group /> },
-  { count: 11, label: "Todays Attendance", bgcolor: "#43a047", icon: <CalendarToday /> },
-  { count: 12, label: "Parent", bgcolor: "#ab47bc", icon: <AccountCircle /> },
-  { count: 4, label: "Available Classes", bgcolor: "#424242", icon: <ClassIcon /> },
-  { count: 2, label: "Unpaid Fees", bgcolor: "#8d6e63", icon: <Payment /> },
-  { count: 1, label: "Inbox", bgcolor: "#ec407a", icon: <Mail /> },
+  {
+    count: 3600,
+    label: "Today's Fees Collected",
+    bgcolor: "#26a69a",
+    icon: <Payment />,
+  },
+  {
+    count: 3600,
+    label: "Pandding Fees",
+    bgcolor: "#26a69a",
+    icon: <Payment />,
+  },
+  { count: 14, label: "Total Students", bgcolor: "#ef5350", icon: <School /> },
+  { count: 9, label: "Total Teachers", bgcolor: "#1e88e5", icon: <Group /> },
+  {
+    count: 11,
+    label: "Todays Absent Teachers",
+    bgcolor: "#43a047",
+    icon: <CalendarToday />,
+  },
+  // { count: 12, label: "Parent", bgcolor: "#ab47bc", icon: <AccountCircle /> },
+  {
+    count: 4,
+    label: "Unscheduled Class",
+    bgcolor: "#424242",
+    icon: <ClassIcon />,
+  },
+  // { count: 2, label: "Unpaid Fees", bgcolor: "#8d6e63", icon: <Payment /> },
+  // { count: 1, label: "Inbox", bgcolor: "#ec407a", icon: <Mail /> },
   { count: 1, label: "Notice", bgcolor: "#00bcd4", icon: <Announcement /> },
 ];
 
@@ -79,10 +108,54 @@ const Dashboard = () => {
 
 // Final Page Component
 const AdminUsers = () => {
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawer = (state) => () => {
+    setOpen(state);
+  };
+  const navigate = useNavigate();
+
   return (
-    <Box>
+    <Box >
       <CssBaseline />
-      <AppBar position="static" />
+      <AppBar position="static"sx={{ border: "2px solid red", backgroundColor: "#1976D2",}}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ ml: 2 }}>
+            Admin Panel
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      {/* Sidekick Drawer */}
+      <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+        >
+          <List>
+            <ListItem button onClick={() => navigate("/")}>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+            <ListItem button onClick={() => navigate("/fees")}>
+              <ListItemText primary="Fees" />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Students" />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Teachers" />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
+
       <Box p={2}>
         <Dashboard />
       </Box>
