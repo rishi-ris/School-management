@@ -58,7 +58,7 @@ const Logify = () => {
         sx={{
           width: "100%",
           height: 75,
-          bgcolor: "rgb(236, 154, 78)",
+          backgroundColor: 'var(--header-bg-color)', 
           boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.3)",
         }}
       />
