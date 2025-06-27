@@ -116,9 +116,15 @@ const AdminUsers = () => {
   const navigate = useNavigate();
 
   return (
-    <Box >
+    <Box>
       <CssBaseline />
-      <AppBar position="static"sx={{ border: "2px solid red", backgroundColor: "#1976D2",}}>
+      <AppBar
+        position="static"
+        sx={{
+          
+          backgroundColor: "var(--header-bg-color)",
+        }}
+      >
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)}>
             <MenuIcon />
@@ -143,7 +149,7 @@ const AdminUsers = () => {
             <ListItem button onClick={() => navigate("/fees")}>
               <ListItemText primary="Fees" />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => navigate("/studentUsers")}>
               <ListItemText primary="Students" />
             </ListItem>
             <ListItem button>

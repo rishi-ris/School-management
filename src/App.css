@@ -1,3 +1,5 @@
 :root {
-  --header-bg-color: white; /* Blue background */
+  --header-bg-color: #1976D2; /* header blue background color */
+  --button-bg-color: #1976D2; /* buttons blue backround color */
+  --buttonHover-bg-color:  #0364c5; /* buttonsHover darkblue backround color */
 }

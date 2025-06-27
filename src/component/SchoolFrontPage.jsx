@@ -35,7 +35,7 @@ const SchoolFrontPage = () => {
       }}
     >
       {/* Top Bar */}
-      <AppBar position="static" sx={{ backgroundColor: "#1e1e2f" }}>
+      <AppBar position="static" sx={{ backgroundColor: 'var(--header-bg-color)', }}>
   <Toolbar>
     <Typography variant="h6" sx={{ flexGrow: 1 }}>
       <span style={{ fontWeight: "bold", color: "#fcd303" }}>
@@ -43,13 +43,7 @@ const SchoolFrontPage = () => {
       </span>
     </Typography>
 
-    {/* Added list here */}
-    <Box component="ul" sx={{ display: "flex", border: "2px solid red", listStyle: "none", mx: 2, p: 0 }}>
-      <li style={{ marginRight: "20px", color: "white", cursor: "pointer" }}>Fees</li>
-      <li style={{ marginRight: "20px", color: "white", cursor: "pointer" }}>Contact</li>
-      <li style={{ marginRight: "20px", color: "white", cursor: "pointer" }}>About</li>
-      <li style={{ marginRight: "20px", color: "white", cursor: "pointer" }}>Filter</li>
-    </Box>
+  
 
     <Box
       display="flex"
