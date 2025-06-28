@@ -10,45 +10,36 @@ import {
   Link,
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
+import Network from "../Application/Network";
 
 const Logify = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  // Role-wise user list
-  const users = [
-    { username: "Admin", password: "Admin123", role: "admin" },
-    { username: "Teacher", password: "Teacher123", role: "teacher" },
-    { username: "Student", password: "Student123", role: "student" },
-    { username: "Parents", password: "Parents123", role: "parents" },
-  ];
-  const navigate = useNavigate();
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Find matching user from array
-    const user = users.find(
-      (u) => u.username === username && u.password === password
-    );
+    if (!username || !password) {
+      setMessage("❌ Username and Password are required.");
+      return;
+    }
 
-    if (user) {
-      // Based on role, show welcome
-      if (user.role === "admin") {
-        // alert("Welcome Admin");
+    try {
+      console.log("➡️ Sending login request to the server...");
+      const response = await Network.login(username, password);
+      console.log("✅ Server Response:", response);
+
+      if (response?.data) {
+        setMessage("✅ Login Successful");
+        console.log("Successful");
         navigate("/adminUser");
-      } else if (user.role === "teacher") {
-        // alert("Welcome Teacher");
-        navigate("/teachersUser");
-      } else if (user.role === "student") {
-        // alert("Welcome Student");
-        navigate("/studentUsers");
-      } else if (user.role === "parents") {
-        // alert("Welcome Parents");
-        navigate("/parentsUsers");
       } else {
-        alert("Invalid login");
+        setMessage("❌ Wrong user password");
       }
+    } catch (error) {
+      setMessage("❌ server not found");
     }
   };
 
@@ -58,11 +49,10 @@ const Logify = () => {
         sx={{
           width: "100%",
           height: 75,
-         backgroundColor: 'var(--header-bg-color)',
+          backgroundColor: "var(--header-bg-color)",
           boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.3)",
         }}
       />
-
       <Container
         maxWidth="sm"
         sx={{
@@ -73,14 +63,7 @@ const Logify = () => {
           px: 2,
         }}
       >
-        <Paper
-          elevation={6}
-          sx={{
-            width: "100%",
-            p: { xs: 3, sm: 4 },
-            borderRadius: 4,
-          }}
-        >
+        <Paper elevation={6} sx={{ width: "100%", p: 4, borderRadius: 4 }}>
           <Typography variant="h5" align="center" gutterBottom>
             Login to Your Account
           </Typography>
@@ -90,7 +73,6 @@ const Logify = () => {
               fullWidth
               margin="normal"
               label="Username"
-              variant="outlined"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -100,7 +82,6 @@ const Logify = () => {
               margin="normal"
               label="Password"
               type="password"
-              variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -120,17 +101,14 @@ const Logify = () => {
                 mt: 3,
                 py: 1.5,
                 borderRadius: 3,
-                textTransform: "none",
-                fontWeight: "bold",
-                fontSize: "1rem",
-                 backgroundColor: 'var(--header-bg-color)',
-                "&:hover": {
-                  backgroundColor: 'var(--buttonHover-bg-color)',
-                },
+                backgroundColor: "var(--header-bg-color)",
               }}
             >
               Login
             </Button>
+            <Typography align="center" mt={2} color="error">
+              {message}
+            </Typography>
           </Box>
         </Paper>
       </Container>
