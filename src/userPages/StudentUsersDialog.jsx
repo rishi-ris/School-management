@@ -1,49 +1,78 @@
 import React, { useState } from "react";
-import {
-  Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Grid
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, } from "@mui/material";
+import CloseButton from "./CloseButton";
+import StudentUsersPerDetail from "./StudentUsersPerDetail";
+import StudentUsersFamilyDetails from "./StudentUsersFamilyDetails";
+import StudentUsersDocuments from "./StudentUsersDocuments";
+import StudentUsersPhotos from "./StudentUsersPhotos";
+import StudentUsersComDetail from "./StudentUserComDetails";
+
+const steps = ["Common Details","Personal Details", "Family Details", "Documents Details", "Upload Photos"];
 
 const StudentUsersDialog = ({ open, onClose, onSave }) => {
-  const [form, setForm] = useState({
-    name: "",
-    roll: "",
-    fees: "",
-    class: "",
-    attendance: "",
-    holidays: ""
-  });
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState({});
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleNext = () => {
+    if (validateStep(activeStep)) {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
+
+  const handleBack = () => setActiveStep((prev) => prev - 1);
+
+  const handleChange = (newValues) => {
+    setFormData((prev) => ({ ...prev, ...newValues }));
   };
 
   const handleSubmit = () => {
-    onSave(form);
-    setForm({ name: "", roll: "", fees: "", class: "", attendance: "", holidays: "" });
+    onSave(formData);
     onClose();
+    setFormData({});
+    setActiveStep(0);
+  };
+
+  const validateStep = (step) => {
+    const stepFields = [
+      ["caste", "religion", "nationality"],
+      ["fatherName", "fatherPhone"],
+      ["aadharCard", "panCard"],
+      ["studentPhoto"]
+    ];
+    return stepFields[step].every((field) => formData[field]?.trim?.() !== "");
+  };
+
+  const getStepComponent = () => {
+    switch (activeStep) {
+      case 0:
+        return <StudentUsersComDetail data={formData} onChange={handleChange} />
+      case 1:
+        return <StudentUsersPerDetail data={formData} onChange={handleChange} />;
+      case 2:
+        return <StudentUsersFamilyDetails data={formData} onChange={handleChange} />;
+      case 3:
+        return <StudentUsersDocuments data={formData} onChange={handleChange} />;
+      case 4:
+        return <StudentUsersPhotos data={formData} onChange={handleChange} />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Register New Student</DialogTitle>
-      <DialogContent>
-        <Grid container spacing={2} mt={1}>
-          {["name", "roll", "fees", "class", "attendance", "holidays"].map((field) => (
-            <Grid item xs={12} sm={6} key={field}>
-              <TextField
-                fullWidth
-                label={field[0].toUpperCase() + field.slice(1)}
-                name={field}
-                value={form[field]}
-                onChange={handleChange}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </DialogContent>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle>
+        Register Student :  {steps[activeStep]}
+        <CloseButton onClick={onClose} />
+      </DialogTitle>
+      <DialogContent>{getStepComponent()}</DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="inherit">Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">Save</Button>
+        {activeStep > 0 && <Button onClick={handleBack}>Previous</Button>}
+        {activeStep < steps.length - 1 ? (
+          <Button onClick={handleNext} variant="contained">Next</Button>
+        ) : (
+          <Button onClick={handleSubmit} variant="contained" color="primary">Submit</Button>
+        )}
       </DialogActions>
     </Dialog>
   );

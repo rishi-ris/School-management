@@ -1,52 +1,75 @@
 import React, { useState } from "react";
 import AddStudentButton from "./AddStudentButton";
-import StudentTable from "./StudentUsersTable";
-import StudentDialog from "./StudentUsersDialog";
-
-import { Box, Typography ,} from "@mui/material";
-
+import StudentUsersTable from "./StudentUsersTable";
+import StudentUsersDialog from "./StudentUsersDialog";
+import { Box, Typography } from "@mui/material";
 
 const StudentUsers = () => {
 
-    const [students, setStudents] = useState([
-      {
-        name: "Aman Sharma",
-        roll: "101",
-        fees: 1000,
-        class: "10th",
-        attendance: "95%",
-        holidays: 2
-      },
-      {
-        name: "Sneha Gupta",
-        roll: "102",
-        fees: 1200,
-        class: "9th",
-        attendance: "97%",
-        holidays: 1
-      }
-    ]);
-  
-    const [dialogOpen, setDialogOpen] = useState(false);
-  
-    const handleAddStudent = (newStudent) => {
-      setStudents([...students, newStudent]);
-    };
+  const [students, setStudents] = useState([
+  {
+    id: 1,
+    userName: "rahul123",
+    password: "pass123",
+    gender: "Male",
+    rollNumber: "101",
+    contactNumber: "9876543210",
+    stu_class: "10th",
+    section: "A",
+    feesStatus: "Unpaid"
+  },
+  {
+    id: 2,
+    userName: "priya456",
+    password: "abc123",
+    gender: "Female",
+    rollNumber: "102",
+    contactNumber: "9123456780",
+    stu_class: "9th",
+    section: "B",
+    feesStatus: "Paid"
+  },
+  {
+    id: 3,
+    userName: "amit001",
+    password: "amitpass",
+    gender: "Male",
+    rollNumber: "103",
+    contactNumber: "9001234567",
+    stu_class: "8th",
+    section: "A",
+    feesStatus: "Unpaid"
+  },
+  {
+    id: 4,
+    userName: "sana999",
+    password: "sana@123",
+    gender: "Female",
+    rollNumber: "104",
+    contactNumber: "9823456789",
+    stu_class: "10th",
+    section: "C",
+    feesStatus: "Paid"
+  }
+]);
+
+
+  const [dialogOpen, setDialogOpen] = useState(false);  
 
   return (
-    <Box>
-            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom>
-                Student Table
-              </Typography>
-              <AddStudentButton onClick={() => setDialogOpen(true)} />
-            </Box>
-            <StudentTable students={students} />
-            <StudentDialog
-            open={dialogOpen}
-            onClose={() => setDialogOpen(false)}
-            onSave={handleAddStudent}/>
-          </Box>
+    <Box p={3}>
+      <Box display="flex" justifyContent="space-between" mb={2}>
+        <Typography variant="h4" fontWeight="bold">Student Table</Typography>
+        <AddStudentButton onClick={() => setDialogOpen(true)} />
+      </Box>
+
+      <StudentUsersTable students={students} />
+
+      <StudentUsersDialog
+  open={dialogOpen}
+  onClose={() => setDialogOpen(false)}
+  onSave={(newStudent) => setStudents([...students, newStudent])}/>
+    </Box>
   );
 };
 
