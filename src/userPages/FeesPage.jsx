@@ -1,7 +1,5 @@
 import React, { useState, useRef } from "react";
 import {
-  AppBar,
-  Toolbar,
   Typography,
   Box,
   Button,
@@ -27,7 +25,7 @@ const dummyData = [
     name: "Anshika",
     class: "9",
     section: "B",
-    total : "4500",
+    total: "4500",
     paid: "4500",
     due: "0",
   },
@@ -73,7 +71,8 @@ const FeesPage = () => {
       (item) =>
         item.roll === roll.trim() &&
         item.class === className.trim() &&
-        (item.section ? item.section.toLowerCase() : "") === classSection.trim().toLowerCase()
+        (item.section ? item.section.toLowerCase() : "") ===
+          classSection.trim().toLowerCase()
     );
     setResult(filtered || "not-found");
     setShowDetails(!!filtered);
@@ -81,14 +80,16 @@ const FeesPage = () => {
   };
 
   return (
-    <Box sx={{ width: '100vw', height: '100vh', m: 0, p: 0, overflow: 'hidden', background: '#f9f9f9' }}>
-      <AppBar position="static" color="primary" sx={{ zIndex: 1201, border: "1px solid black"}}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Shiksha Portal
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Box
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        m: 0,
+        p: 0,
+        overflow: "hidden",
+        background: "#f9f9f9",
+      }}
+    >
       <Container
         maxWidth={false}
         disableGutters
@@ -96,14 +97,14 @@ const FeesPage = () => {
           m: 0,
           p: 0,
           width: "100vw",
-          height: "calc(100vh - 64px)",
-          minHeight: "calc(100vh - 64px)",
-          overflow: "hidden",
+
+          height: "100vh",
+
           display: "flex",
           background: "#f9f9f9",
         }}
       >
-        <Box sx={{ width: 400, height: "100%", minHeight: "100%", p: 0,}}>
+        <Box sx={{ width: 400, height: "100%", minHeight: "100%", p: 0 }}>
           <Paper
             elevation={3}
             sx={{
@@ -113,23 +114,30 @@ const FeesPage = () => {
               borderRadius: 0,
               boxShadow: 0,
               //  border: "1px solid black",
-               
-               display: "flex",
-               flexDirection: "column",
+
+              display: "flex",
+              flexDirection: "column",
               //  justifyContent: "center",
             }}
           >
-            <Box sx={{ display: "flex",
-               flexDirection: "column",
-               justifyContent: "center",
-               alignItems: "center",
-               }}>
-             <Typography sx={{fontSize: 60}}>🎓</Typography>
-            <Typography variant="h6" gutterBottom sx={{
-              fontWeight: 'bold',
-            }}>
-              Search Student Fees
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ fontSize: 80 }}>🎓</Typography>
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Search Student Fees
+              </Typography>
             </Box>
             <TextField
               fullWidth
@@ -155,10 +163,14 @@ const FeesPage = () => {
             <Button
               fullWidth
               variant="contained"
-              sx={{ mt: 2, fontWeight: 'bold',  backgroundColor: 'var(--header-bg-color)',
+              sx={{
+                mt: 2,
+                fontWeight: "bold",
+                backgroundColor: "var(--header-bg-color)",
                 "&:hover": {
-                  backgroundColor: 'var(--buttonHover-bg-color)',
-                }, }}
+                  backgroundColor: "var(--buttonHover-bg-color)",
+                },
+              }}
               onClick={handleSubmit}
             >
               Search
@@ -183,7 +195,6 @@ const FeesPage = () => {
             sx={{
               flex: 1,
               display: "flex",
-              
               height: "100%",
               background: "#fff",
               boxShadow: 2,
@@ -194,6 +205,43 @@ const FeesPage = () => {
             />
           </Box>
         </Slide>
+        {/* Show 'hello' when student details are not open */}
+        {!(showDetails && !!(result && result !== "not-found")) && (
+          <Box
+  sx={{
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "",
+    boxShadow: 2,
+    position: "relative",
+    overflow: "hidden",
+  }}
+>
+  {/* 🔽 Watermark Image */}
+  <Box
+    component="img"
+    src="projectPic/chandrashekhar-azad-watermark.png.png" // ✅ apni image ka path yahan do
+    alt="Watermark"
+    sx={{
+      position: "absolute",
+      width: "80%",
+      opacity: 0.08, // ✅ halka watermark effect
+      zIndex: 0,
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    }}
+  />
+
+  {/* 🔼 Foreground Text */}
+  <Typography variant="h4" color="text.secondary" sx={{ zIndex: 1 }}>
+    CHANDRA SHEKHAR AZAD HR. SEC SCHOOL
+  </Typography>
+</Box>
+
+        )}
       </Container>
     </Box>
   );

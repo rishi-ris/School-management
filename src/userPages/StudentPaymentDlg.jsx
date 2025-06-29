@@ -14,9 +14,17 @@ import {
   Box,
 } from "@mui/material";
 
-const StudentPaymentDlg = ({ open, onClose, paymentMethod, setPaymentMethod, onConfirm, student }) => {
+const StudentPaymentDlg = ({
+  open,
+  onClose,
+  paymentMethod,
+  setPaymentMethod,
+  onConfirm,
+  student,
+}) => {
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
+  const [methodError, setMethodError] = useState("");
 
   const due = student ? parseInt(student.due, 10) : 0;
   const paid = student ? parseInt(student.paid, 10) : 0;
@@ -34,18 +42,28 @@ const StudentPaymentDlg = ({ open, onClose, paymentMethod, setPaymentMethod, onC
       setError("Please enter a valid amount");
       return;
     }
+    if (!paymentMethod) {
+      setMethodError("Please select a payment method");
+      return;
+    }
     if (entered > due) {
       setError("Amount exceeds due fees");
       return;
     }
     setError("");
+    setMethodError("");
     onConfirm(entered, paymentMethod);
     setAmount("");
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Pay Student Fees</DialogTitle>
+      <Box
+        width="100%"
+        sx={{ backgroundColor: "var(--header-bg-color)", color: "white" }}
+      >
+        <DialogTitle>Pay Student Fees</DialogTitle>
+      </Box>
       <DialogContent>
         <Box mb={2}>
           <Typography variant="body2">
@@ -72,16 +90,20 @@ const StudentPaymentDlg = ({ open, onClose, paymentMethod, setPaymentMethod, onC
         <Typography variant="body2" sx={{ mb: 2 }}>
           <b>Remaining Due after Payment:</b> ₹{remaining}
         </Typography>
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" error={!!methodError} sx={{ mb: 1 }}>
           <RadioGroup
             value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
+            onChange={(e) => {
+              setPaymentMethod(e.target.value);
+              setMethodError("");
+            }}
           >
-            <FormControlLabel value="netbanking" control={<Radio />} label="Net Banking" />
             <FormControlLabel value="cash" control={<Radio />} label="Cash" />
-            <FormControlLabel value="upi" control={<Radio />} label="UPI" />
-            <FormControlLabel value="card" control={<Radio />} label="Debit/Credit Card" />
+            <FormControlLabel value="Other" control={<Radio />} label="Other" />
           </RadioGroup>
+          {methodError && (
+            <Typography variant="caption" color="error">{methodError}</Typography>
+          )}
         </FormControl>
       </DialogContent>
       <DialogActions>

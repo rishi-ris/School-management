@@ -143,7 +143,7 @@ const AdminUsers = () => {
           onClick={toggleDrawer(false)}
         >
           <List>
-            <ListItem button onClick={() => navigate("/")}>
+            <ListItem button onClick={() => navigate("/adminUser")}>
               <ListItemText primary="Dashboard" />
             </ListItem>
             <ListItem button onClick={() => navigate("/fees")}>
@@ -152,10 +152,10 @@ const AdminUsers = () => {
             <ListItem button onClick={() => navigate("/studentUsers")}>
               <ListItemText primary="Students" />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => navigate("/teachersUser")}>
               <ListItemText primary="Teachers" />
             </ListItem>
-            <ListItem button>
+            <ListItem button  onClick={() => navigate("/")}>
               <ListItemText primary="Logout" />
             </ListItem>
           </List>
