@@ -77,15 +77,12 @@ const dashboardData = [
     bgcolor: "#43a047",
     icon: <CalendarToday />,
   },
-  // { count: 12, label: "Parent", bgcolor: "#ab47bc", icon: <AccountCircle /> },
   {
     count: 4,
     label: "Unscheduled Class",
     bgcolor: "#424242",
     icon: <ClassIcon />,
   },
-  // { count: 2, label: "Unpaid Fees", bgcolor: "#8d6e63", icon: <Payment /> },
-  // { count: 1, label: "Inbox", bgcolor: "#ec407a", icon: <Mail /> },
   { count: 1, label: "Notice", bgcolor: "#00bcd4", icon: <Announcement /> },
 ];
 
@@ -149,7 +146,11 @@ const AdminUsers = () => {
             <ListItem button onClick={() => navigate("/fees")}>
               <ListItemText primary="Fees" />
             </ListItem>
+
             <ListItem button onClick={() => navigate("/studentUsers")}>
+
+            {/* <ListItem button onClick={() => navigate("/StudentPage")}> */}
+
               <ListItemText primary="Students" />
             </ListItem>
             <ListItem button onClick={() => navigate("/teachersUser")}>
