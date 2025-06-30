@@ -110,7 +110,7 @@ const StudentFeesDetails = ({ student }) => {
               SEMLI KHURD SEHORE
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "#e3f2fd", mt: 1 }}>
-              Session: 2024-2025
+              Session: 2025-2026
             </Typography>
           </Box>
           <Box px={3} pb={0} pt={0}>
