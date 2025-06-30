@@ -17,7 +17,7 @@ export default class Network {
 
       const response = await axios.post(
         Endpoints.loginUrl,
-        JSON.stringify(request),
+        request, // ✅ यहाँ stringify हटाया गया है
         config
       );
 

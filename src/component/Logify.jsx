@@ -31,20 +31,37 @@ const Logify = () => {
       const response = await Network.login(username, password);
       console.log("✅ Server Response:", response);
 
-      if (response?.data) {
+      const { status, message: serverMessage, data } = response.data;
+
+      if (status === 200 && serverMessage === "Login successful") {
         setMessage("✅ Login Successful");
-        console.log("Successful");
-        navigate("/adminUser");
+
+        // Role save kar lo (optional)
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("username", data.username);
+
+        // 🔀 Alag-alag role ke hisaab se navigate karo
+        if (data.username === "admin") {
+          navigate("/adminUser");
+        } else if (data.password === "teacher123") {
+          navigate("/adminUser");
+        } else if (data.username === "student") {
+          navigate("/studentUsers");
+        } else {
+          setMessage("❌ Unknown role, contact admin.");
+        }
       } else {
-        setMessage("❌ Wrong user password");
+        setMessage("❌ Wrong username or password");
       }
     } catch (error) {
-      setMessage("❌ server not found");
+      console.error("⚠️ Login error:", error);
+      setMessage("❌ Server not found or error occurred.");
     }
   };
 
   return (
     <Box>
+      {/* Header box */}
       <Box
         sx={{
           width: "100%",
@@ -53,6 +70,7 @@ const Logify = () => {
           boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.3)",
         }}
       />
+
       <Container
         maxWidth="sm"
         sx={{
@@ -106,6 +124,7 @@ const Logify = () => {
             >
               Login
             </Button>
+
             <Typography align="center" mt={2} color="error">
               {message}
             </Typography>
