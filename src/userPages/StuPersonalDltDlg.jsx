@@ -17,7 +17,7 @@ const fields = [
   { name: "bloodGroup", label: "Blood Group" },
 ];
 
-const StudentUsersPerDetail = ({ data, onChange }) => {
+const StuPersonalDltDlg = ({ data, onChange }) => {
   const handleInputChange = (e) => {
     onChange({ [e.target.name]: e.target.value });
   };
@@ -40,4 +40,4 @@ const StudentUsersPerDetail = ({ data, onChange }) => {
   );
 };
 
-export default StudentUsersPerDetail;
+export default StuPersonalDltDlg;

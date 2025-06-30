@@ -140,7 +140,7 @@ const AdminUsers = () => {
             <ListItem button onClick={() => navigate("/fees")}>
               <ListItemText primary="Fees" />
             </ListItem>
-            <ListItem button onClick={() => navigate("/studentUsers")}>
+            <ListItem button onClick={() => navigate("/StudentPage")}>
               <ListItemText primary="Students" />
             </ListItem>
             <ListItem button>

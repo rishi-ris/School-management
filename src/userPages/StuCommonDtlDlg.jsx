@@ -1,4 +1,3 @@
-// File: StudentUsersComDetail.jsx
 import React from "react";
 import { Grid, TextField } from "@mui/material";
 
@@ -8,11 +7,10 @@ const fields = [
   "address", "city", "state", "pinCode", "country", "status", "feesDiscount"
 ];
 
-const StudentUsersComDetail = ({ data, onChange }) => {
+const StuCommonDtlDlg = ({ data, onChange }) => {
   const handleInputChange = (e) => {
     onChange({ [e.target.name]: e.target.value });
   };
-
   return (
     <Grid container spacing={2} mt={1}>
       {fields.map((field) => (
@@ -30,4 +28,4 @@ const StudentUsersComDetail = ({ data, onChange }) => {
   );
 };
 
-export default StudentUsersComDetail;
+export default StuCommonDtlDlg;

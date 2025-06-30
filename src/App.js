@@ -5,7 +5,7 @@ import SchoolFrontPage from './component/SchoolFrontPage';
 import SignUpPage from './component/SignUpPage';
 import AdminUsers from './userPages/AdminUsers';
 import TeachersUser from './userPages/TeachersUser';
-import StudentUsers from './userPages/StudentUsers';
+import StudentPage from './userPages/StudentPage';
 import ParentsUsers from './userPages/ParentsUsers';
 import FeesPage from './userPages/FeesPage';
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <Route path='/' element={<SchoolFrontPage/>}></Route>
         <Route path='/logify' element={<Logify/>}></Route>
         <Route path='/signUp' element={<SignUpPage/>}></Route>
-        <Route path='/studentUsers' element={<StudentUsers/>}></Route>
+        <Route path='/StudentPage' element={<StudentPage/>}></Route>
         <Route path='/adminUser' element={<AdminUsers/>}></Route>
         <Route path='/teachersUser' element={<TeachersUser/>}></Route>
         <Route path='/parentsusers' element={<ParentsUsers/>}></Route>

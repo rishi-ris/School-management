@@ -11,7 +11,7 @@ import {
   Button
 } from "@mui/material";
 
-const StudentUsersTable = ({ students }) => {
+const StuTable = ({ students }) => {
   return (
     <Box display="flex" justifyContent="center" mt={2}>
       <TableContainer component={Paper} sx={{ maxWidth: 1250, width: "100%", boxShadow: 3 }}>
@@ -60,4 +60,4 @@ const StudentUsersTable = ({ students }) => {
   );
 };
 
-export default StudentUsersTable;
+export default StuTable;

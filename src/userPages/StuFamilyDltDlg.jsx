@@ -4,13 +4,14 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  MenuItem
+  MenuItem,
+  Box
 } from "@mui/material";
 
 const classOptions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"];
 const studentNames = ["Rashi", "Rishi", "Vishal", "Shainu", "Prachi"];
 
-const StudentUsersFamilyDetails = ({ data, onChange }) => {
+const StuFamilyDltDlg = ({ data, onChange }) => {
   const [showSiblingFields, setShowSiblingFields] = useState(data.isSibling || false);
 
   const handleInputChange = (e) => {
@@ -24,51 +25,68 @@ const StudentUsersFamilyDetails = ({ data, onChange }) => {
   };
 
   return (
-    <Grid container spacing={2} mt={1}>
+    <Box>
+      <Grid container spacing={2} mt={1}>
       {/* Father */}
-      <Grid item xs={12}><strong>Father Details</strong></Grid>
+      <Box>
+      <Grid item xs={12} sx={{fontWeight: "600", fontSize: "20px"}}>Father Details</Grid>
       {["fatherName", "fatherPhone", "fatherEmail", "fatherAadharNum", "fatherEducation", "fatherOccupation"].map((field) => (
-        <Grid item xs={12} sm={6} key={field}>
-          <TextField
+        <Grid item xs={12} sm={6} key={field} >
+          <TextField sx={{marginTop: 2}}
             fullWidth
-            label={field.replace(/([A-Z])/g, " $1")}
+            label={field
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (str) => str.toUpperCase())
+          .replace(/ (\w)/g, (_, c) => " " + c.toUpperCase())}
             name={field}
             value={data[field] || ""}
             onChange={handleInputChange}
           />
         </Grid>
       ))}
+      </Box>
 
       {/* Mother */}
-      <Grid item xs={12}><strong>Mother Details</strong></Grid>
+      <Box>
+        <Grid item xs={12}  sx={{fontWeight: "600", fontSize: "20px"}}>Mother Details</Grid>
       {["motherName", "motherPhone", "motherEmail", "motherAadharNum", "motherEducation", "motherOccupation"].map((field) => (
         <Grid item xs={12} sm={6} key={field}>
-          <TextField
+          <TextField sx={{marginTop: 2}}
             fullWidth
-            label={field.replace(/([A-Z])/g, " $1")}
+             label={field
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (str) => str.toUpperCase())
+          .replace(/ (\w)/g, (_, c) => " " + c.toUpperCase())}
             name={field}
             value={data[field] || ""}
             onChange={handleInputChange}
           />
         </Grid>
       ))}
+      </Box>
 
       {/* Guardian */}
-      <Grid item xs={12}><strong>Guardian Details</strong></Grid>
+      <Box >
+      <Grid item xs={12}  sx={{fontWeight: "600", fontSize: "20px"}}>Guardian Details</Grid>
       {["guardianName", "guardianPhone", "guardianEmail", "guardianAadharNum", "guardianEducation", "guardianOccupation"].map((field) => (
         <Grid item xs={12} sm={6} key={field}>
-          <TextField
+          <TextField sx={{marginTop:2}}
             fullWidth
-            label={field.replace(/([A-Z])/g, " $1")}
+             label={field
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (str) => str.toUpperCase())
+          .replace(/ (\w)/g, (_, c) => " " + c.toUpperCase())}
             name={field}
             value={data[field] || ""}
             onChange={handleInputChange}
           />
         </Grid>
       ))}
+      </Box>
 
       {/* Sibling */}
-      <Grid item xs={12}>
+      <Box sx={{ display: "flex", flexDirection: "row"}}>
+      <Grid sx={{ paddingTop: "19px",}}>
         <FormControlLabel
           control={
             <Checkbox
@@ -83,8 +101,8 @@ const StudentUsersFamilyDetails = ({ data, onChange }) => {
 
       {showSiblingFields && (
         <>
-          <Grid item xs={6}>
-            <TextField
+            <Grid item xs={6} >
+            <TextField sx={{marginTop: 2, width: "220px", marginLeft: 5}}
               select
               fullWidth
               name="siblingClass"
@@ -98,7 +116,7 @@ const StudentUsersFamilyDetails = ({ data, onChange }) => {
             </TextField>
           </Grid>
           <Grid item xs={6}>
-            <TextField
+            <TextField sx={{marginTop: 2,  width: "220px", marginLeft: 2}}
               select
               fullWidth
               name="siblingName"
@@ -113,8 +131,10 @@ const StudentUsersFamilyDetails = ({ data, onChange }) => {
           </Grid>
         </>
       )}
+      </Box>
     </Grid>
+    </Box>
   );
 };
 
-export default StudentUsersFamilyDetails;
+export default StuFamilyDltDlg;

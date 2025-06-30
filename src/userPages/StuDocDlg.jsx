@@ -8,7 +8,7 @@ const documentFields = [
   "rationCard", "admissionForm", "passbook"
 ];
 
-const StudentUsersDocuments = ({ data, onChange }) => {
+const StuDocDlg = ({ data, onChange }) => {
   const handleInputChange = (e) => {
     onChange({ [e.target.name]: e.target.value });
   };
@@ -19,7 +19,10 @@ const StudentUsersDocuments = ({ data, onChange }) => {
         <Grid item xs={12} sm={6} key={field}>
           <TextField
             fullWidth
-            label={field.replace(/([A-Z])/g, " $1")}
+            label={field
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (str) => str.toUpperCase())
+          .replace(/ (\w)/g, (_, c) => " " + c.toUpperCase())}
             name={field}
             value={data[field] || ""}
             onChange={handleInputChange}
@@ -30,4 +33,4 @@ const StudentUsersDocuments = ({ data, onChange }) => {
   );
 };
 
-export default StudentUsersDocuments;
+export default StuDocDlg;

@@ -42,7 +42,7 @@ const Logify = () => {
         navigate("/teachersUser");
       } else if (user.role === "student") {
         // alert("Welcome Student");
-        navigate("/studentUsers");
+        navigate("/StudentPage");
       } else if (user.role === "parents") {
         // alert("Welcome Parents");
         navigate("/parentsUsers");

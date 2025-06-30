@@ -8,20 +8,20 @@ const photoFields = [
   { name: "guardianPhoto", label: "Guardian Photo" }
 ];
 
-const StudentUsersPhotos = ({ data, onChange }) => {
+const StuPhotosDltDlg = ({ data, onChange }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      onChange({ [e.target.name]: URL.createObjectURL(file) }); // temporary preview
+      onChange({ [e.target.name]: URL.createObjectURL(file) });
     }
   };
 
   return (
-    <Grid container spacing={2} mt={1}>
+    <Grid container spacing={2} mt={1} >
       {photoFields.map(({ name, label }) => (
-        <Grid item xs={12} sm={6} key={name}>
-          <Typography variant="body2" gutterBottom>{label}</Typography>
-          <Input type="file" name={name} onChange={handleFileChange} fullWidth />
+        <Grid item xs={12} sm={6} key={name} >
+          <Typography variant="body2" gutterBottom >{label}</Typography>
+          <Input type="file" name={name} onChange={handleFileChange} fullWidth  />
           {data[name] && (
             <img
               src={data[name]}
@@ -35,4 +35,4 @@ const StudentUsersPhotos = ({ data, onChange }) => {
   );
 };
 
-export default StudentUsersPhotos;
+export default StuPhotosDltDlg;
