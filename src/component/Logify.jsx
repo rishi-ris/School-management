@@ -8,12 +8,16 @@ import {
   Typography,
   Paper,
   Link,
+  MenuItem,
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 
 const Logify = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [roleError, setRoleError] = useState("");
+  const [userError, setUserError] = useState("");
+  const [passError, setPassError] = useState("");
 
   // Role-wise user list
   const users = [
@@ -26,6 +30,23 @@ const Logify = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setRoleError("");
+    setUserError("");
+    setPassError("");
+    let valid = true;
+    if (!username) {
+      setRoleError("Please select a role");
+      valid = false;
+    }
+    if (!username) {
+      setUserError("Username is required");
+      valid = false;
+    }
+    if (!password) {
+      setPassError("Password is required");
+      valid = false;
+    }
+    if (!valid) return;
 
     // Find matching user from array
     const user = users.find(
@@ -58,7 +79,7 @@ const Logify = () => {
         sx={{
           width: "100%",
           height: 75,
-         backgroundColor: 'var(--header-bg-color)',
+          backgroundColor: "var(--header-bg-color)",
           boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.3)",
         }}
       />
@@ -81,9 +102,47 @@ const Logify = () => {
             borderRadius: 4,
           }}
         >
-          <Typography variant="h5" align="center" gutterBottom>
-            Login to Your Account
-          </Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            mb={2}
+          >
+            <Typography
+              variant="h5"
+              align="center"
+              gutterBottom
+              sx={{ mr: 2 }}
+            >
+              Login to Your Account
+            </Typography>
+            <TextField
+              select
+              size="small"
+              value={username || ""}
+              onChange={(e) => { setUsername(e.target.value); setRoleError(""); }}
+              sx={{ minWidth: 120 }}
+              displayEmpty
+              SelectProps={{
+                displayEmpty: true,
+                renderValue: (selected) =>
+                  selected === "" ? (
+                    <span style={{ color: '#888' }}>Select Role</span>
+                  ) : (
+                    users.find(u => u.username === selected)?.role.charAt(0).toUpperCase() + users.find(u => u.username === selected)?.role.slice(1)
+                  ),
+              }}
+              error={!!roleError}
+              helperText={roleError}
+            >
+            
+              {users.map((u) => (
+                <MenuItem key={u.role} value={u.username}>
+                  {u.role.charAt(0).toUpperCase() + u.role.slice(1)}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
 
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
             <TextField
@@ -92,7 +151,9 @@ const Logify = () => {
               label="Username"
               variant="outlined"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => { setUsername(e.target.value); setUserError(""); }}
+              error={!!userError}
+              helperText={userError}
             />
 
             <TextField
@@ -102,7 +163,9 @@ const Logify = () => {
               type="password"
               variant="outlined"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); setPassError(""); }}
+              error={!!passError}
+              helperText={passError}
             />
 
             <Box display="flex" justifyContent="flex-end" mt={1}>
@@ -123,9 +186,9 @@ const Logify = () => {
                 textTransform: "none",
                 fontWeight: "bold",
                 fontSize: "1rem",
-                 backgroundColor: 'var(--header-bg-color)',
+                backgroundColor: "var(--header-bg-color)",
                 "&:hover": {
-                  backgroundColor: 'var(--buttonHover-bg-color)',
+                  backgroundColor: "var(--buttonHover-bg-color)",
                 },
               }}
             >

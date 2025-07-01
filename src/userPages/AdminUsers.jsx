@@ -147,7 +147,7 @@ const AdminUsers = () => {
               <ListItemText primary="Fees" />
             </ListItem>
 
-            <ListItem button onClick={() => navigate("/studentUsers")}>
+            <ListItem button onClick={() => navigate("/StudentPage")}>
 
             {/* <ListItem button onClick={() => navigate("/StudentPage")}> */}
 

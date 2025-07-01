@@ -10,8 +10,13 @@ import {
   Box,
   Button
 } from "@mui/material";
+import {useNavigate } from "react-router-dom";
 
 const StuTable = ({ students }) => {
+  const navigate = useNavigate();
+  const gotoTCpage =() => {
+    navigate("/tcPage");
+  };
   return (
     <Box display="flex" justifyContent="center" mt={2}>
       <TableContainer component={Paper} sx={{ maxWidth: 1250, width: "100%", boxShadow: 3 }}>
@@ -39,7 +44,7 @@ const StuTable = ({ students }) => {
                 <TableCell>{student.stu_class}</TableCell>
                 <TableCell>{student.section}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" size="small" color="info" sx={{ mr: 1 }}>
+                  <Button onClick={gotoTCpage} variant="outlined" size="small" color="info" sx={{ mr: 1 }}>
                     Generate TC
                   </Button>
                   <Button

@@ -226,7 +226,7 @@ const FeesPage = () => {
     alt="Watermark"
     sx={{
       position: "absolute",
-      width: "80%",
+      width: "60%",
       opacity: 0.08, // ✅ halka watermark effect
       zIndex: 0,
       top: "50%",
