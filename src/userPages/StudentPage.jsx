@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddStuButton from "./AddStuButton";
 import StuTable from "./StuTable";
 import StuDlgCard from "./StuDlgCard";
 import { Box, Typography } from "@mui/material";
+import Network from "../Application/Network";
 
 const StudentPage = () => {
   const [students, setStudents] = useState([
@@ -54,6 +55,27 @@ const StudentPage = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  useEffect(() => {
+    Network.getAllStudents()
+      .then((response) => {
+        setStudents(response.data);
+      })
+      .catch((error) => {
+        console.error("⚠️ Error fetching students:", error);
+      });
+  }, []);
+
+  const handleSave = (newStudent) => {
+    Network.createStudent(newStudent)
+      .then((response) => {
+        setStudents((prev) => [...prev, { ...newStudent, id: prev.length + 1 }]);
+        setDialogOpen(false);
+      })
+      .catch((error) => {
+        console.error("⚠️ Error creating student:", error);
+      });
+  };
+
   return (
     <Box p={3}>
       <Box display="flex" justifyContent="space-between" mb={2}>
@@ -68,7 +90,7 @@ const StudentPage = () => {
       <StuDlgCard
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onSave={(newStudent) => setStudents([...students, newStudent])}
+        onSave={(newStudent) => handleSave(newStudent)}
       />
     </Box>
   );

@@ -8,6 +8,8 @@ import TeachersUser from './userPages/TeachersUser';
 import StudentPage from './userPages/StudentPage';
 import ParentsUsers from './userPages/ParentsUsers';
 import FeesPage from './userPages/FeesPage';
+import TcPage from './userPages/TcPage';
+import AddNewEmpPage from './userPages/AddNewEmpPage';
 function App() {
   return (
     <Routers>
@@ -15,11 +17,13 @@ function App() {
         <Route path='/' element={<SchoolFrontPage/>}></Route>
         <Route path='/logify' element={<Logify/>}></Route>
         <Route path='/signUp' element={<SignUpPage/>}></Route>
-        <Route path='/StudentPage' element={<StudentPage/>}></Route>
+        <Route path='/studentUser' element={<StudentPage/>}></Route>
         <Route path='/adminUser' element={<AdminUsers/>}></Route>
         <Route path='/teachersUser' element={<TeachersUser/>}></Route>
         <Route path='/parentsusers' element={<ParentsUsers/>}></Route>
         <Route path="/fees" element={<FeesPage />} />
+        <Route path='/tcPage' element={<TcPage/>}></Route>
+        {/* <Route path='/newEmployee' element={<AddNewEmpPage/>}></Route> */}
 
       </Routes>
     </Routers>

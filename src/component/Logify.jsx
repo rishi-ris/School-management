@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -11,13 +11,32 @@ import {
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import Network from "../Application/Network";
+import RoleDropdown from "./RoleDropdown";
 
 const Logify = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [roles, setRoles] = useState([]);
+  const [onRolesSelectChange, setOnRolesSelectChange] = useState("");
 
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const response = await Network.getAllRoles();
+      if (response.status === 200) {
+        setRoles(response.data);
+      } else {
+        console.error("Failed to fetch roles");
+      }
+    };
+    fetchRoles();
+  }, []);
+
+   const onRolesSelect = (roleId) => {
+     console.log("Selected Role ID:", roleId);
+     setOnRolesSelectChange(roleId);
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -25,39 +44,68 @@ const Logify = () => {
       setMessage("❌ Username and Password are required.");
       return;
     }
-
+//check if drop down is not selected show error message
+    if (!onRolesSelectChange) {
+      setMessage("❌ Please select a role.");
+      return;
+    }
+ let response = {}; // Initialize response variable
+    // Handle login based on selected role
+    switch (onRolesSelectChange) {
+      case 1: // Admin  
+      response = await Network.login(username, password, onRolesSelectChange);
+        setMessage("🔄 Logging in as Admin...");
+        break;
+      case 2: // Teacher
+      response = await Network.login(username, password, onRolesSelectChange);
+        setMessage("🔄 Logging in as Teacher...");
+        break;  
+      case 3: // Student
+      response = await Network.studentLogin(username, password, onRolesSelectChange);
+        setMessage("🔄 Logging in as Student...");
+        break;
+      case 4: // Parent
+      response = await Network.login(username, password, onRolesSelectChange);
+        setMessage("🔄 Logging in as Parent...");
+        break;
+      case 5: // Student
+      response = await Network.studentLogin(username, password, onRolesSelectChange);
+        setMessage("🔄 Logging in as Student...");
+        break;
+      default:  
+        setMessage("❌ Invalid role selected.");
+        return;
+    }
     try {
-      console.log("➡️ Sending login request to the server...");
-      const response = await Network.login(username, password);
-      console.log("✅ Server Response:", response);
-
-      const { status, message: serverMessage, data } = response.data;
-
-      if (status === 200 && serverMessage === "Login successful") {
-        setMessage("✅ Login Successful");
-
-        // Role save kar lo (optional)
-        localStorage.setItem("role", data.role);
-        localStorage.setItem("username", data.username);
-
-        // 🔀 Alag-alag role ke hisaab se navigate karo
-        if (data.username === "admin") {
-          navigate("/adminUser");
-        } else if (data.password === "teacher123") {
-          navigate("/adminUser");
-        } else if (data.username === "student") {
-          navigate("/studentUsers");
-        } else {
-          setMessage("❌ Unknown role, contact admin.");
+     
+      if (response.status === 200) {
+        setMessage("✅ Login successful!");
+        // Redirect based on role
+        switch (onRolesSelectChange) {
+          case 1:
+            navigate("/adminUser");
+            break;
+          case 2:
+            navigate("/teachersUser");
+            break;
+          case 3:
+            navigate("/studentUser");
+            break;
+          case 4:
+            navigate("/parentsusers");
+            break;
+          default:
+            navigate("/");
         }
       } else {
-        setMessage("❌ Wrong username or password");
+        setMessage("❌ Invalid username or password.");
       }
     } catch (error) {
-      console.error("⚠️ Login error:", error);
-      setMessage("❌ Server not found or error occurred.");
+      console.error("Login error:", error);
+      setMessage("❌ An error occurred during login.");
     }
   };
+
 
   return (
     <Box>
@@ -85,7 +133,7 @@ const Logify = () => {
           <Typography variant="h5" align="center" gutterBottom>
             Login to Your Account
           </Typography>
-
+          <RoleDropdown roles={roles} onSelect={onRolesSelect} />
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
             <TextField
               fullWidth

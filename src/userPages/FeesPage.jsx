@@ -227,7 +227,7 @@ const FeesPage = () => {
     sx={{
       position: "absolute",
       width: "60%",
-      opacity: 0.08, // ✅ halka watermark effect
+      opacity: 0.08, // ✅ some watermark effect
       zIndex: 0,
       top: "50%",
       left: "50%",
@@ -235,10 +235,10 @@ const FeesPage = () => {
     }}
   />
 
-  {/* 🔼 Foreground Text */}
-  <Typography variant="h4" color="text.secondary" sx={{ zIndex: 1 }}>
+  {/*  Foreground Text */}
+  {/* <Typography variant="h4" color="text.secondary" sx={{ zIndex: 1 }}>
     CHANDRA SHEKHAR AZAD HR. SEC SCHOOL
-  </Typography>
+  </Typography> */}
 </Box>
 
         )}

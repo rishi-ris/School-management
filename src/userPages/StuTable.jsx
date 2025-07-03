@@ -36,13 +36,21 @@ const StuTable = ({ students }) => {
           <TableBody>
             {students.map((student, index) => (
               <TableRow key={index}>
-                <TableCell>{student.userName}</TableCell>
+                <TableCell>{student.username}</TableCell>
                 <TableCell>{student.password}</TableCell>
                 <TableCell>{student.gender}</TableCell>
                 <TableCell>{student.rollNumber}</TableCell>
                 <TableCell>{student.contactNumber}</TableCell>
-                <TableCell>{student.stu_class}</TableCell>
-                <TableCell>{student.section}</TableCell>
+              <TableCell>
+  {student.schoolClass
+    ? `${student.schoolClass.className}`
+    : "N/A"}
+</TableCell>
+              <TableCell>
+  {student.schoolClass
+    ? `${student.schoolClass.section}`
+    : "N/A"}
+</TableCell>
                 <TableCell>
                   <Button onClick={gotoTCpage} variant="outlined" size="small" color="info" sx={{ mr: 1 }}>
                     Generate TC

@@ -1,34 +1,4 @@
 // import axios from "axios";
-// import Endpoints from "./Endpoints";
-
-// export default class Network {
-//   static async login(username, password) {
-//     try {
-//       const request = {
-//         username: username,
-//         password: password,
-//       };
-
-//       const config = {
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       };
-
-//       const response = await axios.post(
-//         Endpoints.loginUrl,
-//         request, // ✅ यहाँ stringify हटाया गया है
-//         config
-//       );
-
-//       return response;
-//     } catch (error) {
-//       console.error("⚠️ Login error:", error);
-//       throw error;
-//     }
-//   }
-// }
-
 
 import axios from "axios";
 import Endpoints from "./Endpoints";
@@ -63,4 +33,86 @@ export default class Network {
       throw error;
     }
   }
+  //create student
+  static async createStudent(studentData) {
+    try {
+      const response = await axios.post(
+        Endpoints.createStudent,
+        studentData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Create student error:", error);
+      throw error;
+    }
+  }
+
+ //get All Students
+  static async getAllStudents() {
+    try {
+      const response = await axios.get(
+        Endpoints.getAllStudents,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      
+      return response;
+    } catch (error) {
+      console.error("⚠️ Student login error:", error);
+      throw error;
+    }
+  }
+
+
+
+
+
+
+  static async login(username, password) {
+    try {
+      const response = await axios.post(
+        Endpoints.loginUrl,
+        { username, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ User login error:", error);
+      throw error;
+    }
+  }
+
+
+  //get All roles
+   static async getAllRoles() {
+    try {
+      const response = await axios.get(
+        Endpoints.getAllRoles,
+       
+        { headers: { "Content-Type": "application/json" } }
+      );
+      console.log("***RESPONSE***", response)
+      return response;
+    } catch (error) {
+      console.error("⚠️ Student login error:", error);
+      throw error;
+    }
+  }
+
+ //get All classes
+   static async getAllClasses() {
+    try {
+      const response = await axios.get(
+        Endpoints.getAllClasses,
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      return response;
+    } catch (error) {
+      console.error("⚠️ Student login error:", error);
+      throw error;
+    }
+  }
+
+
 }
