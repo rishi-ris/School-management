@@ -114,5 +114,21 @@ export default class Network {
     }
   }
 
+  //create User
+  static async addNewUser(userData) {
+    try {
+      const response = await axios.post(
+        Endpoints.createUser,
+        userData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Create user error:", error);
+      throw error;
+    }
+  }
 
+
+  
 }

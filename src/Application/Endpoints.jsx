@@ -1,4 +1,4 @@
-const baseURL = "http://192.168.10.3:8080";
+const baseURL = "http://192.168.1.12:8080";
 
 const Endpoints = {
  getAllRoles: baseURL+"/roles/getRoles",
@@ -8,6 +8,8 @@ const Endpoints = {
   createStudent: baseURL+"/students/createStudent",
   getAllStudents: baseURL+"/students/getAllStudents",
   getAllUsers: baseURL+"/users/getAllUsers",
+
+  createUser: baseURL + "/users/createUser"
 };
 
 export default Endpoints;
