@@ -1,31 +1,33 @@
 import React, { useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
-
-
-const ClassDropDown = ({ roles, onSelect  }) => {
-  const [selectedRoleId, setSelectedRoleId] = useState('');
+const ClassDropDown = ({ roles, onSelect }) => {
+  const [selectedClassId, setSelectedClassId] = useState('');
 
   const handleChange = (event) => {
-    setSelectedRoleId(event.target.value);
-    console.log("Selected Role ID:", event.target.value);
-    onSelect(event.target.value);
+    const selectedId = event.target.value;
+    const selectedClassObj = roles.find(cls => cls.classId === selectedId);
+    
+    setSelectedClassId(selectedId);
+    if (selectedClassObj) {
+      onSelect(selectedClassObj); // ✅ Send full object
+    }
   };
 
   return (
     <Box sx={{ minWidth: 200 }}>
       <FormControl fullWidth>
-        <InputLabel id="role-select-label">Select Role</InputLabel>
+        <InputLabel id="class-select-label">Select Class</InputLabel>
         <Select
-          labelId="role-select-label"
-          id="role-select"
-          value={selectedRoleId}
-          label="Select Role"
+          labelId="class-select-label"
+          id="class-select"
+          value={selectedClassId}
+          label="Select Class"
           onChange={handleChange}
         >
-          {roles.map((c) => (
-            <MenuItem key={c.classId} value={c.classId}>
-              {c.className} - {c.section}
+          {roles.map((cls) => (
+            <MenuItem key={cls.classId} value={cls.classId}>
+              {cls.className} - {cls.section}
             </MenuItem>
           ))}
         </Select>

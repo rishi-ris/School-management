@@ -1,141 +1,284 @@
-import React, { useState } from "react";
+import React, { use, useState, useEffect } from "react";
 import {
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
 } from "@mui/material";
-import CloseButton from "./CloseButton";
+
+import StuCommonDtlDlg from "./StuCommonDtlDlg";
 import StuPersonalDltDlg from "./StuPersonalDltDlg";
 import StuFamilyDltDlg from "./StuFamilyDltDlg";
 import StuDocDlg from "./StuDocDlg";
 import StuPhotosDltDlg from "./StuPhotosDltDlg";
-import StuCommonDtlDlg from "./StuCommonDtlDlg";
 
-const steps = [
-  "Common Details",
-  "Personal Details",
-  "Family Details",
-  "Documents Details",
-  "Upload Photos",
-];
+const StuDlgCard = ({ open, onClose, onSave, student }) => {
+  const [commonData, setCommonData] = useState({});
+  const [personalData, setPersonalData] = useState({});
+  const [familyData, setFamilyData] = useState({});
+  const [documents, setDocuments] = useState({});
+  const [photos, setPhotos] = useState({});
+  const [selectedClass, setSelectedClass] = useState({});
+  const [selectedRole, setSelectedRole] = useState({});
 
-const StuDlgCard = ({ open, onClose, onSave }) => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState({});
+  useEffect(() => {
+    console.log("Received student data:", student);
+    if (student) {
+      setCommonData({
+        username: student.username,
+        password: student.password,
+        gender: student.gender,
+        rollNumber: student.rollNumber,
+        scholarNumber: student.scholarNumber,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        contactNumber: student.contactNumber,
+        dob: student.dob,
+        dOB: student.dob,
+        address: student.address,
+        city: student.city,
+        state: student.state,
+        pinCode: student.pinCode,
+        country: student.country,
+        status: student.status,
+        feesDiscount: student.feesDiscount,
+        totalFees: student.totalFees,
+        prevSchool: student.prevSchool,
+        prevEduBoard: student.prevEduBoard,
+        isDisable: student.isDisable,
+        createdBy: student.createdBy,
+        createdAt: student.createdAt,
+        updatedAt: student.updatedAt,
+        schoolClass: student.schoolClass,
+        role: student.role,
+        fees: student.fees || [],
+        
+        documents: student.documents || [],
+        photos: student.photos || {}
+      });
+setFamilyData(student.family && student.family.length > 0 ? student.family[0] : {
+        fatherName: "",
+        fatherOccupation: "",
+        fatherContactNumber: "",
+        fatherEmail: "",
+        motherName: "",
+        motherOccupation: "",
+        motherContactNumber: "",
+        motherEmail: "",
+        guardianName: null,
+        guardianOccupation: null,
+        guardianContactNumber: null,
+        guardianEmail: null,
+        guardianRelation: null,
+        createdBy: "admin"
+      }); 
+      setPersonalData({
+        caste: student.caste,
+        religion: student.religion,
+        nationality: student.nationality,
+        motherToungue: student.motherToungue,
+        isDisable: student.isDisable,
+        sssmidNum: student.sssmidNum,
+        aadharCardNum: student.aadharCardNum,
+        rationCardNum: student.rationCardNum,
+        admissionFormNumber: student.admissionFormNumber,
+        disabilityType: student.disabilityType,
+        apaarId: student.apaarId,
+        prevSchool: student.prevSchool,
+        prevEduBoard: student.prevEduBoard,
+        registrationNumber: student.registrationNumber,
+        enrollmentNumber: student.enrollmentNumber,
+        bloodGroup: student.bloodGroup,
+        medicalHistory: student.medicalHistory,
+        createdBy: student.createdBy
+      });
 
-  const handleNext = () => {
-    if (validateStep(activeStep)) {
-      setActiveStep((prev) => prev + 1);
-    } else {
-      console.log("Please fill all required fields");
+      setDocuments({ ...student.documents });
+      setPhotos({ ...student.photos });
+
+      setSelectedClass(student.schoolClass);
+      setSelectedRole(student.role);
     }
-  };
+  }, [student]);
 
-  const handleBack = () => setActiveStep((prev) => prev - 1);
-
-  const handleChange = (newValues) => {
-    setFormData((prev) => ({ ...prev, ...newValues }));
-  };
+  const getTimestamp = () => new Date().toISOString();
 
   const handleSubmit = () => {
-    onSave(formData);
-    onClose();
-    setFormData({});
-    setActiveStep(0);
-  };
+    console.log("Submitting student data:", familyData);
+    const transformedStudent = {
+      username: commonData.username,
+      password: commonData.password,
+      gender: commonData.gender,
+      rollNumber: commonData.rollNumber,
+      scholarNumber: commonData.scholarNumber,
+      schoolClass: selectedClass.classId,
+      className: selectedClass.classId.classId,
+      classId: selectedClass.classId.classId,
+      role: selectedRole.roleId,
+      firstName: commonData.firstName,
+      lastName: commonData.lastName,
+      contactNumber: commonData.contactNumber,
+      dOB: commonData.dOB,
+      dob: commonData.dOB,
+      address: commonData.address,
+      caste: personalData.caste,
+      religion: personalData.religion,
+      nationality: personalData.nationality,
+      motherToungue: personalData.motherToungue,
+      isDisable: personalData.isDisable ?? null,
+      sssmidNum: documents.sssmid ?? null,
+      aadharCardNum: documents.aadharCard ?? null,
+      rationCardNum: documents.rationCard ?? null,
+      admissionFormNumber: documents.admissionForm ?? null,
+      disabilityType: personalData.disabilityType ?? null,
+      currentEduBoard: personalData.prevEduBoard ?? null,
+      feesDiscount: commonData.feesDiscount ?? null,
+      medicalHistory: personalData.medicalHistory || "None",
+      apaarId: personalData.apaarId,
+      prevSchool: personalData.prevSchool,
+      prevEduBoard: personalData.prevEduBoard,
+      registrationNumber: personalData.registrationNumber,
+      enrollmentNumber: personalData.enrollmentNumber,
+      bloodGroup: personalData.bloodGroup,
+      city: commonData.city,
+      state: commonData.state,
+      pinCode: commonData.pinCode,
+      country: commonData.country,
+      status: commonData.status,
+      createdBy: "admin",
+      createdAt: getTimestamp(),
+      updatedAt: getTimestamp(),
+      totalFees: commonData.totalFees,
 
-  const validateStep = (step) => {
-    const stepFields = [
-      // Step 0: Common Details
-      [
-        "userName",
-        "password",
-        "role",
-        "gender",
-        "rollNumber",
-        "scholarNumber",
-        "stu_class",
-        "section",
-        "firstName",
-        "lastName",
-        "contactNumber",
-        "dOB",
-        "address",
-        "city",
-        "state",
-        "pinCode",
-        "country",
-        "status",
-        "feesDiscount",
+      fees: [
+        {
+          totalFees: commonData.totalFees,
+          paymentDate: "2024-06-15",
+          paymentMode: "cash",
+          paymentRefNum: null,
+          receivedBy: null,
+          paidAmount: "0",
+          status: "partial",
+          createdAt: getTimestamp(),
+          updatedAt: getTimestamp()
+        }
       ],
-      // Step 1: Personal
-      ["caste", "religion", "nationality", "motherTongue"],
-      // Step 2: Family
-      ["fatherName", "fatherPhone", "motherName", "guardianName"],
-      // Step 3: Documents
-      ["aadharCard", "panCard", "birthCertificate"],
-      // Step 4: Photos
-      ["studentPhoto"],
-    ];
 
-    const requiredFields = stepFields[step] || [];
+      family: [
+  {
+     "": "Father Name",
+            "": "Mother Name",
+            "": null,
+            "": null,
+            "": null,
+            "": null,
+            "": "Guarian name",
+            "": null,
+            "": null,
+            "": "FOCCU",
+            "": "MOCCU",
+            "": "GOCCU",
+            "": "msureshmewara@gmail.com",
+            "": "msureshmewara@gmail.com",
+            "": "msureshmewara@gmail.com",
+            "": null,
+            "": null,
+            "": null,
+            "isSibling": null,
+            "siblingDetails": null,
 
-    return requiredFields.every(
-      (field) => formData[field]?.toString().trim() !== ""
-    );
-  };
+    fatherName: familyData.fatherName || "",
+    fatherOccupation: familyData.fatherOccupation || "",
+    fatherPhone: familyData.fatherPhone || "",
+    fatherEmail: familyData.fatherEmail || "",
+    fatherAadharNum: familyData.fatherAadharNum || null,
+    fatherEducation: familyData.fatherEducation || null,
 
-  const getStepComponent = () => {
-    switch (activeStep) {
-      case 0:
-        return (
-          <StuCommonDtlDlg data={formData} onChange={handleChange} />
-        );
-      case 1:
-        return (
-          <StuPersonalDltDlg data={formData} onChange={handleChange} />
-        );
-      case 2:
-        return (
-          <StuFamilyDltDlg data={formData} onChange={handleChange} />
-        );
-      case 3:
-        return (
-          <StuDocDlg data={formData} onChange={handleChange} />
-        );
-      case 4:
-        return (
-          <StuPhotosDltDlg data={formData} onChange={handleChange} />
-        );
-      default:
-        return null;
-    }
+    motherAadharNum: familyData.motherAadharNum || null,
+    motherName: familyData.motherName || "",
+    motherOccupation: familyData.motherOccupation || "",
+    motherPhone: familyData.motherPhone || "",
+    motherEmail: familyData.motherEmail || "",
+    motherEducation: familyData.motherEducation || null,
+
+    guardianName: familyData.guardianName || null,
+    guardianOccupation: familyData.guardianOccupation || null,
+    guardianPhone: familyData.guardianPhone || null,
+    guardianEmail: familyData.guardianEmail || null,
+    guardianRelation: familyData.guardianRelation || null,
+    guardianAadharNum: familyData.guardianAadharNum || null,
+    guardianEducation: familyData.guardianEducation || null,
+    isSibling: familyData.isSibling || null,
+    siblingDetails: familyData.siblingDetails || null,
+   createdBy: "admin"
+  }
+],
+
+      documents: [{
+        aadharCard: documents.aadharCard,
+        panCard: documents.panCard,
+        sssmid: documents.sssmid,
+        casteCertificate: documents.casteCertificate,
+        incomeCertificate: documents.incomeCertificate,
+        domicileCertificate: documents.domicileCertificate,
+        transferCertificate: documents.transferCertificate,
+        migrationCertificate: documents.migrationCertificate,
+        characterCertificate: documents.characterCertificate,
+        previousMarksheet: documents.previousMarksheet,
+        disabilityCertificate: documents.disabilityCertificate,
+        rationCard: documents.rationCard,
+        admissionForm: documents.admissionForm,
+        passbook: documents.passbook,
+        createdBy: "admin",
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp()
+      }],
+
+      photos: {
+        studentPhoto: photos.studentPhoto,
+        fatherPhoto: photos.fatherPhoto,
+        motherPhoto: photos.motherPhoto ?? null,
+        guardianPhoto: photos.guardianPhoto ?? null,
+        createdBy: "admin",
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp()
+      }
+    };
+
+    onSave(transformedStudent);
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>
-        Registration Student : {steps[activeStep]}
-        <CloseButton onClick={onClose} />
-      </DialogTitle>
-      <DialogContent>{getStepComponent()}</DialogContent>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>Add New Student</DialogTitle>
+      <DialogContent dividers>
+        <StuCommonDtlDlg
+          data={commonData}
+          onChange={(val) => setCommonData((prev) => ({ ...prev, ...val }))}
+          onClassSelect={(cls) => {console.log("Selected class 1:", cls); setSelectedClass(cls);}}
+          onRoleSelect={(role) => {console.log("Selected role:", role); setSelectedRole(role);}}
+        />
+        <StuPersonalDltDlg
+          data={personalData}
+          onChange={(val) => setPersonalData((prev) => ({ ...prev, ...val }))}
+        />
+        <StuFamilyDltDlg
+          data={familyData}
+          onChange={(val) => setFamilyData((prev) => ({ ...prev, ...val }))}
+        />
+        <StuDocDlg
+          data={documents}
+          onChange={(val) => setDocuments((prev) => ({ ...prev, ...val }))}
+        />
+        <StuPhotosDltDlg
+          data={photos}
+          onChange={(val) => setPhotos((prev) => ({ ...prev, ...val }))}
+        />
+      </DialogContent>
       <DialogActions>
-        {activeStep > 0 && <Button onClick={handleBack}>Previous</Button>}
-        {activeStep < steps.length - 1 ? (
-          <Button onClick={handleNext} variant="contained">
-            Next
-          </Button>
-        ) : (
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
-            color="primary"
-          >
-            Submit
-          </Button>
-        )}
+        <Button onClick={onClose} variant="outlined">Cancel</Button>
+        <Button onClick={handleSubmit} variant="contained">Save</Button>
       </DialogActions>
     </Dialog>
   );

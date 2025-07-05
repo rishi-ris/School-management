@@ -1,96 +1,108 @@
 import React, { useEffect, useState } from "react";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import AddStuButton from "./AddStuButton";
 import StuTable from "./StuTable";
 import StuDlgCard from "./StuDlgCard";
-import { Box, Typography } from "@mui/material";
 import Network from "../Application/Network";
 
 const StudentPage = () => {
-  const [students, setStudents] = useState([
-    {
-      id: 1,
-      userName: "rahul123",
-      password: "pass123",
-      gender: "Male",
-      rollNumber: "101",
-      contactNumber: "9876543210",
-      stu_class: "10th",
-      section: "A",
-      feesStatus: "Unpaid",
-    },
-    {
-      id: 2,
-      userName: "priya456",
-      password: "abc123",
-      gender: "Female",
-      rollNumber: "102",
-      contactNumber: "9123456780",
-      stu_class: "9th",
-      section: "B",
-      feesStatus: "Paid",
-    },
-    {
-      id: 3,
-      userName: "amit001",
-      password: "amitpass",
-      gender: "Male",
-      rollNumber: "103",
-      contactNumber: "9001234567",
-      stu_class: "8th",
-      section: "A",
-      feesStatus: "Unpaid",
-    },
-    {
-      id: 4,
-      userName: "sana999",
-      password: "sana@123",
-      gender: "Female",
-      rollNumber: "104",
-      contactNumber: "9823456789",
-      stu_class: "10th",
-      section: "C",
-      feesStatus: "Paid",
-    },
-  ]);
-
+  const [students, setStudents] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [loading, setLoading] = useState(false);
+    const [newStudentId, setNewStudentId] = useState(null); // <-- NEW
 
-  useEffect(() => {
-    Network.getAllStudents()
-      .then((response) => {
-        setStudents(response.data);
-      })
-      .catch((error) => {
-        console.error("⚠️ Error fetching students:", error);
-      });
-  }, []);
-
-  const handleSave = (newStudent) => {
-    Network.createStudent(newStudent)
-      .then((response) => {
-        setStudents((prev) => [...prev, { ...newStudent, id: prev.length + 1 }]);
-        setDialogOpen(false);
-      })
-      .catch((error) => {
-        console.error("⚠️ Error creating student:", error);
-      });
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await Network.getAllPendingFeesStudents();
+      setStudents(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("⚠️ Error fetching students:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const handleDetails = async (studentId) => {
+  try {
+    setLoading(true);
+    const response = await Network.getStudentDetails(studentId); // Replace with your API
+    const fullStudent = response.data;
+
+    setEditingStudent(fullStudent);
+    setNewStudentId(studentId);
+    setDialogOpen(true);
+  } catch (err) {
+    console.error("⚠️ Error loading student:", err);
+    alert("Failed to load student details.");
+  } finally {
+    setLoading(false);
+  }
+};
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const handleSave = async (flatData) => {
+    console.log("Saving student data:", flatData.family[0]);
+
+
+
+    try {
+      setLoading(true);
+      await Network.createStudent(flatData);
+      alert("✅ Student saved!");
+      await fetchStudents();
+      setDialogOpen(false);
+      setSelectedStudent(null);
+    } catch (error) {
+      console.error("❌ Error saving student:", error);
+      alert("❌ Failed to save student.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (student) => {
+    console.log("Editing student:", student);
+    setSelectedStudent(student);
+    setDialogOpen(true);
+  };
+const handleDocumentsDetails = (studentId) => {
+  console.log("Viewing documents for student:", studentId);
+  setSelectedStudent(studentId);
+  setDialogOpen(true);
+};
   return (
     <Box p={3}>
       <Box display="flex" justifyContent="space-between" mb={2}>
-        <Typography variant="h4" fontWeight="bold">
-          Student Table
-        </Typography>
-        <AddStuButton onClick={() => setDialogOpen(true)} />
+        <Typography variant="h4" fontWeight="bold">Student Table</Typography>
+        <AddStuButton onClick={() => {
+          setSelectedStudent(null);
+          setDialogOpen(true);
+        }} />
       </Box>
 
-      <StuTable students={students} />
+      {loading ? (
+        <Box display="flex" justifyContent="center" mt={5}>
+          <CircularProgress size={40} />
+        </Box>
+      ) : (
+        <StuTable students={students} onEdit={handleDetails} documentsDetails={handleDocumentsDetails} />
+      )}
 
       <StuDlgCard
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onSave={(newStudent) => handleSave(newStudent)}
+        onClose={() => {
+          setDialogOpen(false);
+          setSelectedStudent(null);
+          setNewStudentId(null);
+          setEditingStudent(null);
+              }}
+          onSave={handleSave}
+          student={editingStudent} // pass for edit
       />
     </Box>
   );

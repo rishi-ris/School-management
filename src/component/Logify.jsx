@@ -34,8 +34,8 @@ const Logify = () => {
   }, []);
 
    const onRolesSelect = (roleId) => {
-     console.log("Selected Role ID:", roleId);
-     setOnRolesSelectChange(roleId);
+     console.log("Selected Role ID:", roleId.roleId);
+     setOnRolesSelectChange(roleId.roleId);
   };
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -53,23 +53,23 @@ const Logify = () => {
     // Handle login based on selected role
     switch (onRolesSelectChange) {
       case 1: // Admin  
-      response = await Network.login(username, password, onRolesSelectChange);
+      response = await Network.login(username, password);
         setMessage("🔄 Logging in as Admin...");
         break;
       case 2: // Teacher
-      response = await Network.login(username, password, onRolesSelectChange);
+      response = await Network.login(username, password);
         setMessage("🔄 Logging in as Teacher...");
         break;  
       case 3: // Student
-      response = await Network.studentLogin(username, password, onRolesSelectChange);
+      response = await Network.studentLogin(username, password);
         setMessage("🔄 Logging in as Student...");
         break;
       case 4: // Parent
-      response = await Network.login(username, password, onRolesSelectChange);
+      response = await Network.login(username, password);
         setMessage("🔄 Logging in as Parent...");
         break;
       case 5: // Student
-      response = await Network.studentLogin(username, password, onRolesSelectChange);
+      response = await Network.studentLogin(username, password);
         setMessage("🔄 Logging in as Student...");
         break;
       default:  

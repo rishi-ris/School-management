@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Input } from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
 
 const photoFields = [
   { name: "studentPhoto", label: "Student Photo" },
@@ -11,22 +11,40 @@ const photoFields = [
 const StuPhotosDltDlg = ({ data, onChange }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const { name } = e.target;
+
     if (file) {
-      onChange({ [e.target.name]: URL.createObjectURL(file) });
+      // You can replace URL.createObjectURL with file directly if sending to server
+      onChange({ [name]: URL.createObjectURL(file) });
     }
   };
 
   return (
-    <Grid container spacing={2} mt={1} >
+    <Grid container spacing={2} mt={1}>
       {photoFields.map(({ name, label }) => (
-        <Grid item xs={12} sm={6} key={name} >
-          <Typography variant="body2" gutterBottom >{label}</Typography>
-          <Input type="file" name={name} onChange={handleFileChange} fullWidth  />
+        <Grid item xs={12} sm={6} key={name}>
+          <Typography variant="body2" gutterBottom>{label}</Typography>
+          
+          <Button
+            variant="contained"
+            component="label"
+            fullWidth
+          >
+            {data[name] ? "Change Photo" : `Upload ${label}`}
+            <input
+              type="file"
+              name={name}
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </Button>
+
           {data[name] && (
             <img
               src={data[name]}
               alt={label}
-              style={{ marginTop: 8, maxHeight: "100px", borderRadius: "8px" }}
+              style={{ marginTop: 8, maxHeight: "100px", borderRadius: "8px", display: "block" }}
             />
           )}
         </Grid>

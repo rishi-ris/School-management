@@ -63,10 +63,34 @@ export default class Network {
     }
   }
 
+//get All Students
+  static async getAllPendingFeesStudents() {
+    try {
+      const response = await axios.get(
+        Endpoints.getAllPendingFeesStudents,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      
+      return response;
+    } catch (error) {
+      console.error("⚠️ Student login error:", error);
+      throw error;
+    }
+  }
 
 
-
-
+  static async getStudentDetails(studentId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.studentDetails}/${studentId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get student details error:", error);
+      throw error;
+    }
+  }
 
   static async login(username, password) {
     try {
@@ -128,7 +152,35 @@ export default class Network {
       throw error;
     }
   }
+static async uploadStudentDocument(studentId, docType, file) {
+  console.log(`📂 Uploading ${docType} for student ${studentId}:`, file.name);
+  const formData = new FormData();
+  formData.append("file", file);         // MUST match @RequestParam("file")
+  formData.append("docType", docType);   // Optional param
+
+  try {
+    const response = await axios.post(
+      `${Endpoints.uploadStudentDocs}/${studentId}/upload`,  // << fix: use actual studentId
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: false // Or true, if backend requires cookies
+      }
+    );
+    console.log("✅ Upload Success:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Error uploading ${docType}:`, error);
+    throw error;
+  }
+}
+
+}
+
+
 
 
   
-}
+
