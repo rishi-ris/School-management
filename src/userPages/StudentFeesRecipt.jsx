@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
+  console.log("🔍 StudentFeesReceipt component rendered with student:", student) ;
   const handlePrint = () => {
     window.print();
   };
@@ -97,27 +98,25 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
             {/* Receipt Content */}
             <Box sx={{ p: 2 , }}>
               <Typography variant="subtitle1">
-                <strong>Name:</strong> {student.name}
+                <strong>Name:</strong> {student.studentName}
               </Typography>
               <Typography variant="subtitle1">
-                <strong>Class:</strong> {student.class}
+                <strong>Class:</strong> {student.className}
+              </Typography>
+              
+              <Typography variant="subtitle1">
+                <strong>Roll No:</strong> {student.rollNumber}
               </Typography>
               <Typography variant="subtitle1">
-                <strong>Section:</strong> {student.section || "-"}
-              </Typography>
-              <Typography variant="subtitle1">
-                <strong>Roll No:</strong> {student.roll}
-              </Typography>
-              <Typography variant="subtitle1">
-                <strong>Total Fees:</strong> ₹{student.total}
+                <strong>Total Fees:</strong> ₹{student.totalFees}
               </Typography>
               <Typography variant="subtitle1">
                 <strong>Paid Fees (after payment):</strong> ₹
-                {parseInt(student.paid || 0) + parseInt(student.fees || 0)}
+                {parseInt(student.totalPaid || 0) + parseInt(student.fees || 0)}
               </Typography>
               <Typography variant="subtitle1">
                 <strong>Due Fees (after payment):</strong> ₹
-                {parseInt(student.due || 0) - parseInt(student.fees || 0)}
+                {parseInt(student.dueFees || 0) - parseInt(student.fees || 0)}
               </Typography>
               <Typography variant="subtitle1">
                 <strong>Amount Paid:</strong> ₹{student.fees}

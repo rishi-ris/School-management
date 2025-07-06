@@ -167,26 +167,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
 
       family: [
   {
-     "": "Father Name",
-            "": "Mother Name",
-            "": null,
-            "": null,
-            "": null,
-            "": null,
-            "": "Guarian name",
-            "": null,
-            "": null,
-            "": "FOCCU",
-            "": "MOCCU",
-            "": "GOCCU",
-            "": "msureshmewara@gmail.com",
-            "": "msureshmewara@gmail.com",
-            "": "msureshmewara@gmail.com",
-            "": null,
-            "": null,
-            "": null,
-            "isSibling": null,
-            "siblingDetails": null,
+    
 
     fatherName: familyData.fatherName || "",
     fatherOccupation: familyData.fatherOccupation || "",
@@ -267,14 +248,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
           data={familyData}
           onChange={(val) => setFamilyData((prev) => ({ ...prev, ...val }))}
         />
-        <StuDocDlg
-          data={documents}
-          onChange={(val) => setDocuments((prev) => ({ ...prev, ...val }))}
-        />
-        <StuPhotosDltDlg
-          data={photos}
-          onChange={(val) => setPhotos((prev) => ({ ...prev, ...val }))}
-        />
+        
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="outlined">Cancel</Button>

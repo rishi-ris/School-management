@@ -4,15 +4,20 @@ import AddStuButton from "./AddStuButton";
 import StuTable from "./StuTable";
 import StuDlgCard from "./StuDlgCard";
 import Network from "../Application/Network";
+import StuDlgDocUpload from "./StuDlgDocUpload";
+import StudentFeesDlg from "./StudentFeesDlg";
 
 const StudentPage = () => {
   const [students, setStudents] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [documentDialogOpen, setDocumentDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [editingStudent, setEditingStudent] = useState(null);
   const [loading, setLoading] = useState(false);
-    const [newStudentId, setNewStudentId] = useState(null); // <-- NEW
-
+  const [newStudentId, setNewStudentId] = useState(null); // <-- NEW
+  const [studentDocuments, setStudentDocuments] = useState(null);
+  const [openFeesDetails, setOpenFeesDetails] = useState(false);
+  const [feesDetails, setFeesDetails] = useState(null);
   const fetchStudents = async () => {
     try {
       setLoading(true);
@@ -41,6 +46,38 @@ const StudentPage = () => {
     setLoading(false);
   }
 };
+const handleFeesDetails = async (stuFeesDetails) => {
+  console.log("Fetching fees details for student ID:", stuFeesDetails);
+  try {
+    setOpenFeesDetails(true);
+    setFeesDetails(stuFeesDetails);
+  } catch (err) {
+    console.error("⚠️ Error loading student fees details:", err);
+    alert("Failed to load student fees details.");
+  } finally {
+    setLoading(false);
+  }
+};
+const handleDocumentsDetails = async (studentId) => {
+  console.log("Fetching documents for student ID:", studentId);
+  try {
+    setLoading(true);
+     setDocumentDialogOpen(true);
+    const response = await Network.getStudentDocuments(studentId); // Replace with your API
+    const studentDocuments = response.data;   
+    setStudentDocuments(studentDocuments);
+    setEditingStudent(studentId ? studentId : null); // Set student ID for document upload
+    // console.log("Documents loaded:", studentDocuments);
+    setNewStudentId(studentId);
+    setDocumentDialogOpen(true);
+  } catch (err) {
+    console.error("⚠️ Error loading student documents:", err);
+    alert("Failed to load student documents.");
+  } finally {
+    setLoading(false);
+  }
+};  
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -70,11 +107,7 @@ const StudentPage = () => {
     setSelectedStudent(student);
     setDialogOpen(true);
   };
-const handleDocumentsDetails = (studentId) => {
-  console.log("Viewing documents for student:", studentId);
-  setSelectedStudent(studentId);
-  setDialogOpen(true);
-};
+
   return (
     <Box p={3}>
       <Box display="flex" justifyContent="space-between" mb={2}>
@@ -90,7 +123,7 @@ const handleDocumentsDetails = (studentId) => {
           <CircularProgress size={40} />
         </Box>
       ) : (
-        <StuTable students={students} onEdit={handleDetails} documentsDetails={handleDocumentsDetails} />
+        <StuTable students={students} onEdit={handleDetails} documentsDetails={handleDocumentsDetails} payFees={handleFeesDetails} />
       )}
 
       <StuDlgCard
@@ -104,6 +137,23 @@ const handleDocumentsDetails = (studentId) => {
           onSave={handleSave}
           student={editingStudent} // pass for edit
       />
+
+      <StuDlgDocUpload
+        open={documentDialogOpen}
+        onClose={() => {
+          setDocumentDialogOpen(false);
+        }}
+        docStudentId={newStudentId} // pass for edit
+        documents={studentDocuments} // pass for edit
+      />
+      <StudentFeesDlg
+        open={openFeesDetails}
+        onClose={() => {
+          setOpenFeesDetails(false);
+        }}
+        student={feesDetails} // pass for edit
+      />
+      
     </Box>
   );
 };

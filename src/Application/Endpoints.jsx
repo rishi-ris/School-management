@@ -1,4 +1,4 @@
-const baseURL = "http://192.168.10.3:8080";
+const baseURL = "http://192.168.10.12:8080";
 
 const Endpoints = {
  getAllRoles: baseURL+"/roles/getRoles",
@@ -11,7 +11,10 @@ const Endpoints = {
   getAllPendingFeesStudents: baseURL+"/students/pending-fees",
   createUser: baseURL + "/users/createUser",
   uploadStudentDocs: baseURL + "/docs",
+  getStudentDocuments: baseURL + "/docs",
   studentDetails: baseURL + "/students/studentDetails",
+  searchStudentFees: baseURL + "/fees/search",
+  saveStudentPayment: baseURL + "/fees/pay",
 };
 
 export default Endpoints;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Typography,
   Box,
@@ -9,54 +9,9 @@ import {
   Slide,
 } from "@mui/material";
 import StudentFeesDetails from "./StudentFeesDetails";
+import Network from "../Application/Network";
+import ClassDropDown from "../component/ClassDropDown";
 
-const dummyData = [
-  {
-    roll: "101",
-    name: "Rishi",
-    class: "10",
-    section: "A",
-    total: "5000",
-    paid: "3000",
-    due: "2000",
-  },
-  {
-    roll: "102",
-    name: "Anshika",
-    class: "9",
-    section: "B",
-    total: "4500",
-    paid: "4500",
-    due: "0",
-  },
-  {
-    roll: "103",
-    name: "Vishal",
-    class: "8",
-    section: "A",
-    total: "4500",
-    paid: "2000",
-    due: "2500",
-  },
-  {
-    roll: "104",
-    name: "Manisha",
-    class: "7",
-    section: "C",
-    total: "4500",
-    paid: "500",
-    due: "4000",
-  },
-  {
-    roll: "105",
-    name: "Ju",
-    class: "6",
-    section: "B",
-    total: "4500",
-    paid: "4500",
-    due: "0",
-  },
-];
 
 const FeesPage = () => {
   const [roll, setRoll] = useState("");
@@ -65,19 +20,41 @@ const FeesPage = () => {
   const [result, setResult] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [slideKey, setSlideKey] = useState(0);
+  const [allClasses, setAllClasses] = useState([]);
 
   const handleSubmit = () => {
-    const filtered = dummyData.find(
-      (item) =>
-        item.roll === roll.trim() &&
-        item.class === className.trim() &&
-        (item.section ? item.section.toLowerCase() : "") ===
-          classSection.trim().toLowerCase()
-    );
-    setResult(filtered || "not-found");
-    setShowDetails(!!filtered);
-    setSlideKey((prev) => prev + 1); // force Slide to remount for animation
+    console.log("🔍 Searching fees for:", { roll, className });
+    Network.searchStudentFees({ rollNumber: roll, className })
+      .then((response) => {
+        setResult(response.data);
+        setShowDetails(true);
+        setSlideKey((prev) => prev + 1);
+      })
+      .catch((err) => {
+        console.error("⚠️ Error searching student fees", err);
+        setResult("not-found");
+      });
   };
+  const handleRollChange = (e) => {
+    setRoll(e.target.value);
+    console.log("Roll number changed:", e.target.value);
+    setShowDetails(false);
+    setResult(null);
+    setSlideKey((prev) => prev + 1);
+  };
+const handleClassSelect = (cls) => {
+    // onClassSelect(cls);
+    setClassName(cls.classId);
+    console.log("Selected class: common dialog", cls);
+    // onClassSelect({ classId: cls });
+  };
+  // ✅ Fetch dropdown data only once
+    useEffect(() => {
+      Network.getAllClasses()
+        .then((response) => setAllClasses(response.data))
+        .catch((err) => console.error("⚠️ Error fetching classes", err));
+  
+    }, []); // ← runs only once
 
   return (
     <Box
@@ -144,22 +121,14 @@ const FeesPage = () => {
               margin="normal"
               label="Roll Number"
               value={roll}
-              onChange={(e) => setRoll(e.target.value)}
+              onChange={(e) => handleRollChange(e)}
             />
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Class"
-              value={className}
-              onChange={(e) => setClassName(e.target.value)}
-            />
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Class Section"
-              value={classSection}
-              onChange={(e) => setClassSection(e.target.value)}
-            />
+            <ClassDropDown
+          roles={allClasses}
+          onSelect={handleClassSelect}
+          
+        />
+           
             <Button
               fullWidth
               variant="contained"

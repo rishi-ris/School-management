@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const StuTable = ({ students, onEdit, documentsDetails }) => {
+const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
   const navigate = useNavigate();
   const gotoTCpage = () => navigate("/tcPage");
 
@@ -21,7 +21,7 @@ const StuTable = ({ students, onEdit, documentsDetails }) => {
             <TableRow>
               <TableCell sx={{ color: "white" }}>Student Name</TableCell>
               <TableCell sx={{ color: "white" }}>Class</TableCell>
-              <TableCell sx={{ color: "white" }}>Paid Fees</TableCell>
+              <TableCell sx={{ color: "white" }}>Total Fees</TableCell>
               <TableCell sx={{ color: "white" }}>Balance Fees</TableCell>
               <TableCell sx={{ color: "white" }}>Action</TableCell>
               <TableCell sx={{ color: "white" }}>Document</TableCell>
@@ -30,16 +30,16 @@ const StuTable = ({ students, onEdit, documentsDetails }) => {
           <TableBody>
             {students.map((student, index) => (
               <TableRow key={index}>
-                <TableCell>{student.fullName}</TableCell>
+                <TableCell>{student.studentName}</TableCell>
                 <TableCell>{student.className}</TableCell>
-                <TableCell>{student.totalFeesPaid}</TableCell>
-                <TableCell>{student.pendingFees}</TableCell>
+                <TableCell>{student.totalFees}</TableCell>
+                <TableCell>{student.dueFees}</TableCell>
                 <TableCell>
                   <Button
                     variant="contained"
                     size="small"
                     color="success"
-                    onClick={() => onEdit(student.studentPin)} // Assuming onDetails is passed as a prop
+                    onClick={() => onEdit(student.studentId)} // Assuming onDetails is passed as a prop
                     sx={{ mx: 1 }}
                   >
                     Details
@@ -57,7 +57,8 @@ const StuTable = ({ students, onEdit, documentsDetails }) => {
                     variant="contained"
                     size="small"
                     color="success"
-                    disabled={student.feesPaid}
+                    disabled={student.dueFees < 0}
+                    onClick={() => payFees(student)}
                   >
                     Pay Fees
                   </Button>
@@ -67,7 +68,7 @@ const StuTable = ({ students, onEdit, documentsDetails }) => {
                     variant="contained"
                     size="small"
                     color="success"
-                    onClick={() => documentsDetails(student.studentPin)}
+                    onClick={() => documentsDetails(student.studentId)}
                   >
                     Document
                   </Button>

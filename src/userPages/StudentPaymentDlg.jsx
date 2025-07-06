@@ -26,10 +26,10 @@ const StudentPaymentDlg = ({
   const [error, setError] = useState("");
   const [methodError, setMethodError] = useState("");
 
-  const due = student ? parseInt(student.due, 10) : 0;
-  const paid = student ? parseInt(student.paid, 10) : 0;
-  const total = student ? parseInt(student.total, 10) : 0;
-  const entered = amount ? parseInt(amount, 10) : 0;
+  const due = student ? parseFloat(student.dueFees, 10) : 0;
+  const paid = student ? parseFloat(student.totalPaid, 10) : 0;
+  const total = student ? parseFloat(student.totalFees, 10) : 0;
+  const entered = amount ? parseFloat(amount, 10) : 0;
   const remaining = due - entered >= 0 ? due - entered : due;
 
   const handleAmountChange = (e) => {
