@@ -1,4 +1,4 @@
-const baseURL = "http://192.168.1.11:8080"; // Use this for local development
+const baseURL = "http://192.168.10.12:8080"; // Use this for local development
 const Endpoints = {
   getAllRoles: baseURL + "/roles/getRoles",
   getAllClasses: baseURL + "/classes/getAllClasses",

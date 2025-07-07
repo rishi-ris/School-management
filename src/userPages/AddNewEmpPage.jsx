@@ -6,9 +6,11 @@ import {
   Button,
   Snackbar,
   Alert,
+  Box,
 } from "@mui/material";
 import RoleDropdown from "../component/RoleDropdown";
 import Network from "../Application/Network";
+import Sidekick from "../component/Sidekick";
 
 // 🟦 Initial form state (used for resetting)
 const initialFormState = {
@@ -118,7 +120,10 @@ const AddNewEmpPage = () => {
   ];
 
   return (
+    <Box>
+      <Sidekick/>
     <Grid container spacing={2} sx={{ marginTop: "20px" }}>
+      
       {/* Custom Role Dropdown */}
       <Grid item xs={12} sm={6}>
         <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId} />
@@ -164,6 +169,8 @@ const AddNewEmpPage = () => {
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
     </Grid>
+        </Box>
+
   );
 };
 

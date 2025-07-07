@@ -31,7 +31,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         gender: student.gender,
         rollNumber: student.rollNumber,
         scholarNumber: student.scholarNumber,
-        firstName: student.firstName, 
+        firstName: student.firstName,
         lastName: student.lastName,
         contactNumber: student.contactNumber,
         // dob: student.dob,
@@ -46,39 +46,43 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         totalFees: student.totalFees,
         prevSchool: student.prevSchool,
         prevEduBoard: student.prevEduBoard,
-        isDisable: student.isDisable,
+        // isDisable: student.isDisable,
         createdBy: student.createdBy,
         createdAt: student.createdAt,
         updatedAt: student.updatedAt,
         schoolClass: student.schoolClass,
         role: student.role,
         fees: student.fees || [],
-        
+
         documents: student.documents || [],
-        photos: student.photos || {}
+        photos: student.photos || {},
       });
-setFamilyData(student.family && student.family.length > 0 ? student.family[0] : {
-        fatherName: "",
-        fatherOccupation: "",
-        fatherContactNumber: "",
-        fatherEmail: "",
-        motherName: "",
-        motherOccupation: "",
-        motherContactNumber: "",
-        motherEmail: "",
-        guardianName: null,
-        guardianOccupation: null,
-        guardianContactNumber: null,
-        guardianEmail: null,
-        guardianRelation: null,
-        createdBy: "admin"
-      }); 
+      setFamilyData(
+        student.family && student.family.length > 0
+          ? student.family[0]
+          : {
+              fatherName: "",
+              fatherOccupation: "",
+              fatherContactNumber: "",
+              fatherEmail: "",
+              motherName: "",
+              motherOccupation: "",
+              motherContactNumber: "",
+              motherEmail: "",
+              guardianName: null,
+              guardianOccupation: null,
+              guardianContactNumber: null,
+              guardianEmail: null,
+              guardianRelation: null,
+              createdBy: "admin",
+            }
+      );
       setPersonalData({
         caste: student.caste,
         religion: student.religion,
         nationality: student.nationality,
         motherToungue: student.motherToungue,
-        isDisable: student.isDisable,
+        // isDisable: student.isDisable,
         sssmidNum: student.sssmidNum,
         aadharCardNum: student.aadharCardNum,
         rationCardNum: student.rationCardNum,
@@ -91,7 +95,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
         enrollmentNumber: student.enrollmentNumber,
         bloodGroup: student.bloodGroup,
         medicalHistory: student.medicalHistory,
-        createdBy: student.createdBy
+        createdBy: student.createdBy,
       });
 
       setDocuments({ ...student.documents });
@@ -104,8 +108,185 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
 
   const getTimestamp = () => new Date().toISOString();
 
+  
+
   const handleSubmit = () => {
     console.log("Submitting student data:", familyData);
+    const requiredFields = [
+      // { key: "classId", value: selectedClass.classId, label: "Class" },
+      { key: "role", value: selectedRole, label: "Role" },
+      { key: "username", value: commonData.username, label: "Username" },
+      { key: "password", value: commonData.password, label: "Password" },
+      { key: "gender", value: commonData.gender, label: "Gender" },
+      { key: "rollNumber", value: commonData.rollNumber, label: "Roll Number" },
+      {
+        key: "scholarNumber",
+        value: commonData.scholarNumber,
+        label: "Scholar Number",
+      },
+      // { key: "classId", value: commonData.classId, label: "Class ID" },
+      { key: "firstName", value: commonData.firstName, label: "First Name" },
+      { key: "lastName", value: commonData.lastName, label: "Last Name" },
+      {
+        key: "contactNumber",
+        value: commonData.contactNumber,
+        label: "Contact Number",
+      },
+      { key: "dOB", value: commonData.dOB, label: "Date of Birth" },
+      { key: "address", value: commonData.address, label: "Address" },
+      { key: "city", value: commonData.city, label: "City" },
+      { key: "state", value: commonData.state, label: "State" },
+      { key: "pinCode", value: commonData.pinCode, label: "Pin Code" },
+      { key: "country", value: commonData.country, label: "Country" },
+      { key: "status", value: commonData.status, label: "Status" },
+      { key: "totalFees", value: commonData.totalFees, label: "Total Fees" },
+      {
+        key: "fatherName",
+        value: familyData.fatherName,
+        label: "Father's Name",
+      },
+      {
+        key: "motherName",
+        value: familyData.motherName,
+        label: "Mother's Name",
+      },
+      {
+        key: "guardianName",
+        value: familyData.guardianName,
+        label: "Guardian's Name",
+      },
+      {
+        key: "fatherOccupation",
+        value: familyData.fatherOccupation,
+        label: "Father's Occupation",
+      },
+      {
+        key: "motherOccupation",
+        value: familyData.motherOccupation,
+        label: "Mother's Occupation",
+      },
+      {
+        key: "guardianOccupation",
+        value: familyData.guardianOccupation,
+        label: "Guardian's Occupation",
+      },
+      {
+        key: "fatherPhone",
+        value: familyData.fatherPhone,
+        label: "Father's Phone",
+      },
+      {
+        key: "motherPhone",
+        value: familyData.motherPhone,
+        label: "Mother's Phone",
+      },
+      {
+        key: "guardianPhone",
+        value: familyData.guardianPhone,
+        label: "Guardian's Phone",
+      },
+      {
+        key: "fatherEmail",
+        value: familyData.fatherEmail,
+        label: "Father's Email",
+      },
+      {
+        key: "motherEmail",
+        value: familyData.motherEmail,
+        label: " Mother's Email",
+      },
+      {
+        key: "guardianEmail",
+        value: familyData.guardianEmail,
+        label: "Guardian's Email",
+      },
+      {
+        key: "fatherAadharNum",
+        value: familyData.fatherAadharNum,
+        label: "Father's Aadhar Number",
+      },
+      {
+        key: "motherAadharNum",
+        value: familyData.motherAadharNum,
+        label: "Mother's Aadhar Number",
+      },
+      {
+        key: "guardianAadharNum",
+        value: familyData.guardianAadharNum,
+        label: "Guardian's Aadhar Number",
+      },
+      {
+        key: "fatherEducation",
+        value: familyData.fatherEducation,
+        label: "     Father's Education",
+      },
+      {
+        key: "motherEducation",
+        value: familyData.motherEducation,
+        label: "Mother's Education",
+      },
+      {
+        key: "guardianEducation",
+        value: familyData.guardianEducation,
+        label: "Guardian's Education",
+      },
+      { key: "caste", value: personalData.caste, label: "Caste" },
+      { key: "religion", value: personalData.religion, label: "Religion" },
+      {
+        key: "nationality",
+        value: personalData.nationality,
+        label: "Nationality",
+      },
+      {
+        key: "motherToungue",
+        value: personalData.motherToungue,
+        label: "Mother Tongue",
+      },
+      // { key: "isDisable", value: personalData.isDisable, label: "Is Disabled" },
+      {
+        key: "disabilityType",
+        value: personalData.disabilityType,
+        label: "Disability Type",
+      },
+      {
+        key: "medicalHistory",
+        value: personalData.medicalHistory,
+        label: "Medical History",
+      },
+
+      { key: "apaarId", value: personalData.apaarId, label: "Aapaar ID" },
+      {
+        key: "prevSchool",
+        value: personalData.prevSchool,
+        label: "Previous School",
+      },
+      {
+        key: "prevEduBoard",
+        value: personalData.prevEduBoard,
+        label: "Previous Education Board",
+      },
+      {
+        key: "registrationNumber",
+        value: personalData.registrationNumber,
+        label: "Registration Number",
+      },
+      {
+        key: "enrollmentNumber",
+        value: personalData.enrollmentNumber,
+        label: "Enrollment Number",
+      },
+      {
+        key: "bloodGroup",
+        value: personalData.bloodGroup,
+        label: "Blood Group",
+      },
+    ];
+    for (let field of requiredFields) {
+      if (!field.value) {
+        alert(`${field.label} is required.`);
+        return;
+      }
+    }
     const transformedStudent = {
       username: commonData.username,
       password: commonData.password,
@@ -126,7 +307,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
       religion: personalData.religion,
       nationality: personalData.nationality,
       motherToungue: personalData.motherToungue,
-      isDisable: personalData.isDisable ?? null,
+      // isDisable: personalData.isDisable ?? null,
       sssmidNum: documents.sssmid ?? null,
       aadharCardNum: documents.aadharCard ?? null,
       rationCardNum: documents.rationCard ?? null,
@@ -161,60 +342,60 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
           paidAmount: "0",
           status: "partial",
           createdAt: getTimestamp(),
-          updatedAt: getTimestamp()
-        }
+          updatedAt: getTimestamp(),
+        },
       ],
 
       family: [
-  {
-    
+        {
+          fatherName: familyData.fatherName || "",
+          fatherOccupation: familyData.fatherOccupation || "",
+          fatherPhone: familyData.fatherPhone || "",
+          fatherEmail: familyData.fatherEmail || "",
+          fatherAadharNum: familyData.fatherAadharNum || null,
+          fatherEducation: familyData.fatherEducation || null,
 
-    fatherName: familyData.fatherName || "",
-    fatherOccupation: familyData.fatherOccupation || "",
-    fatherPhone: familyData.fatherPhone || "",
-    fatherEmail: familyData.fatherEmail || "",
-    fatherAadharNum: familyData.fatherAadharNum || null,
-    fatherEducation: familyData.fatherEducation || null,
+          motherAadharNum: familyData.motherAadharNum || null,
+          motherName: familyData.motherName || "",
+          motherOccupation: familyData.motherOccupation || "",
+          motherPhone: familyData.motherPhone || "",
+          motherEmail: familyData.motherEmail || "",
+          motherEducation: familyData.motherEducation || null,
 
-    motherAadharNum: familyData.motherAadharNum || null,
-    motherName: familyData.motherName || "",
-    motherOccupation: familyData.motherOccupation || "",
-    motherPhone: familyData.motherPhone || "",
-    motherEmail: familyData.motherEmail || "",
-    motherEducation: familyData.motherEducation || null,
+          guardianName: familyData.guardianName || null,
+          guardianOccupation: familyData.guardianOccupation || null,
+          guardianPhone: familyData.guardianPhone || null,
+          guardianEmail: familyData.guardianEmail || null,
+          guardianRelation: familyData.guardianRelation || null,
+          guardianAadharNum: familyData.guardianAadharNum || null,
+          guardianEducation: familyData.guardianEducation || null,
+          isSibling: familyData.isSibling || null,
+          siblingDetails: familyData.siblingDetails || null,
+          createdBy: "admin",
+        },
+      ],
 
-    guardianName: familyData.guardianName || null,
-    guardianOccupation: familyData.guardianOccupation || null,
-    guardianPhone: familyData.guardianPhone || null,
-    guardianEmail: familyData.guardianEmail || null,
-    guardianRelation: familyData.guardianRelation || null,
-    guardianAadharNum: familyData.guardianAadharNum || null,
-    guardianEducation: familyData.guardianEducation || null,
-    isSibling: familyData.isSibling || null,
-    siblingDetails: familyData.siblingDetails || null,
-   createdBy: "admin"
-  }
-],
-
-      documents: [{
-        aadharCard: documents.aadharCard,
-        panCard: documents.panCard,
-        sssmid: documents.sssmid,
-        casteCertificate: documents.casteCertificate,
-        incomeCertificate: documents.incomeCertificate,
-        domicileCertificate: documents.domicileCertificate,
-        transferCertificate: documents.transferCertificate,
-        migrationCertificate: documents.migrationCertificate,
-        characterCertificate: documents.characterCertificate,
-        previousMarksheet: documents.previousMarksheet,
-        disabilityCertificate: documents.disabilityCertificate,
-        rationCard: documents.rationCard,
-        admissionForm: documents.admissionForm,
-        passbook: documents.passbook,
-        createdBy: "admin",
-        createdAt: getTimestamp(),
-        updatedAt: getTimestamp()
-      }],
+      documents: [
+        {
+          aadharCard: documents.aadharCard,
+          panCard: documents.panCard,
+          sssmid: documents.sssmid,
+          casteCertificate: documents.casteCertificate,
+          incomeCertificate: documents.incomeCertificate,
+          domicileCertificate: documents.domicileCertificate,
+          transferCertificate: documents.transferCertificate,
+          migrationCertificate: documents.migrationCertificate,
+          characterCertificate: documents.characterCertificate,
+          previousMarksheet: documents.previousMarksheet,
+          disabilityCertificate: documents.disabilityCertificate,
+          rationCard: documents.rationCard,
+          admissionForm: documents.admissionForm,
+          passbook: documents.passbook,
+          createdBy: "admin",
+          createdAt: getTimestamp(),
+          updatedAt: getTimestamp(),
+        },
+      ],
 
       photos: {
         studentPhoto: photos.studentPhoto,
@@ -223,27 +404,35 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
         guardianPhoto: photos.guardianPhoto ?? null,
         createdBy: "admin",
         createdAt: getTimestamp(),
-        updatedAt: getTimestamp()
-      }
+        updatedAt: getTimestamp(),
+      },
     };
 
     onSave(transformedStudent);
   };
-// ✅ Format date from yyyy-mm-dd to dd/MM/yyyy
+  // ✅ Format date from yyyy-mm-dd to dd/MM/yyyy
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
   };
+  
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Add New Student</DialogTitle>
       <DialogContent dividers>
-        <StuCommonDtlDlg
+        <StuCommonDtlDlg 
           data={commonData}
           onChange={(val) => setCommonData((prev) => ({ ...prev, ...val }))}
-          onClassSelect={(cls) => {console.log("Selected class 1:", cls); setSelectedClass(cls);}}
-          onRoleSelect={(role) => {console.log("Selected role:", role); setSelectedRole(role);}}
+          onClassSelect={(cls) => {
+            console.log("Selected class 1:", cls);
+            setSelectedClass(cls);
+          }}
+          onRoleSelect={(role) => {
+            console.log("Selected role:", role);
+            setSelectedRole(role);
+          }}
         />
         <StuPersonalDltDlg
           data={personalData}
@@ -253,11 +442,14 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
           data={familyData}
           onChange={(val) => setFamilyData((prev) => ({ ...prev, ...val }))}
         />
-        
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant="outlined">Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">Save</Button>
+        <Button onClick={onClose} variant="outlined">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} variant="contained">
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
