@@ -47,7 +47,20 @@ export default class Network {
       throw error;
     }
   }
-
+  //update student
+  static async updateStudent(studentData) {
+    try {
+      const response = await axios.put(
+        `${Endpoints.updateStudent}/${studentData.studentPin}`,
+        studentData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Update student error:", error);
+      throw error;
+    }
+  }
  //get All Students
   static async getAllStudents() {
     try {
@@ -260,9 +273,31 @@ static async saveStudentPayment(paymentPayload) {
     throw error;
   }   
 }
+static async addSubject(subjectData) {
+  try {
+    const response = await axios.post(
+      Endpoints.addSubject,
+      subjectData,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response;
+  } catch (error) {
+    console.error("⚠️ Add subject error:", error);
+    throw error;
+  }   
 }
-
-
-
+static async getAllSubjects() {
+  try {
+    const response = await axios.get(
+      Endpoints.getAllSubjects,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response;
+  } catch (error) {
+    console.error("⚠️ Get all subjects error:", error);
+    throw error;
+  }   
+}
+}
   
 

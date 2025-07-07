@@ -162,6 +162,9 @@ const AdminUsers = () => {
              <ListItem button onClick={() => navigate("/timetable")}>
               <ListItemText primary="Timetable" />
             </ListItem>
+            <ListItem button onClick={() => navigate("/subjectManager")}>
+              <ListItemText primary="Subject Manager" />
+            </ListItem>
             <ListItem button  onClick={() => navigate("/")}>
               <ListItemText primary="Logout" />
             </ListItem>

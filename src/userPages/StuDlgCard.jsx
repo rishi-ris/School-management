@@ -25,6 +25,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   useEffect(() => {
     console.log("Received student data:", student);
     if (student) {
+      
       setCommonData({
         username: student.username,
         password: student.password,
@@ -34,8 +35,14 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         firstName: student.firstName, 
         lastName: student.lastName,
         contactNumber: student.contactNumber,
+        classId: student.classId,
+        className: student.className,
+        roleId: student.roleId,
+        classId: student.classId,
+        studentPin: student.studentPin || null,
+        
         // dob: student.dob,
-        dOB: student.dOB,
+        dOB: student.dob,
         address: student.address,
         city: student.city,
         state: student.state,
@@ -107,19 +114,20 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
   const handleSubmit = () => {
     console.log("Submitting student data:", familyData);
     const transformedStudent = {
+      studentPin: student?.studentPin || null,
       username: commonData.username,
       password: commonData.password,
       gender: commonData.gender,
       rollNumber: commonData.rollNumber,
       scholarNumber: commonData.scholarNumber,
       schoolClass: selectedClass.classId,
-      className: selectedClass.classId.classId,
+      className: selectedClass.classId.className,
       classId: selectedClass.classId.classId,
       role: selectedRole.roleId,
       firstName: commonData.firstName,
       lastName: commonData.lastName,
       contactNumber: commonData.contactNumber,
-      dOB: formatDate(commonData.dOB),
+      dOB: (commonData.dOB),
       // dob: formatDate(commonData.dob),/
       address: commonData.address,
       caste: personalData.caste,
@@ -226,7 +234,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
         updatedAt: getTimestamp()
       }
     };
-
+    console.log("Transformed student data:", transformedStudent);
     onSave(transformedStudent);
   };
 // ✅ Format date from yyyy-mm-dd to dd/MM/yyyy

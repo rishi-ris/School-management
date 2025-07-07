@@ -83,13 +83,13 @@ const handleDocumentsDetails = async (studentId) => {
   }, []);
 
   const handleSave = async (flatData) => {
-    console.log("Saving student data:", flatData.family[0]);
+    console.log("Saving student data:", flatData);
 
 
 
     try {
       setLoading(true);
-      await Network.createStudent(flatData);
+      flatData?.studentPin ? await Network.updateStudent(flatData) : await Network.createStudent(flatData);
       alert("✅ Student saved!");
       await fetchStudents();
       setDialogOpen(false);

@@ -11,7 +11,7 @@ const fields = [
 ];
 
 const StuCommonDtlDlg = ({ data, onChange, onClassSelect, onRoleSelect }) => {
-
+console.log("StuCommonDtlDlg rendered with data:", data);
   // ✅ Only initialize empty form once
   useEffect(() => {
     if (!data || Object.keys(data).length === 0) {
@@ -43,12 +43,14 @@ const StuCommonDtlDlg = ({ data, onChange, onClassSelect, onRoleSelect }) => {
     <Grid container spacing={2} mt={1}>
       <Grid item xs={12} sm={6}>
         <ClassDropDown
+        selectedClassId={data?.classId || ""}
           onSelect={handleClassSelect}
           value={data?.classId || ""}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
         <RoleDropdown
+        selectedRoleId={data?.roleId || ""}
           onSelect={handleRoleSelect}
           value={data?.roleId || ""}
         />
