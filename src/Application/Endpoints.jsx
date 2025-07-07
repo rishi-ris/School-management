@@ -1,14 +1,13 @@
-const baseURL = "http://192.168.10.12:8080";
-
+const baseURL = "http://192.168.1.11:8080"; // Use this for local development
 const Endpoints = {
- getAllRoles: baseURL+"/roles/getRoles",
- getAllClasses: baseURL+"/classes/getAllClasses",
-  loginUrl: baseURL+"/users/login",
-  studentLoginUrl: baseURL+"/students/login",
-  createStudent: baseURL+"/students/createStudent",
-  getAllStudents: baseURL+"/students/getAllStudents",
-  getAllUsers: baseURL+"/users/getAllUsers",
-  getAllPendingFeesStudents: baseURL+"/students/pending-fees",
+  getAllRoles: baseURL + "/roles/getRoles",
+  getAllClasses: baseURL + "/classes/getAllClasses",
+  loginUrl: baseURL + "/users/login",
+  studentLoginUrl: baseURL + "/students/login",
+  createStudent: baseURL + "/students/createStudent",
+  getAllStudents: baseURL + "/students/getAllStudents",
+  getAllUsers: baseURL + "/users/getAllUsers",
+  getAllPendingFeesStudents: baseURL + "/students/pending-fees",
   createUser: baseURL + "/users/createUser",
   uploadStudentDocs: baseURL + "/docs",
   getStudentDocuments: baseURL + "/docs",

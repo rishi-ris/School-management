@@ -31,11 +31,11 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         gender: student.gender,
         rollNumber: student.rollNumber,
         scholarNumber: student.scholarNumber,
-        firstName: student.firstName,
+        firstName: student.firstName, 
         lastName: student.lastName,
         contactNumber: student.contactNumber,
-        dob: student.dob,
-        dOB: student.dob,
+        // dob: student.dob,
+        dOB: student.dOB,
         address: student.address,
         city: student.city,
         state: student.state,
@@ -119,8 +119,8 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
       firstName: commonData.firstName,
       lastName: commonData.lastName,
       contactNumber: commonData.contactNumber,
-      dOB: commonData.dOB,
-      dob: commonData.dOB,
+      dOB: formatDate(commonData.dOB),
+      // dob: formatDate(commonData.dob),/
       address: commonData.address,
       caste: personalData.caste,
       religion: personalData.religion,
@@ -229,7 +229,12 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
 
     onSave(transformedStudent);
   };
-
+// ✅ Format date from yyyy-mm-dd to dd/MM/yyyy
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  };
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Add New Student</DialogTitle>

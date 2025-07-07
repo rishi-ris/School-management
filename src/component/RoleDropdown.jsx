@@ -1,19 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import Network from "../Application/Network";
 
-const RoleDropdown = ({ roles, onSelect }) => {
+const RoleDropdown = ({ onSelect }) => {
  const [selectedRoleId, setSelectedRoleId] = useState('');
+   const [allRoles, setAllRoles] = useState([]);
 
    const handleChange = (event) => {
      const selectedId = event.target.value;
-     const selectedRoleObj = roles.find(role => role.roleId === selectedId);
+     const selectedRoleObj = allRoles.find(role => role.roleId === selectedId);
 
      setSelectedRoleId(selectedId);
      if (selectedRoleObj) {
        onSelect(selectedRoleObj); // ✅ Send full object
      }
    };
-
+// ✅ Fetch dropdown data only once
+  useEffect(() => {
+    Network.getAllRoles()
+      .then((response) => setAllRoles(response.data))
+      .catch((err) => console.error("⚠️ Error fetching roles", err));
+  }, []); // ← runs only once
    return (
      <Box sx={{ minWidth: 200 }}>
        <FormControl fullWidth>
@@ -25,7 +32,7 @@ const RoleDropdown = ({ roles, onSelect }) => {
            label="Select Role"
            onChange={handleChange}
          >
-           {roles.map((role) => (
+           {allRoles.map((role) => (
              <MenuItem key={role.roleId} value={role.roleId}>
                {role.title}
              </MenuItem>

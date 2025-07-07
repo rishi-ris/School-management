@@ -20,7 +20,7 @@ const FeesPage = () => {
   const [result, setResult] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [slideKey, setSlideKey] = useState(0);
-  const [allClasses, setAllClasses] = useState([]);
+
 
   const handleSubmit = () => {
     console.log("🔍 Searching fees for:", { roll, className });
@@ -49,12 +49,7 @@ const handleClassSelect = (cls) => {
     // onClassSelect({ classId: cls });
   };
   // ✅ Fetch dropdown data only once
-    useEffect(() => {
-      Network.getAllClasses()
-        .then((response) => setAllClasses(response.data))
-        .catch((err) => console.error("⚠️ Error fetching classes", err));
-  
-    }, []); // ← runs only once
+   
 
   return (
     <Box
@@ -124,11 +119,8 @@ const handleClassSelect = (cls) => {
               onChange={(e) => handleRollChange(e)}
             />
             <ClassDropDown
-          roles={allClasses}
-          onSelect={handleClassSelect}
-          
-        />
-           
+              onSelect={handleClassSelect}
+            />
             <Button
               fullWidth
               variant="contained"

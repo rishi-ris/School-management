@@ -1,134 +1,138 @@
-// import React, { useEffect } from "react";
-// import { Grid, TextField } from "@mui/material";
-// import Network from "../Application/Network";
-
-// const fields = [
-//   "username", "password", "role", "gender", "firstName", "lastName", "contactNumber", "dOB",
-//   "address", "city", "state", "pinCode", "country", "status",
-// ];
-
-// const AddNewEmpPage = () => {
-//   const [allUsers, getAllUsers] = React.useState([]);
-//   useEffect(() => {
-//     // Network.getAllUsers()
-//     //   .then(response => {
-//     //     console.log("Employees fetched successfully:", response.data);
-//     //     getAllUsers(response.data);
-//     //   })
-//     //   .catch(error => {
-//     //     console.error("⚠️ Error fetching employees:", error);
-//     //   });
-   
-//     // // Initialize data if not provided
-//     // if (!data) {
-//     //   const initialData = {};
-//     //   fields.forEach(field => {
-//     //     initialData[field] = "";
-//     //   });
-//     //   onChange(initialData);
-//     // }
-//   }, []);
-
-
-//   const handleInputChange = (e) => {
-//     console.log({ [e.target.name]: e.target.value });
-//   };
-//   return (
-//     <Grid container spacing={2} mt={1}>
-//       {fields.map((field) => (
-//         <Grid item xs={12} sm={6} key={field}>
-//           <TextField
-//             fullWidth
-//             label={field.replace(/([A-Z])/g, " $1").replace(/^\w/, c => c.toUpperCase())}
-//             name={field}
-            
-//             onChange={handleInputChange}
-//           />
-//         </Grid>
-//       ))}
-//     </Grid>
-//   );
-// };
-
-// export default AddNewEmpPage;
-
-
-
-
-
-
-
-import React, { useEffect, useState } from "react";
-import { Grid, TextField, MenuItem, Button } from "@mui/material";
-import Network from "../Application/Network";
+import React, { useState } from "react";
+import {
+  Grid,
+  TextField,
+  MenuItem,
+  Button,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import RoleDropdown from "../component/RoleDropdown";
+import Network from "../Application/Network";
+
+// 🟦 Initial form state (used for resetting)
+const initialFormState = {
+  username: "",
+  password: "",
+  roleId: "",
+  gender: "",
+  firstName: "",
+  lastName: "",
+  contactNumber: "",
+  dOB: "",
+  address: "",
+  city: "",
+  state: "",
+  pinCode: "",
+  country: "",
+  status: "",
+};
 
 const AddNewEmpPage = () => {
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-    roleId: "",
-    gender: "",
-    firstName: "",
-    lastName: "",
-    contactNumber: "",
-    dOB: "",
-    address: "",
-    city: "",
-    state: "",
-    pinCode: "",
-    country: "",
-    status: "",
+  const [form, setForm] = useState(initialFormState);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
   });
-  const [roles, setRoles] = useState([]);
-
- useEffect(() => {
-    const fetchRoles = async () => {
-      const response = await Network.getAllRoles();
-      if (response.status === 200) {
-        setRoles(response.data);
-      } else {
-        console.error("Failed to fetch roles");
-      }
-    };
-    fetchRoles();
-  }, []);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-  const onRolesSelect = (roleId) => {
-     console.log("Selected Role ID:", roleId);
-
-  };
 
   const genders = ["male", "female"];
   const statuses = ["active", "inactive"];
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const onRolesSelect = (roleId) => {
+    setForm({ ...form, roleId });
+  };
+
+  // ✅ Format date from yyyy-mm-dd to dd/MM/yyyy
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleSubmit = async () => {
+    const payload = {
+      username: form.username,
+      password: form.password,
+      role: {
+        roleId: form.roleId?.roleId || form.roleId, // support object or ID directly
+      },
+      gender: form.gender,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      contactNumber: form.contactNumber,
+      dOB: (form.dOB),
+      address: form.address,
+      city: form.city,
+      state: form.state,
+      pinCode: form.pinCode,
+      country: form.country,
+      status: form.status,
+      createdBy: "system",
+    };
+
+    try {
+      const response = await Network.addNewUser(payload);
+      if (response.status === 200 || response.status === 201) {
+        setSnackbar({
+          open: true,
+          message: "User created successfully!",
+          severity: "success",
+        });
+        setForm(initialFormState); // 🔄 Reset the form here
+      } else {
+        setSnackbar({
+          open: true,
+          message: "Failed to create user.",
+          severity: "error",
+        });
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "API Error: " + error.message,
+        severity: "error",
+      });
+    }
+  };
+
+  const formFields = [
+    { name: "username", label: "Username" },
+    { name: "password", label: "Password", type: "password" },
+    { name: "gender", label: "Gender", select: true, options: genders },
+    { name: "firstName", label: "First Name" },
+    { name: "lastName", label: "Last Name" },
+    { name: "contactNumber", label: "Contact Number" },
+    { name: "dOB", label: "D O B", type: "date" },
+    { name: "address", label: "Address" },
+    { name: "city", label: "City" },
+    { name: "state", label: "State" },
+    { name: "pinCode", label: "Pin Code" },
+    { name: "country", label: "Country" },
+    { name: "status", label: "Status", select: true, options: statuses },
+  ];
+
   return (
-    <Grid container spacing={2} sx={{ display: "flex", flexDirection: "row", marginTop: "20px" }}>
-      {[
-        { name: "username", label: "Username" },
-        { name: "password", label: "Password" },
-        { name: "roleId", label: "Role", select: true, options: <RoleDropdown roles={roles} onSelect={onRolesSelect} /> },
-        { name: "gender", label: "Gender", select: true, options: genders },
-        { name: "firstName", label: "First Name" },
-        { name: "lastName", label: "Last Name" },
-        { name: "contactNumber", label: "Contact Number" },
-        { name: "dOB", label: "D O B",type: "date" },
-        { name: "address", label: "Address" },
-        { name: "city", label: "City" },
-        { name: "state", label: "State" },
-        { name: "pinCode", label: "Pin Code" },
-        { name: "country", label: "Country" },
-        { name: "status", label: "Status", select: true, options: statuses },
-      ].map(({ name, label, select, options, type }) => (
+    <Grid container spacing={2} sx={{ marginTop: "20px" }}>
+      {/* Custom Role Dropdown */}
+      <Grid item xs={12} sm={6}>
+        <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId} />
+      </Grid>
+
+      {/* Dynamic Form Fields */}
+      {formFields.map(({ name, label, select, options, type }) => (
         <Grid item xs={12} sm={6} key={name}>
-          <TextField sx={{width:"200px"}}
+          <TextField
+            sx={{ width: "200px" }}
             fullWidth
             label={label}
             name={name}
-            type={type === "date" ? "date" : "text"}
+            type={type === "date" ? "date" : type || "text"}
             value={form[name]}
             onChange={handleChange}
             InputLabelProps={type === "date" ? { shrink: true } : {}}
@@ -141,10 +145,24 @@ const AddNewEmpPage = () => {
                 </MenuItem>
               ))}
           </TextField>
-          
         </Grid>
       ))}
-      <Button variant="contained" >Summit</Button>
+
+      <Grid item xs={12}>
+        <Button variant="contained" onClick={handleSubmit}>
+          Submit
+        </Button>
+      </Grid>
+
+      {/* Snackbar Feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+      </Snackbar>
     </Grid>
   );
 };

@@ -10,6 +10,7 @@ import ParentsUsers from './userPages/ParentsUsers';
 import FeesPage from './userPages/FeesPage';
 import TcPage from './userPages/TcPage';
 import AddNewEmpPage from './userPages/AddNewEmpPage';
+import TimeTablePage from './component/TimeTablePage';
 function App() {
   return (
     <Routers>
@@ -23,7 +24,8 @@ function App() {
         <Route path='/parentsusers' element={<ParentsUsers/>}></Route>
         <Route path="/fees" element={<FeesPage />} />
         <Route path='/tcPage' element={<TcPage/>}></Route>
-        {/* <Route path='/newEmployee' element={<AddNewEmpPage/>}></Route> */}
+        <Route path='/newEmployee' element={<AddNewEmpPage/>}></Route>
+        <Route path='/timetable' element={<TimeTablePage/>}></Route>
 
       </Routes>
     </Routers>

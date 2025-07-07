@@ -11,19 +11,6 @@ const fields = [
 ];
 
 const StuCommonDtlDlg = ({ data, onChange, onClassSelect, onRoleSelect }) => {
-  const [allClasses, setAllClasses] = useState([]);
-  const [allRoles, setAllRoles] = useState([]);
-
-  // ✅ Fetch dropdown data only once
-  useEffect(() => {
-    Network.getAllClasses()
-      .then((response) => setAllClasses(response.data))
-      .catch((err) => console.error("⚠️ Error fetching classes", err));
-
-    Network.getAllRoles()
-      .then((response) => setAllRoles(response.data))
-      .catch((err) => console.error("⚠️ Error fetching roles", err));
-  }, []); // ← runs only once
 
   // ✅ Only initialize empty form once
   useEffect(() => {
@@ -56,14 +43,12 @@ const StuCommonDtlDlg = ({ data, onChange, onClassSelect, onRoleSelect }) => {
     <Grid container spacing={2} mt={1}>
       <Grid item xs={12} sm={6}>
         <ClassDropDown
-          roles={allClasses}
           onSelect={handleClassSelect}
           value={data?.classId || ""}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
         <RoleDropdown
-          roles={allRoles}
           onSelect={handleRoleSelect}
           value={data?.roleId || ""}
         />

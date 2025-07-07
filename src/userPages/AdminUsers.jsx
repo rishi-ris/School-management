@@ -159,6 +159,9 @@ const AdminUsers = () => {
              <ListItem button onClick={() => navigate("/newEmployee")}>
               <ListItemText primary="Add New Employee" />
             </ListItem>
+             <ListItem button onClick={() => navigate("/timetable")}>
+              <ListItemText primary="Timetable" />
+            </ListItem>
             <ListItem button  onClick={() => navigate("/")}>
               <ListItemText primary="Logout" />
             </ListItem>

@@ -18,20 +18,9 @@ const Logify = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [roles, setRoles] = useState([]);
   const [onRolesSelectChange, setOnRolesSelectChange] = useState("");
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      const response = await Network.getAllRoles();
-      if (response.status === 200) {
-        setRoles(response.data);
-      } else {
-        console.error("Failed to fetch roles");
-      }
-    };
-    fetchRoles();
-  }, []);
+
 
    const onRolesSelect = (roleId) => {
      console.log("Selected Role ID:", roleId.roleId);
@@ -133,7 +122,7 @@ const Logify = () => {
           <Typography variant="h5" align="center" gutterBottom>
             Login to Your Account
           </Typography>
-          <RoleDropdown roles={roles} onSelect={onRolesSelect} />
+          <RoleDropdown onSelect={onRolesSelect} />
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
             <TextField
               fullWidth
