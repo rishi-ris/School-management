@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import MultiSelClassDropD from '../component/MultiSelClassDropD';
 import Network from '../Application/Network';
+import Sidekick from '../component/Sidekick';
 
 const SubjectManager = () => {
   const [open, setOpen] = useState(false);
@@ -82,7 +83,11 @@ const SubjectManager = () => {
   };
 
   return (
+    <Box>
+       <Sidekick/>
+    
     <Box p={3}>
+     
       <Button variant="contained" onClick={handleOpen}>
         Add Subject
       </Button>
@@ -127,6 +132,7 @@ const SubjectManager = () => {
           </TableBody>
         </Table>
       </Box>
+    </Box>
     </Box>
   );
 };
