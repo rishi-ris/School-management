@@ -71,7 +71,7 @@ export default class Network {
       
       return response;
     } catch (error) {
-      console.error("⚠️ Student login error:", error);
+      console.error("⚠️ Student error:", error);
       throw error;
     }
   }
@@ -86,7 +86,7 @@ export default class Network {
       
       return response;
     } catch (error) {
-      console.error("⚠️ Student login error:", error);
+      console.error("⚠️ Student error:", error);
       throw error;
     }
   }
@@ -105,19 +105,7 @@ export default class Network {
     }
   }
 
-  static async login(username, password) {
-    try {
-      const response = await axios.post(
-        Endpoints.loginUrl,
-        { username, password },
-        { headers: { "Content-Type": "application/json" } }
-      );
-      return response;
-    } catch (error) {
-      console.error("⚠️ User login error:", error);
-      throw error;
-    }
-  }
+ 
 
 
   //get All roles
@@ -131,7 +119,7 @@ export default class Network {
       console.log("***RESPONSE***", response)
       return response;
     } catch (error) {
-      console.error("⚠️ Student login error:", error);
+      console.error("⚠️ Student error:", error);
       throw error;
     }
   }
@@ -146,7 +134,7 @@ export default class Network {
 
       return response;
     } catch (error) {
-      console.error("⚠️ Student login error:", error);
+      console.error("⚠️ Student error:", error);
       throw error;
     }
   }
@@ -298,6 +286,54 @@ static async getAllSubjects() {
     throw error;
   }   
 }
+static async getAllStudentsByClassId(classId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getAllStudentsByClassId}/${classId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get students by class ID error:", error);
+      throw error;
+    }
+  }
+static async getAllSubjectsByClassId(classId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getAllSubjectsByClassId}/${classId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get subjects by class ID error:", error);
+      throw error;
+    }
+  }
+static async submitMarks(payload) {
+    try {
+      const response = await axios.post(
+        `${Endpoints.submitMarks}`,
+        payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Submit marks error:", error);
+      throw error;
+    }
+  }
+static async getAllDetailsByClass(classId) {
+  try {
+    const response = await axios.get(
+      `${Endpoints.getAllDetailsByClass}/${classId}/details`,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("⚠️ Get all details by class error:", error);
+    throw error;
+  }
 }
-  
 
+}

@@ -59,6 +59,9 @@ const [open, setOpen] = useState(false);
              <ListItem button onClick={() => navigate("/subjectManager")}>
               <ListItemText primary="Subject" />
             </ListItem>
+            <ListItem button onClick={() => navigate("/marksEntryPage")}>
+              <ListItemText primary="Marks Entry" />
+            </ListItem>
             <ListItem button onClick={() => navigate("/")}>
               <ListItemText primary="Logout" />
             </ListItem>
