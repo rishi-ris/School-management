@@ -10,6 +10,7 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
+import Sidekick from "../component/Sidekick";
 
 const classes = ["Class 6A", "Class 7B", "Class 8C"];
 const schedule = [
@@ -25,7 +26,11 @@ const notices = [
 
 const TeachersUser = () => {
   return (
+    <Box>
+      <Sidekick/>
+    
     <Box p={4}>
+      
       <Typography variant="h4" gutterBottom>
         👨‍🏫 Welcome, Teacher!
       </Typography>
@@ -91,6 +96,7 @@ const TeachersUser = () => {
           </Card>
         </Grid>
       </Grid>
+    </Box>
     </Box>
   );
 };

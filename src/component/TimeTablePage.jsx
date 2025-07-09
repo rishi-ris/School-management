@@ -6,6 +6,7 @@ import {
   InputLabel,
   FormControl,
   Paper,
+  Box,
   Typography,
   Table,
   TableHead,
@@ -13,6 +14,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import Sidekick from "./Sidekick";
 
 const classList = ["1st", "2nd", "3rd", "4th", "5th"];
 const subjects = ["Hindi", "English", "Maths", "Science", "SST", "IT"];
@@ -94,6 +96,9 @@ const TimeTablePage = () => {
   const timetable = selectedClass ? getTimetableForClass(selectedClass) : [];
 
   return (
+    <Box>
+      <Sidekick/>
+    
     <Grid container direction="column" spacing={3} sx={{ padding: 4 }}>
       {/* Class Selection */}
       <Grid item xs={12} sm={6} md={4}>
@@ -152,6 +157,7 @@ const TimeTablePage = () => {
         </Grid>
       )}
     </Grid>
+    </Box>
   );
 };
 

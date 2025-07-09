@@ -11,7 +11,7 @@ import {
 import StudentFeesDetails from "./StudentFeesDetails";
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
-
+import Sidekick from "../component/Sidekick";
 
 const FeesPage = () => {
   const [roll, setRoll] = useState("");
@@ -20,7 +20,6 @@ const FeesPage = () => {
   const [result, setResult] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [slideKey, setSlideKey] = useState(0);
-
 
   const handleSubmit = () => {
     console.log("🔍 Searching fees for:", { roll, className });
@@ -42,14 +41,13 @@ const FeesPage = () => {
     setResult(null);
     setSlideKey((prev) => prev + 1);
   };
-const handleClassSelect = (cls) => {
+  const handleClassSelect = (cls) => {
     // onClassSelect(cls);
     setClassName(cls.classId);
     console.log("Selected class: common dialog", cls);
     // onClassSelect({ classId: cls });
   };
   // ✅ Fetch dropdown data only once
-   
 
   return (
     <Box
@@ -62,6 +60,7 @@ const handleClassSelect = (cls) => {
         background: "#f9f9f9",
       }}
     >
+      <Sidekick />
       <Container
         maxWidth={false}
         disableGutters
@@ -118,9 +117,7 @@ const handleClassSelect = (cls) => {
               value={roll}
               onChange={(e) => handleRollChange(e)}
             />
-            <ClassDropDown
-              onSelect={handleClassSelect}
-            />
+            <ClassDropDown onSelect={handleClassSelect} />
             <Button
               fullWidth
               variant="contained"
@@ -169,39 +166,38 @@ const handleClassSelect = (cls) => {
         {/* Show 'hello' when student details are not open */}
         {!(showDetails && !!(result && result !== "not-found")) && (
           <Box
-  sx={{
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "",
-    boxShadow: 2,
-    position: "relative",
-    overflow: "hidden",
-  }}
->
-  {/* 🔽 Watermark Image */}
-  <Box
-    component="img"
-    src="projectPic/chandrashekhar-azad-watermark.png.png" // ✅ apni image ka path yahan do
-    alt="Watermark"
-    sx={{
-      position: "absolute",
-      width: "60%",
-      opacity: 0.08, // ✅ some watermark effect
-      zIndex: 0,
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-    }}
-  />
+            sx={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "",
+              boxShadow: 2,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {/* 🔽 Watermark Image */}
+            <Box
+              component="img"
+              src="projectPic/chandrashekhar-azad-watermark.png.png" // ✅ apni image ka path yahan do
+              alt="Watermark"
+              sx={{
+                position: "absolute",
+                width: "60%",
+                opacity: 0.08, // ✅ some watermark effect
+                zIndex: 0,
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            />
 
-  {/*  Foreground Text */}
-  {/* <Typography variant="h4" color="text.secondary" sx={{ zIndex: 1 }}>
+            {/*  Foreground Text */}
+            {/* <Typography variant="h4" color="text.secondary" sx={{ zIndex: 1 }}>
     CHANDRA SHEKHAR AZAD HR. SEC SCHOOL
   </Typography> */}
-</Box>
-
+          </Box>
         )}
       </Container>
     </Box>

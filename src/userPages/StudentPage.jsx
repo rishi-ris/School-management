@@ -6,6 +6,7 @@ import StuDlgCard from "./StuDlgCard";
 import Network from "../Application/Network";
 import StuDlgDocUpload from "./StuDlgDocUpload";
 import StudentFeesDlg from "./StudentFeesDlg";
+import Sidekick from "../component/Sidekick";
 
 const StudentPage = () => {
   const [students, setStudents] = useState([]);
@@ -109,7 +110,11 @@ const handleDocumentsDetails = async (studentId) => {
   };
 
   return (
+    <Box>
+       <Sidekick/>
+   
     <Box p={3}>
+     
       <Box display="flex" justifyContent="space-between" mb={2}>
         <Typography variant="h4" fontWeight="bold">Student Table</Typography>
         <AddStuButton onClick={() => {
@@ -155,6 +160,7 @@ const handleDocumentsDetails = async (studentId) => {
       />
       
     </Box>
+     </Box>
   );
 };
 
