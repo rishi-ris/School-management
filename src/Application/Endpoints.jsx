@@ -21,6 +21,10 @@ const Endpoints = {
   getAllStudentsByClassId: baseURL + "/students/stuDetailsByClass",
   submitMarks: baseURL + "/marksheets/createMarksheet",
   getAllDetailsByClass: baseURL + "/classes",
+  getAllUsersByRole: baseURL + "/users/byRoleId",
+  submitTeacherAttendance: baseURL + "/attendance/markBulkAttendance",
+  addTimeTable: baseURL + "/timetable/create",
+  getTimeTableByClass: baseURL + "/timetable/class",
 };
 
 export default Endpoints;

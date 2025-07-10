@@ -13,6 +13,7 @@ import AddNewEmpPage from './userPages/AddNewEmpPage';
 import TimeTablePage from './component/TimeTablePage';
 import SubjectManager from './userPages/SubjectManager';
 import MarksEntryPage from './userPages/MarksEntryPage';
+import TeacherAttendancePage from './userPages/TeacherAttendancePage';
 function App() {
   return (
     <Routers>
@@ -30,6 +31,7 @@ function App() {
         <Route path='/timetable' element={<TimeTablePage/>}></Route>
         <Route path='/subjectManager' element={<SubjectManager/>}></Route>
         <Route path='/marksEntryPage' element={<MarksEntryPage/>}></Route>
+        <Route path='/teacherAttendancePage' element={<TeacherAttendancePage/>}></Route>
         <Route path='*' element={<h1>404 Not Found</h1>}></Route>
 
       </Routes>

@@ -335,5 +335,55 @@ static async getAllDetailsByClass(classId) {
     throw error;
   }
 }
-
+static async getAllUsersByRoleId(roleId) {
+  try {
+    const response = await axios.get(
+      `${Endpoints.getAllUsersByRole}/${roleId}/with-attendance`,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("⚠️ Get all users by role ID error:", error);
+    throw error;
+  } 
+}
+static async submitTeacherAttendance(payload) {
+    try {
+      const response = await axios.post(
+        Endpoints.submitTeacherAttendance,
+        payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Submit teacher attendance error:", error);
+      throw error;
+    }
+  }
+  static async addTimeTable(payload) {
+    try {
+      const response = await axios.post(
+        Endpoints.addTimeTable,
+        payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Add timetable error:", error);
+      throw error;
+    }
+  }
+  static async getTimeTableByClass(classId) {
+     const today = new Date().toISOString().split("T")[0];
+    try {
+      const response = await axios.get(
+        `${Endpoints.getTimeTableByClass}/${classId}?date=${today}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("⚠️ Get timetable by class error:", error);
+      throw error;
+    }
+  }
 }

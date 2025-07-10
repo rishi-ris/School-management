@@ -69,7 +69,7 @@ const AddNewEmpPage = () => {
       firstName: form.firstName,
       lastName: form.lastName,
       contactNumber: form.contactNumber,
-      dOB: (form.dOB),
+      dOB: formatDate(form.dOB),
       address: form.address,
       city: form.city,
       state: form.state,
