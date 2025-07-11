@@ -180,14 +180,14 @@ const FeesPage = () => {
             {/* 🔽 Watermark Image */}
             <Box
               component="img"
-              src="projectPic/chandrashekhar-azad-watermark.png.png" // ✅ apni image ka path yahan do
+              src="ProjectIMG/chandrashekhar-azad-watermark.png.png" 
               alt="Watermark"
               sx={{
                 position: "absolute",
                 width: "60%",
                 opacity: 0.08, // ✅ some watermark effect
                 zIndex: 0,
-                top: "50%",
+                top: "45%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
               }}

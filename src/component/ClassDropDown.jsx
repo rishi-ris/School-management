@@ -35,7 +35,7 @@ const ClassDropDown = ({ onSelect, selectedClassId }) => {
   };
 
   return (
-    <Box sx={{ minWidth: 200 }}>
+    <Box item xs={12} sm={6}  sx={{ }}>
       <FormControl fullWidth>
         <InputLabel id="class-select-label">Select Class</InputLabel>
         <Select

@@ -32,52 +32,52 @@ const StudentPage = () => {
   };
 
   const handleDetails = async (studentId) => {
-  try {
-    setLoading(true);
-    const response = await Network.getStudentDetails(studentId); // Replace with your API
-    const fullStudent = response.data;
+    try {
+      setLoading(true);
+      const response = await Network.getStudentDetails(studentId); // Replace with your API
+      const fullStudent = response.data;
 
-    setEditingStudent(fullStudent);
-    setNewStudentId(studentId);
-    setDialogOpen(true);
-  } catch (err) {
-    console.error("⚠️ Error loading student:", err);
-    alert("Failed to load student details.");
-  } finally {
-    setLoading(false);
-  }
-};
-const handleFeesDetails = async (stuFeesDetails) => {
-  console.log("Fetching fees details for student ID:", stuFeesDetails);
-  try {
-    setOpenFeesDetails(true);
-    setFeesDetails(stuFeesDetails);
-  } catch (err) {
-    console.error("⚠️ Error loading student fees details:", err);
-    alert("Failed to load student fees details.");
-  } finally {
-    setLoading(false);
-  }
-};
-const handleDocumentsDetails = async (studentId) => {
-  console.log("Fetching documents for student ID:", studentId);
-  try {
-    setLoading(true);
-     setDocumentDialogOpen(true);
-    const response = await Network.getStudentDocuments(studentId); // Replace with your API
-    const studentDocuments = response.data;   
-    setStudentDocuments(studentDocuments);
-    setEditingStudent(studentId ? studentId : null); // Set student ID for document upload
-    // console.log("Documents loaded:", studentDocuments);
-    setNewStudentId(studentId);
-    setDocumentDialogOpen(true);
-  } catch (err) {
-    console.error("⚠️ Error loading student documents:", err);
-    alert("Failed to load student documents.");
-  } finally {
-    setLoading(false);
-  }
-};  
+      setEditingStudent(fullStudent);
+      setNewStudentId(studentId);
+      setDialogOpen(true);
+    } catch (err) {
+      console.error("⚠️ Error loading student:", err);
+      alert("Failed to load student details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleFeesDetails = async (stuFeesDetails) => {
+    console.log("Fetching fees details for student ID:", stuFeesDetails);
+    try {
+      setOpenFeesDetails(true);
+      setFeesDetails(stuFeesDetails);
+    } catch (err) {
+      console.error("⚠️ Error loading student fees details:", err);
+      alert("Failed to load student fees details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleDocumentsDetails = async (studentId) => {
+    console.log("Fetching documents for student ID:", studentId);
+    try {
+      setLoading(true);
+      setDocumentDialogOpen(true);
+      const response = await Network.getStudentDocuments(studentId); // Replace with your API
+      const studentDocuments = response.data;
+      setStudentDocuments(studentDocuments);
+      setEditingStudent(studentId ? studentId : null); // Set student ID for document upload
+      // console.log("Documents loaded:", studentDocuments);
+      setNewStudentId(studentId);
+      setDocumentDialogOpen(true);
+    } catch (err) {
+      console.error("⚠️ Error loading student documents:", err);
+      alert("Failed to load student documents.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchStudents();
@@ -86,11 +86,11 @@ const handleDocumentsDetails = async (studentId) => {
   const handleSave = async (flatData) => {
     console.log("Saving student data:", flatData);
 
-
-
     try {
       setLoading(true);
-      flatData?.studentPin ? await Network.updateStudent(flatData) : await Network.createStudent(flatData);
+      flatData?.studentPin
+        ? await Network.updateStudent(flatData)
+        : await Network.createStudent(flatData);
       alert("✅ Student saved!");
       await fetchStudents();
       setDialogOpen(false);
@@ -111,56 +111,63 @@ const handleDocumentsDetails = async (studentId) => {
 
   return (
     <Box>
-       <Sidekick/>
-   
-    <Box p={3}>
-     
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Typography variant="h4" fontWeight="bold">Student Table</Typography>
-        <AddStuButton onClick={() => {
-          setSelectedStudent(null);
-          setDialogOpen(true);
-        }} />
-      </Box>
+      <Sidekick />
 
-      {loading ? (
-        <Box display="flex" justifyContent="center" mt={5}>
-          <CircularProgress size={40} />
+      <Box p={3}>
+        <Box display="flex" justifyContent="space-between" mb={2}>
+          <Typography variant="h4" fontWeight="bold">
+            Student Table
+          </Typography>
+          <AddStuButton
+            onClick={() => {
+              setSelectedStudent(null);
+              setDialogOpen(true);
+            }}
+          />
         </Box>
-      ) : (
-        <StuTable students={students} onEdit={handleDetails} documentsDetails={handleDocumentsDetails} payFees={handleFeesDetails} />
-      )}
 
-      <StuDlgCard
-        open={dialogOpen}
-        onClose={() => {
-          setDialogOpen(false);
-          setSelectedStudent(null);
-          setNewStudentId(null);
-          setEditingStudent(null);
-              }}
+        {loading ? (
+          <Box display="flex" justifyContent="center" mt={5}>
+            <CircularProgress size={40} />
+          </Box>
+        ) : (
+          <StuTable
+            students={students}
+            onEdit={handleDetails}
+            documentsDetails={handleDocumentsDetails}
+            payFees={handleFeesDetails}
+          />
+        )}
+
+        <StuDlgCard
+          open={dialogOpen}
+          onClose={() => {
+            setDialogOpen(false);
+            setSelectedStudent(null);
+            setNewStudentId(null);
+            setEditingStudent(null);
+          }}
           onSave={handleSave}
           student={editingStudent} // pass for edit
-      />
+        />
 
-      <StuDlgDocUpload
-        open={documentDialogOpen}
-        onClose={() => {
-          setDocumentDialogOpen(false);
-        }}
-        docStudentId={newStudentId} // pass for edit
-        documents={studentDocuments} // pass for edit
-      />
-      <StudentFeesDlg
-        open={openFeesDetails}
-        onClose={() => {
-          setOpenFeesDetails(false);
-        }}
-        student={feesDetails} // pass for edit
-      />
-      
+        <StuDlgDocUpload
+          open={documentDialogOpen}
+          onClose={() => {
+            setDocumentDialogOpen(false);
+          }}
+          docStudentId={newStudentId} // pass for edit
+          documents={studentDocuments} // pass for edit
+        />
+        <StudentFeesDlg
+          open={openFeesDetails}
+          onClose={() => {
+            setOpenFeesDetails(false);
+          }}
+          student={feesDetails} // pass for edit
+        />
+      </Box>
     </Box>
-     </Box>
   );
 };
 

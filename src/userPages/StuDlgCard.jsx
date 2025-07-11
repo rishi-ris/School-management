@@ -2,6 +2,7 @@ import React, { use, useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
+  Typography,
   DialogContent,
   DialogActions,
   Button,
@@ -22,17 +23,36 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const [selectedClass, setSelectedClass] = useState({});
   const [selectedRole, setSelectedRole] = useState({});
 
+  const requiredCommonFields = [
+    "username",
+    "password",
+    "gender",
+    "rollNumber",
+    "scholarNumber",
+    "firstName",
+    "lastName",
+    "contactNumber",
+    "dOB",
+    "address",
+    "city",
+    "state",
+    "pinCode",
+    "country",
+    "status",
+    "feesDiscount",
+    "totalFees",
+  ];
+
   useEffect(() => {
     console.log("Received student data:", student);
     if (student) {
-      
       setCommonData({
         username: student.username,
         password: student.password,
         gender: student.gender,
         rollNumber: student.rollNumber,
         scholarNumber: student.scholarNumber,
-        firstName: student.firstName, 
+        firstName: student.firstName,
         lastName: student.lastName,
         contactNumber: student.contactNumber,
         classId: student.classId,
@@ -40,7 +60,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         roleId: student.roleId,
         classId: student.classId,
         studentPin: student.studentPin || null,
-        
+
         // dob: student.dob,
         dOB: student.dob,
         address: student.address,
@@ -60,26 +80,30 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         schoolClass: student.schoolClass,
         role: student.role,
         fees: student.fees || [],
-        
+
         documents: student.documents || [],
-        photos: student.photos || {}
+        photos: student.photos || {},
       });
-setFamilyData(student.family && student.family.length > 0 ? student.family[0] : {
-        fatherName: "",
-        fatherOccupation: "",
-        fatherContactNumber: "",
-        fatherEmail: "",
-        motherName: "",
-        motherOccupation: "",
-        motherContactNumber: "",
-        motherEmail: "",
-        guardianName: null,
-        guardianOccupation: null,
-        guardianContactNumber: null,
-        guardianEmail: null,
-        guardianRelation: null,
-        createdBy: "admin"
-      }); 
+      setFamilyData(
+        student.family && student.family.length > 0
+          ? student.family[0]
+          : {
+              fatherName: "",
+              fatherOccupation: "",
+              fatherContactNumber: "",
+              fatherEmail: "",
+              motherName: "",
+              motherOccupation: "",
+              motherContactNumber: "",
+              motherEmail: "",
+              guardianName: null,
+              guardianOccupation: null,
+              guardianContactNumber: null,
+              guardianEmail: null,
+              guardianRelation: null,
+              createdBy: "admin",
+            }
+      );
       setPersonalData({
         caste: student.caste,
         religion: student.religion,
@@ -98,7 +122,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
         enrollmentNumber: student.enrollmentNumber,
         bloodGroup: student.bloodGroup,
         medicalHistory: student.medicalHistory,
-        createdBy: student.createdBy
+        createdBy: student.createdBy,
       });
 
       setDocuments({ ...student.documents });
@@ -112,6 +136,14 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
   const getTimestamp = () => new Date().toISOString();
 
   const handleSubmit = () => {
+    let errors = [];
+
+    requiredCommonFields.forEach((field) => {
+      if (!commonData[field] || commonData[field].toString().trim() === "") {
+        errors.push(`Common: ${field} is required`);
+      }
+    });
+
     console.log("Submitting student data:", familyData);
     const transformedStudent = {
       studentPin: student?.studentPin || null,
@@ -127,7 +159,7 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
       firstName: commonData.firstName,
       lastName: commonData.lastName,
       contactNumber: commonData.contactNumber,
-      dOB: (commonData.dOB),
+      dOB: commonData.dOB,
       // dob: formatDate(commonData.dob),/
       address: commonData.address,
       caste: personalData.caste,
@@ -169,60 +201,60 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
           paidAmount: "0",
           status: "partial",
           createdAt: getTimestamp(),
-          updatedAt: getTimestamp()
-        }
+          updatedAt: getTimestamp(),
+        },
       ],
 
       family: [
-  {
-    
+        {
+          fatherName: familyData.fatherName || "",
+          fatherOccupation: familyData.fatherOccupation || "",
+          fatherPhone: familyData.fatherPhone || "",
+          fatherEmail: familyData.fatherEmail || "",
+          fatherAadharNum: familyData.fatherAadharNum || null,
+          fatherEducation: familyData.fatherEducation || null,
 
-    fatherName: familyData.fatherName || "",
-    fatherOccupation: familyData.fatherOccupation || "",
-    fatherPhone: familyData.fatherPhone || "",
-    fatherEmail: familyData.fatherEmail || "",
-    fatherAadharNum: familyData.fatherAadharNum || null,
-    fatherEducation: familyData.fatherEducation || null,
+          motherAadharNum: familyData.motherAadharNum || null,
+          motherName: familyData.motherName || "",
+          motherOccupation: familyData.motherOccupation || "",
+          motherPhone: familyData.motherPhone || "",
+          motherEmail: familyData.motherEmail || "",
+          motherEducation: familyData.motherEducation || null,
 
-    motherAadharNum: familyData.motherAadharNum || null,
-    motherName: familyData.motherName || "",
-    motherOccupation: familyData.motherOccupation || "",
-    motherPhone: familyData.motherPhone || "",
-    motherEmail: familyData.motherEmail || "",
-    motherEducation: familyData.motherEducation || null,
+          guardianName: familyData.guardianName || null,
+          guardianOccupation: familyData.guardianOccupation || null,
+          guardianPhone: familyData.guardianPhone || null,
+          guardianEmail: familyData.guardianEmail || null,
+          guardianRelation: familyData.guardianRelation || null,
+          guardianAadharNum: familyData.guardianAadharNum || null,
+          guardianEducation: familyData.guardianEducation || null,
+          isSibling: familyData.isSibling || null,
+          siblingDetails: familyData.siblingDetails || null,
+          createdBy: "admin",
+        },
+      ],
 
-    guardianName: familyData.guardianName || null,
-    guardianOccupation: familyData.guardianOccupation || null,
-    guardianPhone: familyData.guardianPhone || null,
-    guardianEmail: familyData.guardianEmail || null,
-    guardianRelation: familyData.guardianRelation || null,
-    guardianAadharNum: familyData.guardianAadharNum || null,
-    guardianEducation: familyData.guardianEducation || null,
-    isSibling: familyData.isSibling || null,
-    siblingDetails: familyData.siblingDetails || null,
-   createdBy: "admin"
-  }
-],
-
-      documents: [{
-        aadharCard: documents.aadharCard,
-        panCard: documents.panCard,
-        sssmid: documents.sssmid,
-        casteCertificate: documents.casteCertificate,
-        incomeCertificate: documents.incomeCertificate,
-        domicileCertificate: documents.domicileCertificate,
-        transferCertificate: documents.transferCertificate,
-        migrationCertificate: documents.migrationCertificate,
-        characterCertificate: documents.characterCertificate,
-        previousMarksheet: documents.previousMarksheet,
-        disabilityCertificate: documents.disabilityCertificate,
-        rationCard: documents.rationCard,
-        admissionForm: documents.admissionForm,
-        passbook: documents.passbook,
-        createdBy: "admin",
-        createdAt: getTimestamp(),
-        updatedAt: getTimestamp()
-      }],
+      documents: [
+        {
+          aadharCard: documents.aadharCard,
+          panCard: documents.panCard,
+          sssmid: documents.sssmid,
+          casteCertificate: documents.casteCertificate,
+          incomeCertificate: documents.incomeCertificate,
+          domicileCertificate: documents.domicileCertificate,
+          transferCertificate: documents.transferCertificate,
+          migrationCertificate: documents.migrationCertificate,
+          characterCertificate: documents.characterCertificate,
+          previousMarksheet: documents.previousMarksheet,
+          disabilityCertificate: documents.disabilityCertificate,
+          rationCard: documents.rationCard,
+          admissionForm: documents.admissionForm,
+          passbook: documents.passbook,
+          createdBy: "admin",
+          createdAt: getTimestamp(),
+          updatedAt: getTimestamp(),
+        },
+      ],
 
       photos: {
         studentPhoto: photos.studentPhoto,
@@ -231,13 +263,13 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
         guardianPhoto: photos.guardianPhoto ?? null,
         createdBy: "admin",
         createdAt: getTimestamp(),
-        updatedAt: getTimestamp()
-      }
+        updatedAt: getTimestamp(),
+      },
     };
     console.log("Transformed student data:", transformedStudent);
     onSave(transformedStudent);
   };
-// ✅ Format date from yyyy-mm-dd to dd/MM/yyyy
+  // ✅ Format date from yyyy-mm-dd to dd/MM/yyyy
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const [year, month, day] = dateString.split("-");
@@ -245,13 +277,34 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
   };
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Add New Student</DialogTitle>
+      <DialogTitle>
+        <Typography
+          width={180}
+          sx={{
+            fontWeight: "bold",
+            borderTopRightRadius: "50px",
+            borderBottomRightRadius: "50px",
+            padding: "5px",
+            mt: 2,
+            color: "white",
+            backgroundColor: "#1976D2",
+          }}
+        >
+          Add New Student
+        </Typography>
+      </DialogTitle>
       <DialogContent dividers>
         <StuCommonDtlDlg
           data={commonData}
           onChange={(val) => setCommonData((prev) => ({ ...prev, ...val }))}
-          onClassSelect={(cls) => {console.log("Selected class 1:", cls); setSelectedClass(cls);}}
-          onRoleSelect={(role) => {console.log("Selected role:", role); setSelectedRole(role);}}
+          onClassSelect={(cls) => {
+            console.log("Selected class 1:", cls);
+            setSelectedClass(cls);
+          }}
+          onRoleSelect={(role) => {
+            console.log("Selected role:", role);
+            setSelectedRole(role);
+          }}
         />
         <StuPersonalDltDlg
           data={personalData}
@@ -261,11 +314,14 @@ setFamilyData(student.family && student.family.length > 0 ? student.family[0] : 
           data={familyData}
           onChange={(val) => setFamilyData((prev) => ({ ...prev, ...val }))}
         />
-        
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant="outlined">Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">Save</Button>
+        <Button onClick={onClose} variant="outlined">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} variant="contained">
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );

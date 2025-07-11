@@ -35,7 +35,7 @@ const RoleDropdown = ({ onSelect, selectedRoleId }) => {
   };
 
   return (
-    <Box sx={{ minWidth: 200 }}>
+    <Box item xs={12} sm={6}  >
       <FormControl fullWidth>
         <InputLabel id="role-select-label">Select Role</InputLabel>
         <Select
