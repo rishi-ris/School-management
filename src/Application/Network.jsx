@@ -386,4 +386,16 @@ static async submitTeacherAttendance(payload) {
       throw error;
     }
   }
+  static async getDashboardStats() {
+    try {
+      const response = await axios.get(
+        Endpoints.getDashboardStats,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("⚠️ Get dashboard stats error:", error);
+      throw error;
+    }
+  }
 }

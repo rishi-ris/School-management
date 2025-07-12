@@ -25,6 +25,7 @@ const Endpoints = {
   submitTeacherAttendance: baseURL + "/attendance/markBulkAttendance",
   addTimeTable: baseURL + "/timetable/create",
   getTimeTableByClass: baseURL + "/timetable/class",
+  getDashboardStats: baseURL + "/dashboard/stats",
 };
 
 export default Endpoints;

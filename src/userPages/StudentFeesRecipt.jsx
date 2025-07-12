@@ -8,12 +8,27 @@ import {
   Dialog,
   DialogContent,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
+  const navigate = useNavigate();
   console.log("🔍 StudentFeesReceipt component rendered with student:", student);
 
   const handlePrint = () => {
-    window.print();
+    navigate("/paymentReceipt", {
+      state: {
+        name: student.studentName,
+        className: student.className,
+        rollNo: student.rollNumber,
+        totalFees: student.totalFees,
+        paidFees: student.totalPaid,
+        dueFees: student.dueFees,
+        amountPaid: student.fees,
+        paymentMode: method,
+        dateTime: new Date().toLocaleString(),
+      }
+    }
+      );
   };
 
   return (
