@@ -1,0 +1,30 @@
+const baseURL =  "http://192.168.10.15:8080"; // Use this for local development
+const Endpoints = {
+  getAllRoles: baseURL + "/roles/getRoles",
+  getAllClasses: baseURL + "/classes/getAllClasses",
+  loginUrl: baseURL + "/users/login",
+  studentLoginUrl: baseURL + "/students/login",
+  createStudent: baseURL + "/students/createStudent",
+  getAllStudents: baseURL + "/students/getAllStudents",
+  getAllUsers: baseURL + "/users/getAllUsers",
+  getAllPendingFeesStudents: baseURL + "/students/pending-fees",
+  createUser: baseURL + "/users/createUser",
+  uploadStudentDocs: baseURL + "/docs",
+  getStudentDocuments: baseURL + "/docs",
+  studentDetails: baseURL + "/students/studentDetails",
+  searchStudentFees: baseURL + "/fees/search",
+  saveStudentPayment: baseURL + "/fees/pay",
+  updateStudent: baseURL + "/students/updateStudent",
+  addSubject: baseURL + "/subjects/createSubject",
+  getAllSubjects: baseURL + "/subjects/all",
+  getAllSubjectsByClassId: baseURL + "/subjects/by-class",
+  getAllStudentsByClassId: baseURL + "/students/stuDetailsByClass",
+  submitMarks: baseURL + "/marksheets/createMarksheet",
+  getAllDetailsByClass: baseURL + "/classes",
+  getAllUsersByRole: baseURL + "/users/byRoleId",
+  submitTeacherAttendance: baseURL + "/attendance/markBulkAttendance",
+  addTimeTable: baseURL + "/timetable/create",
+  getTimeTableByClass: baseURL + "/timetable/class",
+};
+
+export default Endpoints;
