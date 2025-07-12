@@ -20,12 +20,10 @@ const Logify = () => {
   const [message, setMessage] = useState("");
   const [onRolesSelectChange, setOnRolesSelectChange] = useState("");
 
-
-
-   const onRolesSelect = (roleId) => {
-     console.log("Selected Role ID:", roleId.roleId);
-     setOnRolesSelectChange(roleId.roleId);
+  const onRolesSelect = (roleId) => {
+    setOnRolesSelectChange(roleId.roleId);
   };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -33,58 +31,37 @@ const Logify = () => {
       setMessage("❌ Username and Password are required.");
       return;
     }
-//check if drop down is not selected show error message
+
     if (!onRolesSelectChange) {
       setMessage("❌ Please select a role.");
       return;
     }
- let response = {}; // Initialize response variable
-    // Handle login based on selected role
+
+    let response = {};
     switch (onRolesSelectChange) {
-      case 1: // Admin  
-      response = await Network.login(username, password);
-        setMessage("🔄 Logging in as Admin...");
+      case 1:
+      case 2:
+      case 4:
+        response = await Network.login(username, password);
         break;
-      case 2: // Teacher
-      response = await Network.login(username, password);
-        setMessage("🔄 Logging in as Teacher...");
-        break;  
-      case 3: // Student
-      response = await Network.studentLogin(username, password);
-        setMessage("🔄 Logging in as Student...");
+      case 3:
+      case 5:
+        response = await Network.studentLogin(username, password);
         break;
-      case 4: // Parent
-      response = await Network.login(username, password);
-        setMessage("🔄 Logging in as Parent...");
-        break;
-      case 5: // Student
-      response = await Network.studentLogin(username, password);
-        setMessage("🔄 Logging in as Student...");
-        break;
-      default:  
+      default:
         setMessage("❌ Invalid role selected.");
         return;
     }
+
     try {
-     
       if (response.status === 200) {
         setMessage("✅ Login successful!");
-        // Redirect based on role
         switch (onRolesSelectChange) {
-          case 1:
-            navigate("/adminUser");
-            break;
-          case 2:
-            navigate("/teachersUser");
-            break;
-          case 3:
-            navigate("/studentUser");
-            break;
-          case 4:
-            navigate("/parentsusers");
-            break;
-          default:
-            navigate("/");
+          case 1: navigate("/adminUser"); break;
+          case 2: navigate("/teachersUser"); break;
+          case 3: navigate("/studentUser"); break;
+          case 4: navigate("/parentsusers"); break;
+          default: navigate("/");
         }
       } else {
         setMessage("❌ Invalid username or password.");
@@ -95,10 +72,9 @@ const Logify = () => {
     }
   };
 
-
   return (
-    <Box>
-      {/* Header box */}
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* Header */}
       <Box
         sx={{
           width: "100%",
@@ -108,10 +84,11 @@ const Logify = () => {
         }}
       />
 
+      {/* Login Form */}
       <Container
         maxWidth="sm"
         sx={{
-          minHeight: "100vh",
+          flex: 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -131,7 +108,6 @@ const Logify = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
-
             <TextField
               fullWidth
               margin="normal"
@@ -140,13 +116,11 @@ const Logify = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <Box display="flex" justifyContent="flex-end" mt={1}>
               <Link href="#" underline="hover">
                 Forgot password?
               </Link>
             </Box>
-
             <Button
               fullWidth
               type="submit"
@@ -161,13 +135,35 @@ const Logify = () => {
             >
               Login
             </Button>
-
             <Typography align="center" mt={2} color="error">
               {message}
             </Typography>
           </Box>
         </Paper>
       </Container>
+
+      {/* Footer */}
+      <Box
+        sx={{
+          py: 2,
+          textAlign: "center",
+          backgroundColor: "#f1f1f1",
+          borderTop: "1px solid #ccc",
+        }}
+      >
+        <Typography variant="body2">
+    © {new Date().getFullYear()} All Rights Reserved —{" "}
+    <Link
+      href="https://arpanasoftwaressolution.co.in"
+      target="_blank"
+      rel="noopener noreferrer"
+      underline="hover"
+      sx={{ fontWeight: "bold" }}
+    >
+      Arpana Infotech Solutions
+    </Link>
+  </Typography>
+      </Box>
     </Box>
   );
 };
