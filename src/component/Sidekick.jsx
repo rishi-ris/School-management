@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  useTheme,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -27,49 +28,70 @@ import {
 } from "@mui/icons-material";
 
 const drawerItems = [
-  { label: "Dashboard", icon: <GridViewOutlinedIcon />, path: "/adminUser" },
-  { label: "Fees", icon: <CurrencyRupeeOutlinedIcon />, path: "/fees" },
-  { label: "Students", icon: <SchoolOutlinedIcon />, path: "/StudentUser" },
-  { label: "Teachers", icon: <PeopleAltOutlinedIcon />, path: "/teachersUser" },
   {
-    label: "Add New Employee",
+    label: "Add Staff", // 10 characters (with space)
     icon: <PersonAddAltOutlinedIcon />,
     path: "/newEmployee",
+  },
+  {
+    label: "Dashboard",
+    icon: <GridViewOutlinedIcon />,
+    path: "/adminUser",
+  },
+  {
+    label: "Fee Panel",
+    icon: <CurrencyRupeeOutlinedIcon />,
+    path: "/fees",
+  },
+  {
+    label: "Mark Sheet",
+    icon: <AssignmentOutlinedIcon />,
+    path: "/marksEntryPage",
+  },
+  {
+    label: "Students",
+    icon: <SchoolOutlinedIcon />,
+    path: "/StudentUser",
+  },
+  {
+    label: "Subjects",
+    icon: <MenuBookOutlinedIcon />,
+    path: "/subjectManager",
+  },
+  {
+    label: "Attendance",
+    icon: <EventAvailableOutlinedIcon />,
+    path: "/teacherAttendancePage",
+  },
+  {
+    label: "Teachers",
+    icon: <PeopleAltOutlinedIcon />,
+    path: "/teachersUser",
   },
   {
     label: "Timetable",
     icon: <CalendarMonthOutlinedIcon />,
     path: "/timetable",
   },
-  { label: "Subject", icon: <MenuBookOutlinedIcon />, path: "/subjectManager" },
-  {
-    label: "Marks Entry",
-    icon: <AssignmentOutlinedIcon />,
-    path: "/marksEntryPage",
-  },
-  {
-    label: "Teacher Attendance",
-    icon: <EventAvailableOutlinedIcon />,
-    path: "/teacherAttendancePage",
-  },
 ];
+
 
 const Sidekick = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const theme = useTheme();
 
-  const toggleDrawer = (state) => () => {
-    setOpen(state);
-  };
+  const toggleDrawer = (state) => () => setOpen(state);
+
   return (
     <Box>
       {/* AppBar */}
-      <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
+      <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main }}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)}>
+          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ ml: 2 }}>
+          <Typography variant="h6" fontWeight={600}>
             Admin Panel
           </Typography>
         </Toolbar>
@@ -79,16 +101,22 @@ const Sidekick = () => {
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
         <Box
           sx={{
-            width: 260,
+            width: 280,
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            bgcolor: "#f9f9f9",
+            bgcolor: theme.palette.background.default,
           }}
           role="presentation"
           onClick={toggleDrawer(false)}
         >
-          <List sx={{ mt: 2 }}>
+          <Typography variant="h6" sx={{ px: 3, py: 2, fontWeight: "bold", color: theme.palette.primary.main }}>
+            Menu
+          </Typography>
+
+          <Divider />
+
+          <List sx={{ mt: 1 }}>
             {drawerItems.map((item, index) => (
               <ListItem
                 button
@@ -97,17 +125,22 @@ const Sidekick = () => {
                 sx={{
                   px: 3,
                   py: 1.5,
-                  borderRadius: 1,
+                  borderRadius: 2,
                   mx: 2,
                   mb: 1,
-                  transition: "0.3s",
+                  transition: "all 0.25s ease-in-out",
                   "&:hover": {
-                    bgcolor: "primary.light",
-                    color: "white",
+                    bgcolor: theme.palette.primary.main,
+                    color: "#fff",
+                    "& .MuiSvgIcon-root": {
+                      color: "#fff",
+                    },
                   },
                 }}
               >
-                <Box sx={{ mr: 2, color: "primary.main" }}>{item.icon}</Box>
+                <Box sx={{ mr: 2, display: "flex", alignItems: "center", color: theme.palette.primary.main }}>
+                  {item.icon}
+                </Box>
                 <ListItemText primary={item.label} />
               </ListItem>
             ))}
@@ -116,7 +149,7 @@ const Sidekick = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Divider and Logout */}
-          <Divider sx={{ mt: 2 }} />
+          <Divider />
           <List sx={{ mb: 2 }}>
             <ListItem
               button
@@ -125,16 +158,20 @@ const Sidekick = () => {
                 px: 3,
                 py: 1.5,
                 mx: 2,
-                mt: 1,
-                borderRadius: 1,
-                color: "error.main",
+                mt: 1.5,
+                borderRadius: 2,
+                color: theme.palette.error.main,
+                transition: "all 0.25s ease-in-out",
                 "&:hover": {
-                  bgcolor: "error.light",
-                  color: "white",
+                  bgcolor: theme.palette.error.light,
+                  color: "#fff",
+                  "& .MuiSvgIcon-root": {
+                    color: "#fff",
+                  },
                 },
               }}
             >
-              <Box sx={{ mr: 2 }}>
+              <Box sx={{ mr: 2, display: "flex", alignItems: "center" }}>
                 <LogoutOutlinedIcon />
               </Box>
               <ListItemText primary="Logout" />

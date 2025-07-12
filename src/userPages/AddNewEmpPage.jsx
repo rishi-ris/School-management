@@ -8,6 +8,7 @@ import {
   Alert,
   Box,
 } from "@mui/material";
+import { keyframes } from "@emotion/react";
 import RoleDropdown from "../component/RoleDropdown";
 import Network from "../Application/Network";
 import Sidekick from "../component/Sidekick";
@@ -30,7 +31,16 @@ const initialFormState = {
   country: "",
   status: "",
 };
-
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
 const AddNewEmpPage = () => {
   const [form, setForm] = useState(initialFormState);
   const [snackbar, setSnackbar] = useState({
@@ -121,57 +131,76 @@ const AddNewEmpPage = () => {
   ];
 
   return (
-    <Box>
-     <Sidekick/>
-    
-    <Grid container spacing={2} sx={{ marginTop: "20px" }}>
-      {/* Custom Role Dropdown */}
-      <Grid item xs={12} sm={6}>
-        <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId} />
-      </Grid>
+    <>
+       <Sidekick />
+    <Box
+      sx={{
+       
+        maxWidth: 800,
+        margin: "auto",
+        mt: 4,
+        height:"400px",
+        p: 3,
+        borderRadius: 2,
+        boxShadow: 8,
+        backgroundColor: "#eeebebff",
+        animation: `${fadeInUp} 0.8s ease-out`,
+      }}
+    >
+   
 
-      {/* Dynamic Form Fields */}
-      {formFields.map(({ name, label, select, options, type }) => (
-        <Grid item xs={12} sm={6} key={name}>
-          <TextField
-            sx={{ width: "200px" }}
-            fullWidth
-            label={label}
-            name={name}
-            type={type === "date" ? "date" : type || "text"}
-            value={form[name]}
-            onChange={handleChange}
-            InputLabelProps={type === "date" ? { shrink: true } : {}}
-            select={!!select}
-          >
-            {select &&
-              options.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-          </TextField>
+      <Grid container spacing={2} sx={{ marginTop: "20px"}}>
+        {/* Role Dropdown */}
+        <Grid item xs={12} sm={6} sx={{width:"200px"}}>
+          <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId}  />
         </Grid>
-      ))}
 
-      <Grid item xs={12}>
-        <Button variant="contained" onClick={handleSubmit}>
-          Submit
-        </Button>
+        {/* Dynamic Form Fields */}
+        {formFields.map(({ name, label, select, options, type }) => (
+          <Grid item xs={12} sm={6} key={name}>
+            <TextField
+              sx={{ width: "200px" }}
+              fullWidth
+              label={label}
+              name={name}
+              type={type === "date" ? "date" : type || "text"}
+              value={form[name]}
+              onChange={handleChange}
+              InputLabelProps={type === "date" ? { shrink: true } : {}}
+              select={!!select}
+            >
+              {select &&
+                options.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+            </TextField>
+          </Grid>
+        ))}
+
+        {/* Submit Button */}
+        <Grid item xs={12}  sx={{
+      fontWeight: "bold",
+      fontSize: "40px",
+    }}>
+          <Button variant="contained" onClick={handleSubmit} sx={{width: "200px",marginBottom:"15px"}} >
+            Submit
+          </Button>
+        </Grid>
       </Grid>
 
       {/* Snackbar Feedback */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        onClose={() => setSnackbar({...snackbar, open: false })}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
       </Snackbar>
-    </Grid>
     </Box>
+    </>
   );
 };
-
 export default AddNewEmpPage;

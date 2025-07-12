@@ -184,6 +184,7 @@ const FeesPage = () => {
               alt="Watermark"
               sx={{
                 position: "absolute",
+                
                 width: "60%",
                 opacity: 0.08, // ✅ some watermark effect
                 zIndex: 0,

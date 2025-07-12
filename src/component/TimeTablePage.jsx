@@ -23,66 +23,102 @@ import {
   TableBody,
   Box,
 } from "@mui/material";
+import Network from "../Application/Network";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
 import Sidekick from "./Sidekick";
 
 const TeacherTimeTablePage = () => {
   const [teachers, setTeachers] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedClass, setSelectedClass] = useState(null);
-  const [dayOfWeek, setDayOfWeek] = useState("");
-  const [periods, setPeriods] = useState([
-    { period: 1, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 2, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 3, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 4, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 5, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 6, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 7, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 8, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-  ]);
+  const [form, setForm] = useState({
+    teacherId: "",
+    subjectId: "",
+    classId: "",
+    dayOfWeek: "",
+    period: "",
+    timeSlot: "",
+  });
+  const [selectedClass, setSelectedClass] = useState("");
   const [timetable, setTimetable] = useState([]);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
-  const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const days = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+  ];
+  const periods = Array.from({ length: 8 }, (_, i) => i + 1);
 
   useEffect(() => {
     Network.getAllUsersByRoleId(3).then(setTeachers).catch(console.error);
-    Network.getAllClasses()
-      .then((res) => setSelectedClass(res[0]))
-      .catch(console.error);
+    Network.getAllClasses().then(setClasses).catch(console.error);
   }, []);
 
   useEffect(() => {
-    if (selectedClass?.classId) {
-      Network.getAllSubjectsByClassId(selectedClass.classId)
+    if (form.classId) {
+      Network.getAllSubjectsByClassId(form.classId)
         .then((res) => {
           const subjectArray = Array.isArray(res.data) ? res.data : res;
           setSubjects(subjectArray);
         })
         .catch(() => setSubjects([]));
     }
-  }, [selectedClass]);
+  }, [form.classId]);
 
   const handleOpen = () => setOpenDialog(true);
   const handleClose = () => setOpenDialog(false);
 
-  const handlePeriodChange = (index, key, value) => {
-    setPeriods((prev) => {
-      const updated = [...prev];
-      updated[index][key] = value;
-      return updated;
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleClassSelect = (cls) => {
+    setForm((prev) => ({ ...prev, classId: cls.classId }));
+  };
+
+  const handleSubmit = () => {
+    Network.addTimeTable(form)
+      .then(() => {
+        setSnackbar({
+          open: true,
+          message: "Timetable added successfully!",
+          severity: "success",
+        });
+        handleClose();
+        setForm({
+          teacherId: "",
+          subjectId: "",
+          classId: "",
+          dayOfWeek: "",
+          period: "",
+          timeSlot: "",
+        });
+      })
+      .catch(() =>
+        setSnackbar({
+          open: true,
+          message: "Failed to add timetable.",
+          severity: "error",
+        })
+      );
   };
 
   const handleTimetableClassChange = async (cls) => {
     const classId = cls.classId;
-    setSelectedClass(cls);
+    setSelectedClass(classId);
     try {
       const response = await Network.getTimeTableByClass(classId);
       setTimetable(response);
@@ -91,152 +127,142 @@ const TeacherTimeTablePage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    const payload = {
-      classId: selectedClass.classId,
-      dayOfWeek,
-      periods: periods.map((p) => ({
-        period: p.period,
-        timeSlot: `${p.startTime}-${p.endTime}`,
-        subjectId: p.subjectId,
-        teacherId: p.teacherId,
-      })),
-    };
-    Network.addTimeTable(payload)
-      .then(() => {
-        setSnackbar({ open: true, message: "Timetable added successfully!", severity: "success" });
-        handleClose();
-        setDayOfWeek("");
-        setPeriods([
-          { period: 1, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 2, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 3, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 4, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 5, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 6, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 7, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-    { period: 8, startTime: "", endTime: "", subjectId: "", teacherId: "" },
-        ]);
-      })
-      .catch(() => setSnackbar({ open: true, message: "Failed to add timetable.", severity: "error" }));
-  };
-
   return (
-    <Box>
-      <Sidekick />
-      <Container maxWidth={false} sx={{ mt: 2 }}>
-        <Typography variant="h4" gutterBottom>Teacher Timetable</Typography>
-
+    // <Paper sx={{ border: "2px solid red " ,height:'100%', width:'100px',
+    // }}>
+<Box><Sidekick/>
+    <Container maxWidth={false} sx={{mt:2}}>
+      <Typography variant="h4" gutterBottom>
+        Teacher Timetable
+      </Typography>
+      <Box>
         <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-          <Button variant="contained" onClick={handleOpen}>Add Timetable</Button>
-          <Grid item xs={12} sm={6} sx={{ width: '280px' }}>
-            <ClassDropDown onSelect={handleTimetableClassChange} selectedClass={selectedClass} />
+          <Button variant="contained" onClick={handleOpen}>
+            Add Timetable
+          </Button>
+          <Grid item xs={12} sm={6}sx={{width:'280px'}}>
+            <ClassDropDown
+              onSelect={handleTimetableClassChange}
+              selectedClass={selectedClass}
+            />
           </Grid>
         </Box>
 
-        <Dialog open={openDialog} onClose={handleClose} fullWidth maxWidth="md">
+        <Dialog open={openDialog} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add Timetable</DialogTitle>
           <DialogContent>
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Box sx={{ display: "flex", flexDirection: "row", gap: 2, mb: 2 }}>
-            
-              <Grid item xs={12} sm={6}>
-                <ClassDropDown onSelect={setSelectedClass} selectedClass={selectedClass?.classId} />
-              </Grid>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Day</InputLabel>
-                  <Select value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)} label="Day">
-                    {days.map((d) => (
-                      <MenuItem key={d} value={d}>{d}</MenuItem>
+                  <InputLabel>Teacher</InputLabel>
+                  <Select
+                    name="teacherId"
+                    value={form.teacherId}
+                    onChange={handleChange}
+                    label="Teacher"
+                  >
+                    {teachers.map((t) => (
+                      <MenuItem key={t.id} value={t.id}>
+                        {t.firstName} {t.lastName}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
-              </Box>
-              
-              {periods.map((p, index) => (
-               <Box key={p.period} sx={{ display: "flex", flexDirection: "row", gap: 2, mb: 2 }}>
-                 <React.Fragment key={index}>
-                  <Grid item xs={12} sm={2}>
-                    <TextField label="Period" value={p.period} disabled fullWidth />
-                  </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <TextField
-                      type="time"
-                      label="Start Time"
-                      value={p.startTime}
-                      onChange={(e) => handlePeriodChange(index, "startTime", e.target.value)}
-                      fullWidth
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <TextField
-                      type="time"
-                      label="End Time"
-                      value={p.endTime}
-                      onChange={(e) => handlePeriodChange(index, "endTime", e.target.value)}
-                      fullWidth
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <FormControl fullWidth>
-                      <InputLabel>Subject</InputLabel>
-                      <Select
-                        value={p.subjectId}
-                        onChange={(e) => handlePeriodChange(index, "subjectId", e.target.value)}
-                        label="Subject"
-                      >
-                        {subjects.map((s) => (
-                          <MenuItem key={s.subjectId} value={s.subjectId}>{s.title}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <FormControl fullWidth>
-                      <InputLabel>Teacher</InputLabel>
-                      <Select
-                        value={p.teacherId}
-                        onChange={(e) => handlePeriodChange(index, "teacherId", e.target.value)}
-                        label="Teacher"
-                      >
-                        {teachers.map((t) => (
-                          <MenuItem key={t.id} value={t.id}>{t.firstName} {t.lastName}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </React.Fragment>
-                </Box>
-              ))}
+
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Subject</InputLabel>
+                  <Select
+                    name="subjectId"
+                    value={form.subjectId}
+                    onChange={handleChange}
+                    label="Subject"
+                  >
+                    {Array.isArray(subjects) &&
+                      subjects.map((s) => (
+                        <MenuItem key={s.subjectId} value={s.subjectId}>
+                          {s.title}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Day</InputLabel>
+                  <Select
+                    name="dayOfWeek"
+                    value={form.dayOfWeek}
+                    onChange={handleChange}
+                    label="Day"
+                  >
+                    {days.map((d) => (
+                      <MenuItem key={d} value={d}>
+                        {d}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Period</InputLabel>
+                  <Select
+                    name="period"
+                    value={form.period}
+                    onChange={handleChange}
+                    label="Period"
+                  >
+                    {periods.map((p) => (
+                      <MenuItem key={p} value={p}>
+                        {p}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Time Slot"
+                  name="timeSlot"
+                  fullWidth
+                  placeholder="e.g., 09:00 - 09:45"
+                  value={form.timeSlot}
+                  onChange={handleChange}
+                />
+              </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+            <Button variant="contained" onClick={handleSubmit}>
+              Submit
+            </Button>
           </DialogActions>
         </Dialog>
- <Grid container direction="column" spacing={3} sx={{ mt: 1 }}>
+
+        {/* Class Selection and Timetable Table */}
+        <Grid container direction="column" spacing={3} sx={{ mt: 1 }}>
           {selectedClass && timetable.length > 0 && (
             <Grid item xs={12}>
-              <Paper elevation={4} sx={{ overflowX: "auto", width: '100%' }}>
-                <Typography variant="h5" gutterBottom textAlign="center" sx={{ m: 2 }}>
-                  Timetable for Class {selectedClass?.classId}
+              <Paper elevation={4} sx={{ overflowX: "auto", width:'100%',}}>
+                <Typography variant="h5" gutterBottom textAlign="center"  sx={{ m:2 }}>
+                  Timetable for Class {selectedClass}
                 </Typography>
                 <Table>
                   <TableHead>
                     <TableRow sx={{ backgroundColor: "#1976d2" }}>
-                      <TableCell sx={{ color: "white", fontWeight: "bold" }}>Day</TableCell>
-                      {periods.map((p) => (
+                      <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                        Day
+                      </TableCell>
+                      {periods.map((period) => (
                         <TableCell
-                          key={p.period}
+                          key={period}
                           align="center"
                           sx={{ color: "white", fontWeight: "bold" }}
                         >
-                          Period {p.period}
+                          Period {period}
                         </TableCell>
                       ))}
                     </TableRow>
@@ -245,21 +271,28 @@ const TeacherTimeTablePage = () => {
                     {days.map((day) => (
                       <TableRow key={day}>
                         <TableCell sx={{ fontWeight: "bold" }}>{day}</TableCell>
-                        {periods.map((p) => {
+                        {periods.map((period) => {
                           const entry = timetable.find(
-                            (item) => item.dayOfWeek === day && item.period === p.period
+                            (item) =>
+                              item.dayOfWeek === day && item.period === period
                           );
 
                           return (
-                            <TableCell key={`${day}-${p.period}`}>
+                            <TableCell
+                              key={`${day}-${period}`}
+                       
+                            >
                               {entry ? (
                                 <Paper
                                   elevation={3}
                                   sx={{
                                     height: "100px",
                                     width: "110%",
-                                    backgroundColor: entry.isTeacherPresent ? "#e0f7fa" : "#ffcdd2",
-                                    p: 0.3,
+                                    backgroundColor: entry.isTeacherPresent
+                                      ? "#e0f7fa"
+                                      : "#ffcdd2", // light blue or red
+                                      p:0.3,
+                                  
                                     borderRadius: 1,
                                   }}
                                 >
@@ -269,12 +302,17 @@ const TeacherTimeTablePage = () => {
                                   <Typography variant="body2">
                                     <PersonIcon /> {entry.teacherName}
                                   </Typography>
+
                                   <Typography variant="caption">
                                     <AccessTimeIcon /> {entry.timeSlot}
                                   </Typography>
                                 </Paper>
                               ) : (
-                                <Typography variant="body2" color="textSecondary" align="center">
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                  align="center"
+                                >
                                   -
                                 </Typography>
                               )}
@@ -289,15 +327,17 @@ const TeacherTimeTablePage = () => {
             </Grid>
           )}
         </Grid>
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={3000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
-        </Snackbar>
-      </Container>
+      </Box>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+      </Snackbar>
+    </Container>
     </Box>
   );
 };

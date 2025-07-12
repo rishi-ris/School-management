@@ -3,6 +3,7 @@ import {
   Container,
   Typography,
   Grid,
+  Box,
   FormControlLabel,
   RadioGroup,
   Radio,
@@ -10,7 +11,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-
+import SideKick from "../component/Sidekick";
 import Network from "../Application/Network";
 import RoleDropdown from "../component/RoleDropdown";
 
@@ -73,6 +74,9 @@ const TeacherAttendancePage = () => {
   };
 
   return (
+    <Box>
+      <SideKick/>
+    
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
         Teacher Attendance
@@ -142,6 +146,7 @@ const TeacherAttendancePage = () => {
         )}
       </Paper>
     </Container>
+    </Box>
   );
 };
 

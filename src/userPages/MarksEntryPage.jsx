@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
+import Sidekick from "../component/Sidekick";
 
 const MarksEntryPage = () => {
   const [students, setStudents] = useState([]);
@@ -118,6 +119,9 @@ const MarksEntryPage = () => {
   };
 
   return (
+    <Box>
+      <Sidekick/>
+    
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>
         Enter Student Marks
@@ -278,6 +282,7 @@ const MarksEntryPage = () => {
         </Box>
       </Paper>
     </Container>
+    </Box>
   );
 };
 

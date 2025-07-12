@@ -15,6 +15,7 @@ import {
 import StudentPaymentDlg from "./StudentPaymentDlg";
 import StudentFeesReceipt from "./StudentFeesRecipt";
 import Network from "../Application/Network";
+import Sidekick from "../component/Sidekick";
 
 const StudentFeesDetails = ({ student }) => {
   console.log("🔍 StudentFeesDetails component rendered with student:", student);
@@ -114,11 +115,12 @@ const StudentFeesDetails = ({ student }) => {
   };
 
   return (
-    <Box width="100%" bgcolor="#f4f8fb" minHeight="100vh" pb={4}>
+    <Box width="100%" bgcolor="#f4f8fb"  pb={4} >
+      
       <Box height="100vh" display="flex" justifyContent="center">
         <Paper
           elevation={0}
-          sx={{ width: "100%", maxWidth: "100vw", background: "#fff" }}
+          sx={{ width: "100%", maxWidth: "100vw",  background: "#fff" }}
         >
           <Box
             textAlign="center"
@@ -206,6 +208,7 @@ const StudentFeesDetails = ({ student }) => {
                         </Typography>
                       </TableCell>
                     </TableRow>
+
                   )}
                 </TableBody>
               </Table>
