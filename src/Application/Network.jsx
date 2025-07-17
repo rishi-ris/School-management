@@ -36,11 +36,9 @@ export default class Network {
   //create student
   static async createStudent(studentData) {
     try {
-      const response = await axios.post(
-        Endpoints.createStudent,
-        studentData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post(Endpoints.createStudent, studentData, {
+        headers: { "Content-Type": "application/json" },
+      });
       return response;
     } catch (error) {
       console.error("⚠️ Create student error:", error);
@@ -61,14 +59,13 @@ export default class Network {
       throw error;
     }
   }
- //get All Students
+  //get All Students
   static async getAllStudents() {
     try {
-      const response = await axios.get(
-        Endpoints.getAllStudents,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      
+      const response = await axios.get(Endpoints.getAllStudents, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       return response;
     } catch (error) {
       console.error("⚠️ Student error:", error);
@@ -76,21 +73,19 @@ export default class Network {
     }
   }
 
-//get All Students
+  //get All Students
   static async getAllPendingFeesStudents() {
     try {
-      const response = await axios.get(
-        Endpoints.getAllPendingFeesStudents,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      
+      const response = await axios.get(Endpoints.getAllPendingFeesStudents, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       return response;
     } catch (error) {
       console.error("⚠️ Student error:", error);
       throw error;
     }
   }
-
 
   static async getStudentDetails(studentId) {
     try {
@@ -105,18 +100,15 @@ export default class Network {
     }
   }
 
- 
-
-
   //get All roles
-   static async getAllRoles() {
+  static async getAllRoles() {
     try {
       const response = await axios.get(
         Endpoints.getAllRoles,
-       
+
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log("***RESPONSE***", response)
+      console.log("***RESPONSE***", response);
       return response;
     } catch (error) {
       console.error("⚠️ Student error:", error);
@@ -124,13 +116,12 @@ export default class Network {
     }
   }
 
- //get All classes
-   static async getAllClasses() {
+  //get All classes
+  static async getAllClasses() {
     try {
-      const response = await axios.get(
-        Endpoints.getAllClasses,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.get(Endpoints.getAllClasses, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       return response;
     } catch (error) {
@@ -142,11 +133,9 @@ export default class Network {
   //create User
   static async addNewUser(userData) {
     try {
-      const response = await axios.post(
-        Endpoints.createUser,
-        userData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post(Endpoints.createUser, userData, {
+        headers: { "Content-Type": "application/json" },
+      });
       return response;
     } catch (error) {
       console.error("⚠️ Create user error:", error);
@@ -159,7 +148,7 @@ export default class Network {
         `${Endpoints.uploadStudentDocs}${studentId}/delete/${docId}`,
         {
           headers: { "Content-Type": "application/json" },
-          data: { studentId } // Include studentId in the request body
+          data: { studentId }, // Include studentId in the request body
         }
       );
       console.log("✅ Document deleted successfully:", response.data);
@@ -169,31 +158,31 @@ export default class Network {
       throw error;
     }
   }
-static async uploadStudentDocument(studentId, docType, file) {
-  console.log(`📂 Uploading ${docType} for student ${studentId}:`, file.name);
-  const formData = new FormData();
-  formData.append("file", file);         // MUST match @RequestParam("file")
-  formData.append("docType", docType);   // Optional param
+  static async uploadStudentDocument(studentId, docType, file) {
+    console.log(`📂 Uploading ${docType} for student ${studentId}:`, file.name);
+    const formData = new FormData();
+    formData.append("file", file); // MUST match @RequestParam("file")
+    formData.append("docType", docType); // Optional param
 
-  try {
-    const response = await axios.post(
-      `${Endpoints.uploadStudentDocs}/${studentId}/upload`,  // << fix: use actual studentId
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: false // Or true, if backend requires cookies
-      }
-    );
-    console.log("✅ Upload Success:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error(`❌ Error uploading ${docType}:`, error);
-    throw error;
+    try {
+      const response = await axios.post(
+        `${Endpoints.uploadStudentDocs}/${studentId}/upload`, // << fix: use actual studentId
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: false, // Or true, if backend requires cookies
+        }
+      );
+      console.log("✅ Upload Success:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`❌ Error uploading ${docType}:`, error);
+      throw error;
+    }
   }
-}
-static async updateStudentDocument (studentId, docId, docType, file)  {
+  static async updateStudentDocument(studentId, docId, docType, file) {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("docType", docType);
@@ -210,83 +199,90 @@ static async updateStudentDocument (studentId, docId, docType, file)  {
     return response.data;
   }
 
-
-static async getStudentDocuments(studentId) {
-  try {
-    const response = await axios.get(
-      `${Endpoints.getStudentDocuments}/${studentId}/studentDocList`,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response;
-  } catch (error) {
-    console.error("⚠️ Get student documents error:", error);
-    throw error;
+  static async getStudentDocuments(studentId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getStudentDocuments}/${studentId}/studentDocList`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get student documents error:", error);
+      throw error;
+    }
   }
-}  
-static async getStudentPhotos(studentId) {
-  try {
-    const response = await axios.get(
-      `${Endpoints.getStudentPhotos}/${studentId}`,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response;
-  } catch (error) {
-    console.error("⚠️ Get student photos error:", error);
-    throw error;
+  static async getStudentPhotos(studentId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getStudentPhotos}/${studentId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get student photos error:", error);
+      throw error;
+    }
   }
-}
-static async searchStudentFees({ rollNumber, className }) {
-  console.log("🔍 Searching fees for:", { rollNumber, className });
-  try {
-    const response = await axios.get(Endpoints.searchStudentFees, {
-      params: { className, rollNumber },
-    });
-    return response;
-  } catch (error) {
-    console.error("⚠️ Search student fees error:", error);
-    throw error;
+  static async searchStudentFees({ rollNumber, className }) {
+    console.log("🔍 Searching fees for:", { rollNumber, className });
+    try {
+      const response = await axios.get(Endpoints.searchStudentFees, {
+        params: { className, rollNumber },
+      });
+      return response;
+    } catch (error) {
+      console.error("⚠️ Search student fees error:", error);
+      throw error;
+    }
   }
-}
-static async saveStudentPayment(paymentPayload) {
-  console.log("💰 Saving student payment:", paymentPayload);
-  try {
-    const response = await axios.post(
-      `${Endpoints.saveStudentPayment}/${paymentPayload.studentId}`,
-      paymentPayload,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response;
-  } catch (error) {
-    console.error("❌ Error saving student payment:", error);
-    throw error;
-  }   
-}
-static async addSubject(subjectData) {
-  try {
-    const response = await axios.post(
-      Endpoints.addSubject,
-      subjectData,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response;
-  } catch (error) {
-    console.error("⚠️ Add subject error:", error);
-    throw error;
-  }   
-}
-static async getAllSubjects() {
-  try {
-    const response = await axios.get(
-      Endpoints.getAllSubjects,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response;
-  } catch (error) {
-    console.error("⚠️ Get all subjects error:", error);
-    throw error;
-  }   
-}
-static async getAllStudentsByClassId(classId) {
+  static async saveStudentPayment(paymentPayload) {
+    console.log("💰 Saving student payment:", paymentPayload);
+    try {
+      const response = await axios.post(
+        `${Endpoints.saveStudentPayment}/${paymentPayload.studentId}`,
+        paymentPayload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("❌ Error saving student payment:", error);
+      throw error;
+    }
+  }
+  static async addSubject(subjectData) {
+    try {
+      const response = await axios.post(Endpoints.addSubject, subjectData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      return response;
+    } catch (error) {
+      console.error("⚠️ Add subject error:", error);
+      throw error;
+    }
+  }
+  static async getAllSubjects() {
+    try {
+      const response = await axios.get(Endpoints.getAllSubjects, {
+        headers: { "Content-Type": "application/json" },
+      });
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get all subjects error:", error);
+      throw error;
+    }
+  }
+  // static async StudentMarksheet() {
+  //   try {
+  //     const response = await axios.get(Endpoints.StudentMarksheet, {
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     return response;
+  //   } catch (error) {
+  //     console.error("Get all marksheet error:", error);
+  //     throw error;
+  //   }
+  // }
+  static async getAllStudentsByClassId(classId) {
     try {
       const response = await axios.get(
         `${Endpoints.getAllStudentsByClassId}/${classId}`,
@@ -298,7 +294,7 @@ static async getAllStudentsByClassId(classId) {
       throw error;
     }
   }
-static async getAllSubjectsByClassId(classId) {
+  static async getAllSubjectsByClassId(classId) {
     try {
       const response = await axios.get(
         `${Endpoints.getAllSubjectsByClassId}/${classId}`,
@@ -310,44 +306,42 @@ static async getAllSubjectsByClassId(classId) {
       throw error;
     }
   }
-static async submitMarks(payload) {
+  static async submitMarks(payload) {
     try {
-      const response = await axios.post(
-        `${Endpoints.submitMarks}`,
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post(`${Endpoints.submitMarks}`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
       return response;
     } catch (error) {
       console.error("⚠️ Submit marks error:", error);
       throw error;
     }
   }
-static async getAllDetailsByClass(classId) {
-  try {
-    const response = await axios.get(
-      `${Endpoints.getAllDetailsByClass}/${classId}/details`,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("⚠️ Get all details by class error:", error);
-    throw error;
+  static async getAllDetailsByClass(classId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getAllDetailsByClass}/${classId}/details`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("⚠️ Get all details by class error:", error);
+      throw error;
+    }
   }
-}
-static async getAllUsersByRoleId(roleId) {
-  try {
-    const response = await axios.get(
-      `${Endpoints.getAllUsersByRole}/${roleId}/with-attendance`,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("⚠️ Get all users by role ID error:", error);
-    throw error;
-  } 
-}
-static async submitTeacherAttendance(payload) {
+  static async getAllUsersByRoleId(roleId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getAllUsersByRole}/${roleId}/with-attendance`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("⚠️ Get all users by role ID error:", error);
+      throw error;
+    }
+  }
+  static async submitTeacherAttendance(payload) {
     try {
       const response = await axios.post(
         Endpoints.submitTeacherAttendance,
@@ -362,11 +356,9 @@ static async submitTeacherAttendance(payload) {
   }
   static async addTimeTable(payload) {
     try {
-      const response = await axios.post(
-        Endpoints.addTimeTable,
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post(Endpoints.addTimeTable, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
       return response;
     } catch (error) {
       console.error("⚠️ Add timetable error:", error);
@@ -374,7 +366,7 @@ static async submitTeacherAttendance(payload) {
     }
   }
   static async getTimeTableByClass(classId) {
-     const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0];
     try {
       const response = await axios.get(
         `${Endpoints.getTimeTableByClass}/${classId}?date=${today}`,
@@ -388,10 +380,9 @@ static async submitTeacherAttendance(payload) {
   }
   static async getDashboardStats() {
     try {
-      const response = await axios.get(
-        Endpoints.getDashboardStats,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.get(Endpoints.getDashboardStats, {
+        headers: { "Content-Type": "application/json" },
+      });
       return response.data;
     } catch (error) {
       console.error("⚠️ Get dashboard stats error:", error);

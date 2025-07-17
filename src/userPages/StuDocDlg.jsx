@@ -9,37 +9,35 @@ import {
   Paper,
   Typography,
   Button,
+  Divider,
 } from "@mui/material";
 import Network from "../Application/Network";
 import Endpoints from "../Application/Endpoints";
 
-// All expected document types
-const documentFields = [
-  "studentPhoto", "fatherPhoto",  "motherPhoto",  "guardianPhoto",
-  "aadharCard", "panCard", "sssmid", "casteCertificate", "incomeCertificate",
-  "domicileCertificate", "transferCertificate", "migrationCertificate",
-  "characterCertificate", "previousMarksheet", "disabilityCertificate",
-  "rationCard", "admissionForm", "passbook"
-];
+const documentFields = {
+  Photos: [
+    "studentPhoto", "fatherPhoto", "motherPhoto", "guardianPhoto"
+  ],
+  Certificates: [
+    "aadharCard", "panCard", "sssmid", "casteCertificate", "incomeCertificate",
+    "domicileCertificate", "disabilityCertificate", "rationCard", "passbook"
+  ],
+  Academic: [
+    "transferCertificate", "migrationCertificate", "characterCertificate",
+    "previousMarksheet", "admissionForm"
+  ]
+};
 
-
-
-// Converts camelCase to readable label
 const labelMap = (field) =>
-  field
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (str) => str.toUpperCase());
+  field.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
 
 const StuDocDlg = ({ studentId, data }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
 
-  // Create a map of uploaded docs for quick lookup
   const docMap = useMemo(() => {
     if (!Array.isArray(data)) return {};
     return data.reduce((acc, doc) => {
-      if (doc?.docType) {
-        acc[doc.docType] = doc;
-      }
+      if (doc?.docType) acc[doc.docType] = doc;
       return acc;
     }, {});
   }, [data]);
@@ -47,6 +45,13 @@ const StuDocDlg = ({ studentId, data }) => {
   const handleFileChange = async (e, docType) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // ✅ Optional: Validate file size (limit: 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size should be less than 5MB");
+      e.target.value = null;
+      return;
+    }
 
     setSelectedFiles((prev) => ({
       ...prev,
@@ -64,62 +69,81 @@ const StuDocDlg = ({ studentId, data }) => {
       }
     } catch (err) {
       console.error(`❌ Failed to process ${docType}:`, err.message);
+      alert(`Failed to upload ${labelMap(docType)}: ${err.message}`);
     }
 
     e.target.value = null;
   };
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 2 }}>
-      <Typography variant="h6" sx={{ p: 2 }}>
-        Upload Student Documents
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Document Type</strong></TableCell>
-            <TableCell><strong>Upload</strong></TableCell>
-            <TableCell><strong>Selected / Uploaded File</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {documentFields.map((field) => (
-            <TableRow key={field}>
-              <TableCell>{labelMap(field)}</TableCell>
+    <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 2 }}>
+      <Typography variant="h6" gutterBottom>Student Documents</Typography>
+      <Divider sx={{ mb: 3 }} />
 
-              <TableCell>
-                <Button variant="outlined" component="label">
-                  Choose File
-                  <input
-                    type="file"
-                    hidden
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) => handleFileChange(e, field)}
-                  />
-                </Button>
-              </TableCell>
-
-              <TableCell>
-                {docMap[field]?.fileName ? (
-                  <a
-                    href={`${Endpoints.getStudentDocuments}/${studentId}/preview/${docMap[field].stuDocId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {docMap[field].fileName}
-                  </a>
-                ) : selectedFiles[field]?.name ? (
-                  selectedFiles[field].name
-                ) : (
-                  <em>No file chosen</em>
-                )}
-              </TableCell>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Document Type</strong></TableCell>
+              <TableCell><strong>Upload</strong></TableCell>
+              <TableCell><strong>Selected / Uploaded File</strong></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+
+          <TableBody>
+            {Object.entries(documentFields).map(([section, fields]) => (
+              <React.Fragment key={section}>
+                <TableRow>
+                  <TableCell colSpan={3} sx={{ backgroundColor: "#f5f5f5" }}>
+                    <Typography variant="subtitle1" fontWeight={600}>
+                      {section}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+                {fields.map((field) => (
+                  <TableRow key={field}>
+                    <TableCell>{labelMap(field)}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        component="label"
+                        size="small"
+                        aria-label={`Upload ${labelMap(field)}`}
+                      >
+                        Choose File
+                        <input
+                          type="file"
+                          hidden
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          onChange={(e) => handleFileChange(e, field)}
+                        />
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      {docMap[field]?.fileName ? (
+                        <a
+                          href={`${Endpoints.getStudentDocuments}/${studentId}/preview/${docMap[field].stuDocId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {docMap[field].fileName}
+                        </a>
+                      ) : selectedFiles[field]?.name ? (
+                        selectedFiles[field].name
+                      ) : (
+                        <em>No file chosen</em>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 };
 
 export default StuDocDlg;
+  

@@ -146,7 +146,7 @@ const SubjectManager = () => {
               Add Subject
             </Button>
           </Grid>
-          <Grid item>
+          <Grid item width={200}>
             <ClassDropDown onSelect={handleClassFilter} />
           </Grid>
         </Grid>

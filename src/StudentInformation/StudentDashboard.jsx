@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Box,
   AppBar,
@@ -16,82 +15,41 @@ import {
 } from "@mui/material";
 import {
   Menu as MenuIcon,
-  SchoolOutlined as SchoolOutlinedIcon,
-  PeopleAltOutlined as PeopleAltOutlinedIcon,
-  PersonAddAltOutlined as PersonAddAltOutlinedIcon,
-  CalendarMonthOutlined as CalendarMonthOutlinedIcon,
-  MenuBookOutlined as MenuBookOutlinedIcon,
+  SchoolOutlined as DescriptionIcon ,
   AssignmentOutlined as AssignmentOutlinedIcon,
-  EventAvailableOutlined as EventAvailableOutlinedIcon,
   LogoutOutlined as LogoutOutlinedIcon,
   GridViewOutlined as GridViewOutlinedIcon,
   CurrencyRupeeOutlined as CurrencyRupeeOutlinedIcon,
 } from "@mui/icons-material";
 
 
+// ✅ ONLY these 4 items will be displayed
 const drawerItems = [
   {
-    label: "Add Staff", // 10 characters (with space)
-    icon: <PersonAddAltOutlinedIcon />,
-    path: "/newEmployee",
-  },
-  {
-    label: "Dashboard",
+    label: "Profile",
     icon: <GridViewOutlinedIcon />,
-    path: "/adminUser",
+    path: "/home",
   },
   {
-    label: "Fee Panel",
+    label: "FeesPanel",
     icon: <CurrencyRupeeOutlinedIcon />,
-    path: "/fees",
+    path: "/studentfeespanel",
   },
   {
-    label: "Mark Sheet",
+    label: "Marksheet",
+    icon: <DescriptionIcon />,
+    path: "/studentMarksheet",
+  },
+  
+  {
+    label: "Result",
     icon: <AssignmentOutlinedIcon />,
-    path: "/marksEntryPage",
+    path: "/result",
   },
-  {
-    label: "Students",
-    icon: <SchoolOutlinedIcon />,
-    path: "/StudentUser",
-  },
-  {
-    label: "Subjects",
-    icon: <MenuBookOutlinedIcon />,
-    path: "/subjectManager",
-  },
-  {
-    label: "Attendance",
-    icon: <EventAvailableOutlinedIcon />,
-    path: "/teacherAttendancePage",
-  },
-  {
-    label: "Teachers",
-    icon: <PeopleAltOutlinedIcon />,
-    path: "/teachersUser",
-  },
-  {
-    label: "Timetable",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/timetable",
-  },
-   {
-
-    label: "teacherdetls",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/TeacherDasboard",
-  },
- 
-{
-    label: "StudentInfo",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/studentinfo",
-  },
-
+  
 ];
 
-
-const Sidekick = () => {
+const StudentDashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -100,17 +58,39 @@ const Sidekick = () => {
 
   return (
     <Box>
-      {/* AppBar */}
-      <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main }}>
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          width: "100%",
+          top: 0,
+          left: 0,
+          zIndex: theme.zIndex.drawer + 1,
+        }}
+      >
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} sx={{ mr: 2 }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={toggleDrawer(true)}
+            sx={{ mr: 2 }}
+          >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" fontWeight={600}>
-            Admin Panel
-          </Typography>
+          <Typography
+                      variant="h5"
+                      fontWeight="bold"
+                      color="white"
+                      marginLeft={40}
+                      letterSpacing={1}
+                    >
+                      CHANDRA SHEKHAR AZAD HIGHER SECONDARY SCHOOL
+                    </Typography>
         </Toolbar>
       </AppBar>
+      <Box>
+        
+      </Box>
 
       {/* Drawer */}
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
@@ -125,7 +105,15 @@ const Sidekick = () => {
           role="presentation"
           onClick={toggleDrawer(false)}
         >
-          <Typography variant="h6" sx={{ px: 3, py: 2, fontWeight: "bold", color: theme.palette.primary.main }}>
+          <Typography
+            variant="h6"
+            sx={{
+              px: 3,
+              py: 2,
+              fontWeight: "bold",
+              color: theme.palette.primary.main,
+            }}
+          >
             Menu
           </Typography>
 
@@ -153,7 +141,14 @@ const Sidekick = () => {
                   },
                 }}
               >
-                <Box sx={{ mr: 2, display: "flex", alignItems: "center", color: theme.palette.primary.main }}>
+                <Box
+                  sx={{
+                    mr: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    color: theme.palette.primary.main,
+                  }}
+                >
                   {item.icon}
                 </Box>
                 <ListItemText primary={item.label} />
@@ -163,7 +158,7 @@ const Sidekick = () => {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Divider and Logout */}
+          {/* Logout Button */}
           <Divider />
           <List sx={{ mb: 2 }}>
             <ListItem
@@ -198,4 +193,4 @@ const Sidekick = () => {
   );
 };
 
-export default Sidekick;
+export default StudentDashboard;

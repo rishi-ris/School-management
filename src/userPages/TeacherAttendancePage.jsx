@@ -85,7 +85,7 @@ const TeacherAttendancePage = () => {
 
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} sx={{width:"200px"}}>
+          <Grid item xs={12} sm={6}>
             <RoleDropdown onSelect={onRolesSelect} />
           </Grid>
         </Grid>

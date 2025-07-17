@@ -1,4 +1,4 @@
-const baseURL =  "http://192.168.10.16:8080"; // Use this for local development
+const baseURL =  "http://192.168.1.34:8080"; // Use this for local development
 const Endpoints = {
   getAllRoles: baseURL + "/roles/getRoles",
   getAllClasses: baseURL + "/classes/getAllClasses",
@@ -26,6 +26,7 @@ const Endpoints = {
   addTimeTable: baseURL + "/timetable/create",
   getTimeTableByClass: baseURL + "/timetable/class",
   getDashboardStats: baseURL + "/dashboard/stats",
+  // StudentMarksheet: baseURL+ "/marksheets/evaluate/1",
 };
 
 export default Endpoints;
