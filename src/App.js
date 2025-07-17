@@ -15,8 +15,20 @@ import SubjectManager from './userPages/SubjectManager';
 import MarksEntryPage from './userPages/MarksEntryPage';
 import TeacherAttendancePage from './userPages/TeacherAttendancePage';
 import PaymentReceipt from './userPages/PaymentReceipt';
+
+import TeacherSubjectManager from './teacherdetls/TeacherSubjectManager';
+import TeacherDashboardside from './teacherdetls/TeacherDasboardside';
+import TeacherDasboardAttendance from './teacherdetls/TeacherDasboardAttendance';
+import TeacherDasboard from './teacherdetls/TeacherDashboard';
+import TeacherMarksEntry from './teacherdetls/TeacherMarksEntry';
+
+
+
+
 function App() {
   return (
+    <>
+   
     <Routers>
       <Routes>
         <Route path='/' element={<SchoolFrontPage/>}></Route>
@@ -34,10 +46,16 @@ function App() {
         <Route path='/marksEntryPage' element={<MarksEntryPage/>}></Route>
         <Route path='/teacherAttendancePage' element={<TeacherAttendancePage/>}></Route>
         <Route path='/paymentReceipt' element={<PaymentReceipt/>}></Route>
+        <Route path='/TeacherDasboard' element={<TeacherDasboard/>}/>
+        <Route path='TeacherDasboardsike' element={<TeacherDashboardside/>}/>
+         <Route path='/TeacherSubjectManager' element={<TeacherSubjectManager/>}/>
+         <Route path='teacherDasboradAttendance' element ={<TeacherDasboardAttendance/>}/>
+         <Route path='/teacherMarksEntryPage' element={<TeacherMarksEntry/>}/>
         <Route path='*' element={<h1>404 Not Found</h1>}></Route>
 
       </Routes>
     </Routers>
+     </>
   );
 }
 

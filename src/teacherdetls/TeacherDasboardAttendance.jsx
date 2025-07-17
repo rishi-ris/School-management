@@ -14,9 +14,10 @@ import {
 
 import Network from "../Application/Network";
 import RoleDropdown from "../component/RoleDropdown";
-import TeacherDashboard from "../teacherdetls/TeacherDashboard";
 
-const TeacherAttendancePage = () => {
+import TeacherDashboardside from "./TeacherDasboardside";
+
+const TeacherDasboardAttendance = () => {
   const [teachers, setTeachers] = useState([]);
   const [attendance, setAttendance] = useState({});
   const [selectedRoleId, setSelectedRoleId] = useState("");
@@ -76,7 +77,7 @@ const TeacherAttendancePage = () => {
 
   return (
     <Box>
-    <TeacherDashboard/>
+    <TeacherDashboardside/>
     
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
@@ -151,4 +152,4 @@ const TeacherAttendancePage = () => {
   );
 };
 
-export default TeacherAttendancePage;
+export default TeacherDasboardAttendance ;

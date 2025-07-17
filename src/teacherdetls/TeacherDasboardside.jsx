@@ -29,61 +29,29 @@ import {
 
 
 const drawerItems = [
-  {
-    label: "Add Staff", // 10 characters (with space)
-    icon: <PersonAddAltOutlinedIcon />,
-    path: "/newEmployee",
-  },
-  {
-    label: "Dashboard",
-    icon: <GridViewOutlinedIcon />,
-    path: "/adminUser",
-  },
-  {
-    label: "Fee Panel",
-    icon: <CurrencyRupeeOutlinedIcon />,
-    path: "/fees",
-  },
-  {
-    label: "Mark Sheet",
-    icon: <AssignmentOutlinedIcon />,
-    path: "/marksEntryPage",
-  },
-  {
-    label: "Students",
-    icon: <SchoolOutlinedIcon />,
-    path: "/StudentUser",
-  },
-  {
-    label: "Subjects",
-    icon: <MenuBookOutlinedIcon />,
-    path: "/subjectManager",
-  },
-  {
-    label: "Attendance",
-    icon: <EventAvailableOutlinedIcon />,
-    path: "/teacherAttendancePage",
-  },
-  {
-    label: "Teachers",
-    icon: <PeopleAltOutlinedIcon />,
-    path: "/teachersUser",
-  },
-  {
-    label: "Timetable",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/timetable",
-  },
-   {
-    label: "teacherdetls",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/TeacherDasboard",
-  },
+  
+      {
+        label: "Attendance",
+        icon: <EventAvailableOutlinedIcon />,
+        path: "/teacherDasboradAttendance",
+      },
+       {
+     label: "Subjects",
+       icon: <MenuBookOutlinedIcon />,
+        path: "/TeacherSubjectManager",
+      },
+        {
+          label: "Mark Sheet",
+          icon: <AssignmentOutlinedIcon />,
+          path: "/teacherMarksEntryPage",
+        },
+
+
  
 ];
 
 
-const Sidekick = () => {
+const TeacherDashboardside= () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -99,7 +67,7 @@ const Sidekick = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" fontWeight={600}>
-            Admin Panel
+            Teacher Panel
           </Typography>
         </Toolbar>
       </AppBar>
@@ -190,4 +158,4 @@ const Sidekick = () => {
   );
 };
 
-export default Sidekick;
+export default TeacherDashboardside ;
