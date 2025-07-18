@@ -15,6 +15,7 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  Typography
 } from '@mui/material';
 import MultiSelClassDropD from '../component/MultiSelClassDropD';
 import Network from '../Application/Network';
@@ -26,6 +27,7 @@ const SubjectManager = () => {
   const [subjectName, setSubjectName] = useState('');
   const [selectedClass, setSelectedClass] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const [totalTheoryMarks, setTotalTheoryMarks] = useState('');
   const [passingTheoryMarks, setPassingTheoryMarks] = useState('');
@@ -33,7 +35,6 @@ const SubjectManager = () => {
   const [totalInternalMarks, setTotalInternalMarks] = useState('');
   const [passingInternalMarks, setPassingInternalMarks] = useState('');
 
-  // Fetch all subjects on load
   useEffect(() => {
     fetchSubjects();
   }, []);
@@ -59,16 +60,6 @@ const SubjectManager = () => {
     }
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-    resetForm();
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    resetForm();
-  };
-
   const resetForm = () => {
     setSubjectName('');
     setSelectedClass([]);
@@ -77,43 +68,69 @@ const SubjectManager = () => {
     setHasInternal(false);
     setTotalInternalMarks('');
     setPassingInternalMarks('');
+    setErrors({});
+  };
+
+  const handleOpen = () => {
+    resetForm();
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    resetForm();
+    setOpen(false);
+  };
+
+  const validate = () => {
+    const err = {};
+    if (!subjectName.trim()) err.subjectName = 'Subject Name is required';
+    if (selectedClass.length === 0) err.selectedClass = 'Please select at least one class';
+
+    if (totalTheoryMarks === '') err.totalTheoryMarks = 'Required';
+    else if (totalTheoryMarks < 0 || totalTheoryMarks > 100) err.totalTheoryMarks = '0–100 only';
+
+    if (passingTheoryMarks === '') err.passingTheoryMarks = 'Required';
+    else if (passingTheoryMarks < 0 || passingTheoryMarks > 100) err.passingTheoryMarks = '0–100 only';
+
+    if (hasInternal) {
+      if (totalInternalMarks === '') err.totalInternalMarks = 'Required';
+      else if (totalInternalMarks < 0 || totalInternalMarks > 100) err.totalInternalMarks = '0–100 only';
+
+      if (passingInternalMarks === '') err.passingInternalMarks = 'Required';
+      else if (passingInternalMarks < 0 || passingInternalMarks > 100) err.passingInternalMarks = '0–100 only';
+    }
+
+    setErrors(err);
+    return Object.keys(err).length === 0;
   };
 
   const handleSave = async () => {
-    if (!subjectName || selectedClass.length === 0 || !totalTheoryMarks || !passingTheoryMarks) {
-      alert('Please fill all required fields');
-      return;
-    }
+    if (!validate()) return;
 
     const payload = {
       title: subjectName.trim(),
-      classIds: selectedClass.map(cls => (cls.classId )),
+      classIds: selectedClass.map(cls => cls.classId),
       totalTheoryMarks: parseInt(totalTheoryMarks),
       passingTheoryMarks: parseInt(passingTheoryMarks),
-      hasInternal: hasInternal,
+      hasInternal,
       totalInternalMarks: hasInternal ? parseInt(totalInternalMarks || 0) : 0,
       passingInternalMarks: hasInternal ? parseInt(passingInternalMarks || 0) : 0,
     };
 
     try {
       const response = await Network.addSubject(payload);
-      if (!response.data) {
-        throw new Error(`Failed to save subject: ${response.statusText}`);
-      }
-
+      if (!response.data) throw new Error('Save failed');
       await fetchSubjects();
       handleClose();
     } catch (err) {
-      console.error('❌ Error saving subject:', err);
-      alert('Failed to save subject.');
+      console.error('❌ Error saving subject:', err.response.data.errors.unique_constraint);
+      alert(err.response.data.errors.unique_constraint);
     }
   };
+
   const handleClassFilter = async (classId) => {
     setSubjects([]);
-    if (!classId) {
-      alert('Please select a class to filter subjects.');
-      return;
-    }
+    if (!classId) return;
     try {
       const response = await Network.getAllSubjectsByClassId(classId.classId);
       if (Array.isArray(response.data)) {
@@ -125,7 +142,6 @@ const SubjectManager = () => {
           hasInternal: subj.hasInternal,
           totalInternalMarks: subj.totalInternalMarks,
           passingInternalMarks: subj.passingInternalMarks,
-        
         }));
         setSubjects(formatted);
       }
@@ -133,25 +149,21 @@ const SubjectManager = () => {
       console.error('❌ Failed to filter subjects:', err);
       alert('Error filtering subjects by class.');
     }
-  };  
+  };
 
   return (
     <Box>
       <Sidekick />
-
       <Box p={3}>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={2}>
           <Grid item>
-            <Button variant="contained" onClick={handleOpen}>
-              Add Subject
-            </Button>
+            <Button variant="contained" onClick={handleOpen}>Add Subject</Button>
           </Grid>
-          <Grid item width={200}>
+          <Grid item sx={{width:"180px"}}>
             <ClassDropDown onSelect={handleClassFilter} />
           </Grid>
         </Grid>
 
-        {/* Dialog Box */}
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add Subject</DialogTitle>
           <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
@@ -159,22 +171,27 @@ const SubjectManager = () => {
               label="Subject Name"
               value={subjectName}
               onChange={(e) => setSubjectName(e.target.value)}
+              error={!!errors.subjectName}
+              helperText={errors.subjectName}
               fullWidth
-              required
             />
 
             <MultiSelClassDropD
               onSelect={setSelectedClass}
               selectedClassIds={selectedClass.map(cls => cls.classId)}
             />
+            {errors.selectedClass && (
+              <Typography color="error" variant="caption">{errors.selectedClass}</Typography>
+            )}
 
             <TextField
               label="Total Theory Marks"
               type="number"
               value={totalTheoryMarks}
               onChange={(e) => setTotalTheoryMarks(e.target.value)}
+              error={!!errors.totalTheoryMarks}
+              helperText={errors.totalTheoryMarks}
               fullWidth
-              required
             />
 
             <TextField
@@ -182,17 +199,13 @@ const SubjectManager = () => {
               type="number"
               value={passingTheoryMarks}
               onChange={(e) => setPassingTheoryMarks(e.target.value)}
+              error={!!errors.passingTheoryMarks}
+              helperText={errors.passingTheoryMarks}
               fullWidth
-              required
             />
 
             <FormControlLabel
-              control={
-                <Checkbox
-                  checked={hasInternal}
-                  onChange={(e) => setHasInternal(e.target.checked)}
-                />
-              }
+              control={<Checkbox checked={hasInternal} onChange={(e) => setHasInternal(e.target.checked)} />}
               label="Has Internal Marks"
             />
 
@@ -203,6 +216,8 @@ const SubjectManager = () => {
                   type="number"
                   value={totalInternalMarks}
                   onChange={(e) => setTotalInternalMarks(e.target.value)}
+                  error={!!errors.totalInternalMarks}
+                  helperText={errors.totalInternalMarks}
                   fullWidth
                 />
                 <TextField
@@ -210,58 +225,52 @@ const SubjectManager = () => {
                   type="number"
                   value={passingInternalMarks}
                   onChange={(e) => setPassingInternalMarks(e.target.value)}
+                  error={!!errors.passingInternalMarks}
+                  helperText={errors.passingInternalMarks}
                   fullWidth
                 />
               </>
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} variant="outlined">
-              Cancel
-            </Button>
-            <Button onClick={handleSave} variant="contained">
-              Save
-            </Button>
+            <Button onClick={handleClose} variant="outlined">Cancel</Button>
+            <Button onClick={handleSave} variant="contained">Save</Button>
           </DialogActions>
         </Dialog>
 
-        {/* Table Section */}
         <Box mt={4}>
           <Table>
-  <TableHead>
-    <TableRow>
-      <TableCell>Subject Name</TableCell>
-      <TableCell>Classes</TableCell>
-      <TableCell>Total Theory Marks</TableCell>
-      <TableCell>Passing Theory Marks</TableCell>
-      <TableCell>Has Internal</TableCell>
-      <TableCell>Total Internal Marks</TableCell>
-      <TableCell>Passing Internal Marks</TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    {subjects.length > 0 ? (
-      subjects.map((subj, index) => (
-        <TableRow key={index}>
-          <TableCell>{subj.title}</TableCell>
-          <TableCell>{subj.className}</TableCell>
-          <TableCell>{subj.totalTheoryMarks}</TableCell>
-          <TableCell>{subj.passingTheoryMarks}</TableCell>
-          <TableCell>{subj.hasInternal ? "Yes" : "No"}</TableCell>
-          <TableCell>{subj.totalInternalMarks}</TableCell>
-          <TableCell>{subj.passingInternalMarks}</TableCell>
-        </TableRow>
-      ))
-    ) : (
-      <TableRow>
-        <TableCell colSpan={7} align="center">
-          No subjects found for the selected class. Please add subject or select another class.
-        </TableCell>
-      </TableRow>
-    )}
-  </TableBody>
-</Table>
-
+            <TableHead>
+              <TableRow>
+                <TableCell>Subject Name</TableCell>
+                <TableCell>Classes</TableCell>
+                <TableCell>Total Theory Marks</TableCell>
+                <TableCell>Passing Theory Marks</TableCell>
+                <TableCell>Has Internal</TableCell>
+                <TableCell>Total Internal Marks</TableCell>
+                <TableCell>Passing Internal Marks</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {subjects.length > 0 ? (
+                subjects.map((subj, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{subj.title}</TableCell>
+                    <TableCell>{subj.className}</TableCell>
+                    <TableCell>{subj.totalTheoryMarks}</TableCell>
+                    <TableCell>{subj.passingTheoryMarks}</TableCell>
+                    <TableCell>{subj.hasInternal ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{subj.totalInternalMarks}</TableCell>
+                    <TableCell>{subj.passingInternalMarks}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">No subjects found</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </Box>
       </Box>
     </Box>

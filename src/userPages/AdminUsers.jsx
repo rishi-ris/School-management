@@ -115,9 +115,9 @@ const Dashboard = ({ stats, navigate }) => {
       <Typography variant="h5" mb={3} fontWeight="bold">
         Admin Dashboard
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} >
         {cardData.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+          <Grid item xs={12} sm={6} md={4} key={index} >
             <DashboardCard {...item} />
           </Grid>
         ))}

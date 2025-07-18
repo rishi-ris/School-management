@@ -22,7 +22,7 @@ const MarksEntryPage = () => {
   const [subjects, setSubjects] = useState([]);
   const [academicYears] = useState([
     { year: "2024 - 2025", id: 1 },
-    { year: "2025 - 2026", id: 2 }
+    { year: "2025 - 2026", id: 2 },
   ]);
 
   const [selectedClassId, setSelectedClassId] = useState("");
@@ -42,8 +42,6 @@ const MarksEntryPage = () => {
           setStudents([]);
           setSubjects([]);
         });
-
-      
     }
   }, [selectedClassId]);
 
@@ -60,29 +58,18 @@ const MarksEntryPage = () => {
       setSelectedStudent(studentPin);
       setRollNumber(selected.rollNumber);
 
-      // const resetMarks = subjects.map((sub) => ({
-      //   subjectId: sub.subjectId,
-      //   subjectName: sub.subjectName,
-      //   totalTheoryMarks: sub.totalTheoryMarks,
-      //   totalInternalMarks: sub.totalInternalMarks,
-      //   passingTheoryMarks: sub.passingTheoryMarks,
-      //   passingInternalMarks: sub.passingInternalMarks,
-      //   obtainedTheoryMarks: "",
-      //   obtainedInternalMarks: "",
-      // }));
-      // setSubjectMarks(resetMarks);
       const initialMarks = subjects.map((sub) => ({
-            subjectId: sub.subjectId,
-            subjectName: sub.subjectName,
-            totalTheoryMarks: sub.totalTheoryMarks,
-            totalInternalMarks: sub.totalInternalMarks,
-            passingTheoryMarks: sub.passingTheoryMarks,
-            passingInternalMarks: sub.passingInternalMarks,
-            obtainedTheoryMarks: "",
-            obtainedInternalMarks: "",
-            hasInternal: sub.hasInternal, // ✅ add this
-          }));
-          setSubjectMarks(initialMarks);
+        subjectId: sub.subjectId,
+        subjectName: sub.subjectName,
+        totalTheoryMarks: sub.totalTheoryMarks,
+        totalInternalMarks: sub.totalInternalMarks,
+        passingTheoryMarks: sub.passingTheoryMarks,
+        passingInternalMarks: sub.passingInternalMarks,
+        obtainedTheoryMarks: "",
+        obtainedInternalMarks: "",
+        hasInternal: sub.hasInternal,
+      }));
+      setSubjectMarks(initialMarks);
     }
   };
 
@@ -93,6 +80,18 @@ const MarksEntryPage = () => {
   };
 
   const handleSubmit = () => {
+    const isAnyEmpty = subjectMarks.some((m) => {
+      return (
+        m.obtainedTheoryMarks === "" ||
+        (m.hasInternal && m.obtainedInternalMarks === "")
+      );
+    });
+
+    if (isAnyEmpty) {
+      alert("Please enter all marks before submitting.");
+      return;
+    }
+
     const payload = {
       studentId: selectedStudent,
       academicYear: selectedYear,
@@ -106,7 +105,9 @@ const MarksEntryPage = () => {
         passingTheoryMarks: parseInt(m.passingTheoryMarks),
         passingInternalMarks: parseInt(m.passingInternalMarks),
         obtainedTheoryMarks: parseInt(m.obtainedTheoryMarks),
-        obtainedInternalMarks: parseInt(m.obtainedInternalMarks),
+        obtainedInternalMarks: m.hasInternal
+          ? parseInt(m.obtainedInternalMarks)
+          : 0,
       })),
     };
 
@@ -118,170 +119,214 @@ const MarksEntryPage = () => {
       });
   };
 
+  const isAnyInvalid = subjectMarks.some(
+    (sub) =>
+      (sub.obtainedTheoryMarks !== "" &&
+        (Number(sub.obtainedTheoryMarks) < 0 ||
+          Number(sub.obtainedTheoryMarks) > 100)) ||
+      (sub.obtainedInternalMarks !== "" &&
+        (Number(sub.obtainedInternalMarks) < 0 ||
+          Number(sub.obtainedInternalMarks) > 100))
+  );
+
   return (
     <Box>
-      <Sidekick/>
-    
-    <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>
-        Enter Student Marks
-      </Typography>
+      <Sidekick />
 
-      <Paper elevation={3} sx={{ p: 3 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={3} width={200}>
-            <ClassDropDown onSelect={handleClassSelect} />
-          </Grid>
-          <Grid item xs={12} sm={3} width={200}>
-            <Select
-              fullWidth
-              value={selectedStudent}
-              onChange={(e) => handleStudentSelect(e.target.value)}
-              displayEmpty
-              disabled={!students.length}
-            >
-              <MenuItem value="" disabled>
-                Select Student
-              </MenuItem>
-              {students.map((s) => (
-                <MenuItem key={s.studentPin} value={s.studentPin}>
-                  {s.firstName} {s.lastName}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <Select
-              fullWidth
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              displayEmpty
-            >
-              <MenuItem value="" disabled>
-                Select Academic Year
-              </MenuItem>
-              {academicYears.map((y) => (
-                <MenuItem key={y.id} value={y.id}>
-                  {y.year}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Roll Number"
-              fullWidth
-              type="number"
-              value={rollNumber}
-              disabled
-            />
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 3 }} />
-
-        <Typography variant="h6" gutterBottom>
-          Subject Marks
+      <Container maxWidth="lg">
+        <Typography variant="h4" gutterBottom mt={2}>
+          Enter Student Marks
         </Typography>
 
-       <Grid container spacing={3}>
-  {subjectMarks.map((sub, index) => (
-    <Grid item xs={12} md={6} key={sub.subjectId}>
-      <Card variant="outlined">
-        <CardContent>
-          <Typography variant="subtitle1" gutterBottom>
-            <b>{sub.subjectName}</b>
-          </Typography>
-
-          {/* First Row - Theory Marks */}
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                label="Total Theory Marks"
-                type="number"
-                fullWidth
-                value={sub.totalTheoryMarks}
-                disabled
-              />
+        <Paper elevation={3} sx={{ p: 3 , width:'65%'}}>
+          {/* Top Section */}
+          <Grid container spacing={2} >
+            <Grid item xs={12} sm={6} md={3} sx={{width:"150px"}}>
+              <ClassDropDown onSelect={handleClassSelect} />
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Passing Theory Marks"
-                type="number"
+            <Grid item xs={12} sm={6} md={3} >
+              <Select
                 fullWidth
-                value={sub.passingTheoryMarks}
-                disabled
-              />
+                value={selectedStudent}
+                onChange={(e) => handleStudentSelect(e.target.value)}
+                displayEmpty
+                disabled={!students.length}
+              >
+                <MenuItem value="" disabled>
+                  Select Student
+                </MenuItem>
+                {students.map((s) => (
+                  <MenuItem key={s.studentPin} value={s.studentPin}>
+                    {s.firstName} {s.lastName}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Obtained Theory Marks"
-                type="number"
+            <Grid item xs={12} sm={6} md={3}>
+              <Select
                 fullWidth
-                value={sub.obtainedTheoryMarks}
-                onChange={(e) =>
-                  handleMarksChange(index, "obtainedTheoryMarks", e.target.value)
-                }
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Select Academic Year
+                </MenuItem>
+                {academicYears.map((y) => (
+                  <MenuItem key={y.id} value={y.id}>
+                    {y.year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                label="Roll Number"
+                fullWidth
+                type="number"
+                value={rollNumber}
+                disabled
               />
             </Grid>
           </Grid>
 
-          {/* Second Row - Internal Marks (only if hasInternal === true) */}
-          {sub.hasInternal && (
-            <Grid container spacing={2} mt={1}>
-              <Grid item xs={6}>
-                <TextField
-                  label="Total Internal Marks"
-                  type="number"
-                  fullWidth
-                  value={sub.totalInternalMarks}
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Passing Internal Marks"
-                  type="number"
-                  fullWidth
-                  value={sub.passingInternalMarks}
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Obtained Internal Marks"
-                  type="number"
-                  fullWidth
-                  value={sub.obtainedInternalMarks}
-                  onChange={(e) =>
-                    handleMarksChange(index, "obtainedInternalMarks", e.target.value)
-                  }
-                />
-              </Grid>
-            </Grid>
-          )}
-        </CardContent>
-      </Card>
-    </Grid>
-  ))}
-</Grid>
+          <Divider sx={{ my: 3 }} />
 
+          {/* Subject Entry Section */}
+          <Typography variant="h6" gutterBottom>
+            Subject Marks
+          </Typography>
 
-        <Box mt={4} textAlign="center">
-          <Button
-            variant="contained"
-            size="large"
-            color="primary"
-            onClick={handleSubmit}
-            disabled={
-              !selectedStudent || !selectedYear || subjectMarks.length === 0
-            }
-          >
-            Submit Marks
-          </Button>
-        </Box>
-      </Paper>
-    </Container>
+          <Grid container spacing={3}>
+            {subjectMarks.map((sub, index) => (
+              <Grid item xs={12} md={6} key={sub.subjectId}>
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <b>{sub.subjectName}</b>
+                    </Typography>
+
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <TextField
+                          label="Total Theory Marks"
+                          type="number"
+                          fullWidth
+                          value={sub.totalTheoryMarks}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField
+                          label="Passing Theory Marks"
+                          type="number"
+                          fullWidth
+                          value={sub.passingTheoryMarks}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          label="Obtained Theory Marks"
+                          type="number"
+                          fullWidth
+                          value={sub.obtainedTheoryMarks}
+                          onChange={(e) =>
+                            handleMarksChange(
+                              index,
+                              "obtainedTheoryMarks",
+                              e.target.value
+                            )
+                          }
+                          error={
+                            sub.obtainedTheoryMarks !== "" &&
+                            (Number(sub.obtainedTheoryMarks) < 0 ||
+                              Number(sub.obtainedTheoryMarks) > 100)
+                          }
+                          helperText={
+                            sub.obtainedTheoryMarks !== "" &&
+                            (Number(sub.obtainedTheoryMarks) < 0 ||
+                              Number(sub.obtainedTheoryMarks) > 100)
+                              ? "Please enter marks between 0 and 100"
+                              : ""
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+
+                    {sub.hasInternal && (
+                      <Grid container spacing={2} mt={1}>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Total Internal Marks"
+                            type="number"
+                            fullWidth
+                            value={sub.totalInternalMarks}
+                            disabled
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label="Passing Internal Marks"
+                            type="number"
+                            fullWidth
+                            value={sub.passingInternalMarks}
+                            disabled
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Obtained Internal Marks"
+                            type="number"
+                            fullWidth
+                            value={sub.obtainedInternalMarks}
+                            onChange={(e) =>
+                              handleMarksChange(
+                                index,
+                                "obtainedInternalMarks",
+                                e.target.value
+                              )
+                            }
+                            error={
+                              sub.obtainedInternalMarks !== "" &&
+                              (Number(sub.obtainedInternalMarks) < 0 ||
+                                Number(sub.obtainedInternalMarks) > 100)
+                            }
+                            helperText={
+                              sub.obtainedInternalMarks !== "" &&
+                              (Number(sub.obtainedInternalMarks) < 0 ||
+                                Number(sub.obtainedInternalMarks) > 100)
+                                ? "Please enter marks between 0 and 100"
+                                : ""
+                            }
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Box mt={4} textAlign="center">
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={handleSubmit}
+              disabled={
+                !selectedStudent ||
+                !selectedYear ||
+                subjectMarks.length === 0 ||
+                isAnyInvalid
+              }
+            >
+              Submit Marks
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
     </Box>
   );
 };
