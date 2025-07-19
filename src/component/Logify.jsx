@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -39,39 +39,50 @@ const Logify = () => {
       return;
     }
 
-    let response = {};
-    switch (onRolesSelectChange) {
-      case 1:
-      case 2:
-      case 3:
-        response = await Network.login(username, password);
-        break;
-      case 4:
-      case 5:
-        response = await Network.studentLogin(username, password);
-        break;
-      default:
-        setMessage("❌ Invalid role selected.");
-        return;
-    }
-
     try {
-      if (response.status === 200) {
+      let response = {};
+      switch (onRolesSelectChange) {
+        case 1:
+        case 2:
+        case 3:
+          response = await Network.login(username, password);
+          break;
+        case 4:
+        case 5:
+          response = await Network.studentLogin(username, password);
+          break;
+        default:
+          setMessage("❌ Invalid role selected.");
+          return;
+      }
+
+      if (response?.status === 200) {
         setMessage("✅ Login successful!");
         login(response); // Set context
         switch (onRolesSelectChange) {
-          case 1: navigate("/adminUser"); break;
-          case 3: navigate("/TeacherDasboard"); break;
-          case 4: navigate("/studentinfo"); break;
-          case 5: navigate("/TeacherDasboard"); break;
-          default: navigate("/");
+          case 1:
+            navigate("/adminUser");
+            break;
+          case 3:
+            navigate("/TeacherDasboard");
+            break;
+          case 4:
+            navigate("/studentinfo");
+            break;
+          case 5:
+            navigate("/TeacherDasboard");
+            break;
+          default:
+            navigate("/");
         }
       } else {
-        setMessage("❌ Invalid username or password.");
+        const errorMessage =
+          response?.data?.message || "❌ Invalid username or password.";
+        setMessage(`❌ ${errorMessage}`);
       }
     } catch (error) {
       console.error("Login error:", error);
-      setMessage("❌ An error occurred during login.");
+      setMessage("❌ Username and Password incorrect"); // ✅ Custom message here
     }
   };
 
@@ -133,7 +144,7 @@ const Logify = () => {
                 mt: 3,
                 py: 1.5,
                 borderRadius: 3,
-                backgroundColor: "var(--header-bg-color)",
+                backgroundColor: "var(--button-bg-color)",
               }}
             >
               Login
@@ -155,17 +166,17 @@ const Logify = () => {
         }}
       >
         <Typography variant="body2">
-    © {new Date().getFullYear()} All Rights Reserved —{" "}
-    <Link
-      href="https://arpanasoftwaressolution.co.in"
-      target="_blank"
-      rel="noopener noreferrer"
-      underline="hover"
-      sx={{ fontWeight: "bold" }}
-    >
-      Arpana Infotech Solutions
-    </Link>
-  </Typography>
+          © {new Date().getFullYear()} All Rights Reserved —{" "}
+          <Link
+            href="https://arpanasoftwaressolution.co.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="hover"
+            sx={{ fontWeight: "bold" }}
+          >
+            Arpana Infotech Solutions
+          </Link>
+        </Typography>
       </Box>
     </Box>
   );

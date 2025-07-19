@@ -19,7 +19,9 @@ import UseCommonText from "../CommonFile/UseCommonText";
 
 const StudentMarksheet = () => {
   const headerText = UseCommonText ("--headerText");
- 
+ const emailText = UseCommonText ("--emailText");
+ const contactNumber = UseCommonText ("--contactNumber");
+ const schoolBoardAddress = UseCommonText ("--schoolBoardAddress");
   const [data, setData] = useState(null);
 //  const response = await Network.StudentMarksheet();
   useEffect(() => {
@@ -108,11 +110,10 @@ const StudentMarksheet = () => {
             Jakhakhedi Jod, Distt. – Sehore (M.P.) – 466001
           </Typography>
           <Typography fontSize={15} color="text.secondary">
-            Mobile : 9165918557, 9301054099 | Email:
-            ChandraShekharAzad2003@gmail.com
+            {contactNumber}|{emailText}
           </Typography>
           <Typography fontWeight="bold" fontSize={15} color="primary.dark">
-            Affiliated to M.P. Board of Secondary Education
+            {schoolBoardAddress}
           </Typography>
         </Box>
 

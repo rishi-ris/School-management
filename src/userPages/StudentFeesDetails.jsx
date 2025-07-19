@@ -129,7 +129,7 @@ const StudentFeesDetails = ({ student }) => {
             mt={0}
             p={2}
             sx={{
-              background: "linear-gradient(90deg, #1976D2 60%, #42a5f5 100%)",
+            backgroundColor: "var(--header-bg-color)",
             }}
           >
              <Typography
@@ -160,7 +160,7 @@ const StudentFeesDetails = ({ student }) => {
                   padding: "5px",
                   mt: 2,
                   color: "white",
-                  backgroundColor: "#1976D2",
+                  backgroundColor: "var(--header-bg-color)",
                 }}
               >
                 Student Fees Details
@@ -222,7 +222,7 @@ const StudentFeesDetails = ({ student }) => {
                 color="primary"
                 onClick={handlePayClick}
                 disabled={due > 0}
-                sx={{ borderRadius: 2, fontWeight: 600, px: 4, py: 1 }}
+                sx={{ borderRadius: 2, fontWeight: 600, px: 4, py: 1, backgroundColor: "var(--button-bg-color)",}}
               >
                 Pay Fees
               </Button>

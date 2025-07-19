@@ -157,7 +157,7 @@ const SubjectManager = () => {
       <Box p={3}>
         <Grid container spacing={2}>
           <Grid item>
-            <Button variant="contained" onClick={handleOpen}>Add Subject</Button>
+            <Button variant="contained" onClick={handleOpen} sx={{backgroundColor: "var(--button-bg-color)",}}>Add Subject</Button>
           </Grid>
           <Grid item sx={{width:"180px"}}>
             <ClassDropDown onSelect={handleClassFilter} />
@@ -165,7 +165,7 @@ const SubjectManager = () => {
         </Grid>
 
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-          <DialogTitle>Add Subject</DialogTitle>
+          <DialogTitle >Add Subject</DialogTitle>
           <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <TextField
               label="Subject Name"

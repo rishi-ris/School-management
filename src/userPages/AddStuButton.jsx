@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 
 const AddStuButton = ({ onClick }) => (
   <Box display="flex" justifyContent="flex-end">
-    <Button variant="contained" color="success" onClick={onClick}>
+    <Button variant="contained" color="success" onClick={onClick} sx={{backgroundColor: "var(--button-bg-color)",}}>
       + Add New Student
     </Button>
   </Box>

@@ -133,7 +133,7 @@ useEffect(()=> {
               color="primary"
               fullWidth
               onClick={handleSubmit}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2,  }}
             >
               Submit Attendance
             </Button>

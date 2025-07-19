@@ -32,6 +32,7 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
   };
 const headerText = UseCommonText ("--headerText");
 const addressText = UseCommonText ("--addressText");
+const contactNumber = UseCommonText ("--contactNumber");
   return (
     <>
       <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth>
@@ -61,7 +62,7 @@ const addressText = UseCommonText ("--addressText");
             textAlign="center"
             py={2}
             sx={{
-              background: "linear-gradient(90deg, #1976D2 60%, #42a5f5 100%)",
+             backgroundColor: "var(--header-bg-color)",
               borderTopLeftRadius: 4,
               borderTopRightRadius: 4,
             }}
@@ -87,7 +88,7 @@ const addressText = UseCommonText ("--addressText");
                 mt: 0.5,
               }}
             >
-              Contact: 9165918557, 9301054099
+              {contactNumber}
             </Typography>
           </Box>
 
@@ -101,7 +102,7 @@ const addressText = UseCommonText ("--addressText");
               ml: 2,
               pl: 1,
               color: "white",
-              backgroundColor: "#1976D2",
+           backgroundColor: "var(--header-bg-color)",
             }}
           >
             Payment Recipt
@@ -146,7 +147,7 @@ const addressText = UseCommonText ("--addressText");
 
             {/* Close/Print Buttons */}
             <Box textAlign="center" mt={3} className="no-print">
-              <Button variant="contained" color="primary" onClick={onClose} sx={{ mr: 2 }}>
+              <Button variant="contained" color="primary" onClick={onClose} sx={{ mr: 2, backgroundColor: "var(--button-bg-color)", }}>
                 Close Receipt
               </Button>
               {showPrint && (

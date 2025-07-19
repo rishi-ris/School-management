@@ -61,7 +61,7 @@ const headerText = UseCommonText ("--headerText");
       <AppBar
         position="fixed"
         sx={{
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: "var(--header-bg-color)",
           width: "100%",
           top: 0,
           left: 0,

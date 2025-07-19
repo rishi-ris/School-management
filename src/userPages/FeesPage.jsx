@@ -124,7 +124,7 @@ const FeesPage = () => {
               sx={{
                 mt: 2,
                 fontWeight: "bold",
-                backgroundColor: "var(--header-bg-color)",
+                backgroundColor: "var(--button-bg-color)",
                 "&:hover": {
                   backgroundColor: "var(--buttonHover-bg-color)",
                 },

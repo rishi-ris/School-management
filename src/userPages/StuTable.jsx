@@ -40,7 +40,7 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
                     size="small"
                     color="success"
                     onClick={() => onEdit(student.studentId)} // Assuming onDetails is passed as a prop
-                    sx={{ mx: 1 }}
+                    sx={{ mx: 1,backgroundColor: "var(--button-bg-color)", }}
                   >
                     Details
                   </Button>
@@ -59,6 +59,7 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
                     color="success"
                     disabled={student.dueFees < 0}
                     onClick={() => payFees(student)}
+                    sx={{backgroundColor: "var(--button-bg-color)",}}
                   >
                     Pay Fees
                   </Button>
@@ -69,6 +70,7 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
                     size="small"
                     color="success"
                     onClick={() => documentsDetails(student.studentId)}
+                    sx={{backgroundColor: "var(--button-bg-color)",}}
                   >
                     Document
                   </Button>

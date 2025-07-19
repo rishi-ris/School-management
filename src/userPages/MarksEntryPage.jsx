@@ -321,6 +321,7 @@ const MarksEntryPage = () => {
                 subjectMarks.length === 0 ||
                 isAnyInvalid
               }
+              sx={{backgroundColor: "var(--button-bg-color)",}}
             >
               Submit Marks
             </Button>
