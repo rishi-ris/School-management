@@ -14,7 +14,7 @@ import {
 
 import Network from "../Application/Network";
 import RoleDropdown from "../component/RoleDropdown";
-import TeacherDashboard from "../teacherdetls/TeacherDashboard";
+import Sidekick from "../component/Sidekick";
 
 const TeacherAttendancePage = () => {
   const [teachers, setTeachers] = useState([]);
@@ -76,7 +76,7 @@ const TeacherAttendancePage = () => {
 
   return (
     <Box>
-    <TeacherDashboard/>
+   <Sidekick/>
     
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>

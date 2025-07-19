@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -12,9 +12,11 @@ import {
 import LoginIcon from "@mui/icons-material/Login";
 import Network from "../Application/Network";
 import RoleDropdown from "./RoleDropdown";
+import { AuthContext } from "../auth/AuthProvider";
 
 const Logify = () => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -41,10 +43,10 @@ const Logify = () => {
     switch (onRolesSelectChange) {
       case 1:
       case 2:
-      case 4:
+      case 3:
         response = await Network.login(username, password);
         break;
-      case 3:
+      case 4:
       case 5:
         response = await Network.studentLogin(username, password);
         break;
@@ -56,11 +58,12 @@ const Logify = () => {
     try {
       if (response.status === 200) {
         setMessage("✅ Login successful!");
+        login(response); // Set context
         switch (onRolesSelectChange) {
           case 1: navigate("/adminUser"); break;
-          case 2: navigate("/teachersUser"); break;
-          case 3: navigate("/studentUser"); break;
-          case 4: navigate("/parentsusers"); break;
+          case 3: navigate("/TeacherDasboard"); break;
+          case 4: navigate("/studentinfo"); break;
+          case 5: navigate("/TeacherDasboard"); break;
           default: navigate("/");
         }
       } else {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -16,11 +16,12 @@ import Network from "../Application/Network";
 import RoleDropdown from "../component/RoleDropdown";
 
 import TeacherDashboardside from "./TeacherDasboardside";
+import { AuthContext } from "../auth/AuthProvider";
 
 const TeacherDasboardAttendance = () => {
+   const { user } = useContext(AuthContext);
   const [teachers, setTeachers] = useState([]);
   const [attendance, setAttendance] = useState({});
-  const [selectedRoleId, setSelectedRoleId] = useState("");
 
   const todayDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
@@ -45,11 +46,10 @@ const TeacherDasboardAttendance = () => {
       .catch(() => alert("Error submitting attendance"));
   };
 
-  const onRolesSelect = (roleObj) => {
-    const roleId = roleObj.roleId;
-    setSelectedRoleId(roleId);
 
-    Network.getAllUsersByRoleId(roleId)
+useEffect(()=> {
+
+  Network.getAttendanceByTeacher(user.data.data.id)
       .then((res) => {
         setTeachers(res);
 
@@ -67,14 +67,15 @@ const TeacherDasboardAttendance = () => {
         }, {});
 
         setAttendance(initialAttendance);
+
+
       })
       .catch((err) => {
         console.error("Error loading teachers:", err);
         setTeachers([]);
         setAttendance({});
       });
-  };
-
+}, [])
   return (
     <Box>
     <TeacherDashboardside/>
@@ -85,15 +86,11 @@ const TeacherDasboardAttendance = () => {
       </Typography>
 
       <Paper sx={{ p: 3 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} sx={{width:"200px"}}>
-            <RoleDropdown onSelect={onRolesSelect} />
-          </Grid>
-        </Grid>
+  
 
         <Divider sx={{ my: 3 }} />
 
-        {teachers.length > 0 ? (
+       
           <>
             {teachers.map((teacher) => (
               <Grid
@@ -141,11 +138,7 @@ const TeacherDasboardAttendance = () => {
               Submit Attendance
             </Button>
           </>
-        ) : (
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            Please select a role to load teachers.
-          </Typography>
-        )}
+        
       </Paper>
     </Container>
     </Box>

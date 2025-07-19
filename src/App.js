@@ -31,12 +31,15 @@ import TeacherDashboardside from "./teacherdetls/TeacherDasboardside";
 import TeacherDasboardAttendance from "./teacherdetls/TeacherDasboardAttendance";
 import TeacherDasboard from "./teacherdetls/TeacherDashboard";
 import TeacherMarksEntry from "./teacherdetls/TeacherMarksEntry";
+import { AuthProvider } from "./auth/AuthProvider";
 
 function App() {
   return (
     <>
       <Routers>
+         <AuthProvider>
         <Routes>
+         
           <Route path="/" element={<SchoolFrontPage />} />
           <Route path="/logify" element={<Logify />} />
           <Route path="/signUp" element={<SignUpPage />} />
@@ -67,7 +70,9 @@ function App() {
 
           {/* Fallback Route */}
           <Route path="*" element={<h1>404 Not Found</h1>} />
+         
         </Routes>
+         </AuthProvider>
       </Routers>
     </>
   );

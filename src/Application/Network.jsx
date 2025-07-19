@@ -389,4 +389,15 @@ export default class Network {
       throw error;
     }
   }
+
+  static async getAttendanceByTeacher (teacherId) {
+    try{
+      const response = await axios.get( `${Endpoints.getAttendanceByTeacher}/${teacherId}/with-attendance`, {
+         headers: { "Content-Type": "application/json" },
+      })
+      return response.data;
+    } catch(error) {
+
+    }
+  }
 }
