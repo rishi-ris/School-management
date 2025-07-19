@@ -18,7 +18,7 @@ import { styled } from "@mui/system";
 
 // Curved AppBar styling
 const CurvedAppBar = styled(AppBar)(() => ({
-  backgroundColor: 'rgb(33, 116, 241)',
+backgroundColor: "var(--header-bg-color)",
   height: 240,
   clipPath: 'ellipse(100% 85% at 50% 0%)',
   position: 'relative',

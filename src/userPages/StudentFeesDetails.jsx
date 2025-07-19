@@ -15,7 +15,7 @@ import {
 import StudentPaymentDlg from "./StudentPaymentDlg";
 import StudentFeesReceipt from "./StudentFeesRecipt";
 import Network from "../Application/Network";
-import Sidekick from "../component/Sidekick";
+import UseCommonText from "../CommonFile/UseCommonText";
 
 const StudentFeesDetails = ({ student }) => {
   console.log("🔍 StudentFeesDetails component rendered with student:", student);
@@ -114,6 +114,8 @@ const StudentFeesDetails = ({ student }) => {
     setReceiptInfo(null);
   };
 
+   const headerText = UseCommonText ("--headerText");
+    const addressText = UseCommonText ("--addressText");
   return (
     <Box width="100%" bgcolor="#f4f8fb"  pb={4} >
       
@@ -130,17 +132,17 @@ const StudentFeesDetails = ({ student }) => {
               background: "linear-gradient(90deg, #1976D2 60%, #42a5f5 100%)",
             }}
           >
-            <Typography
-              variant="h5"
-              sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
-            >
-              CHANDRA SEKHAR AZAD HR. SEC SCHOOL
-            </Typography>
+             <Typography
+      variant="h5"
+      sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
+    >
+      {headerText}
+    </Typography>
             <Typography
               variant="h6"
               sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
             >
-              SEMLI KHURD SEHORE
+             {addressText}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "#e3f2fd", mt: 1 }}>
               Session: 2025-2026

@@ -9,7 +9,7 @@ import {
   DialogContent,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import UseCommonText from "../CommonFile/UseCommonText";
 const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
   const navigate = useNavigate();
   console.log("🔍 StudentFeesReceipt component rendered with student:", student);
@@ -30,7 +30,8 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
     }
       );
   };
-
+const headerText = UseCommonText ("--headerText");
+const addressText = UseCommonText ("--addressText");
   return (
     <>
       <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth>
@@ -65,17 +66,17 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
               borderTopRightRadius: 4,
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 700, color: "white", letterSpacing: 1 }}
-            >
-              CHANDRA SEKHAR AZAD HR. SEC SCHOOL
-            </Typography>
+             <Typography
+      variant="h5"
+      sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
+    >
+      {headerText}
+    </Typography>
             <Typography
               variant="subtitle2"
               sx={{ color: "#e3f2fd", fontWeight: 500, letterSpacing: 1 }}
             >
-              SEMLI KHURD SEHORE
+             {addressText}
             </Typography>
             <Typography
               variant="body2"
