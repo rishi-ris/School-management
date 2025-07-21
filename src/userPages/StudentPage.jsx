@@ -7,6 +7,8 @@ import Network from "../Application/Network";
 import StuDlgDocUpload from "./StuDlgDocUpload";
 import StudentFeesDlg from "./StudentFeesDlg";
 import Sidekick from "../component/Sidekick";
+import { ToastContainer } from "react-toastify"; // ✅ Toast import
+import "react-toastify/dist/ReactToastify.css";   // ✅ Toast CSS
 
 const StudentPage = () => {
   const [students, setStudents] = useState([]);
@@ -15,10 +17,11 @@ const StudentPage = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [editingStudent, setEditingStudent] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [newStudentId, setNewStudentId] = useState(null); // <-- NEW
+  const [newStudentId, setNewStudentId] = useState(null);
   const [studentDocuments, setStudentDocuments] = useState(null);
   const [openFeesDetails, setOpenFeesDetails] = useState(false);
   const [feesDetails, setFeesDetails] = useState(null);
+
   const fetchStudents = async () => {
     try {
       setLoading(true);
@@ -34,7 +37,7 @@ const StudentPage = () => {
   const handleDetails = async (studentId) => {
     try {
       setLoading(true);
-      const response = await Network.getStudentDetails(studentId); // Replace with your API
+      const response = await Network.getStudentDetails(studentId);
       const fullStudent = response.data;
 
       setEditingStudent(fullStudent);
@@ -47,8 +50,8 @@ const StudentPage = () => {
       setLoading(false);
     }
   };
+
   const handleFeesDetails = async (stuFeesDetails) => {
-    console.log("Fetching fees details for student ID:", stuFeesDetails);
     try {
       setOpenFeesDetails(true);
       setFeesDetails(stuFeesDetails);
@@ -59,16 +62,15 @@ const StudentPage = () => {
       setLoading(false);
     }
   };
+
   const handleDocumentsDetails = async (studentId) => {
-    console.log("Fetching documents for student ID:", studentId);
     try {
       setLoading(true);
       setDocumentDialogOpen(true);
-      const response = await Network.getStudentDocuments(studentId); // Replace with your API
+      const response = await Network.getStudentDocuments(studentId);
       const studentDocuments = response.data;
       setStudentDocuments(studentDocuments);
-      setEditingStudent(studentId ? studentId : null); // Set student ID for document upload
-      // console.log("Documents loaded:", studentDocuments);
+      setEditingStudent(studentId ? studentId : null);
       setNewStudentId(studentId);
       setDocumentDialogOpen(true);
     } catch (err) {
@@ -84,8 +86,6 @@ const StudentPage = () => {
   }, []);
 
   const handleSave = async (flatData) => {
-    console.log("Saving student data:", flatData);
-
     try {
       setLoading(true);
       flatData?.studentPin
@@ -104,7 +104,6 @@ const StudentPage = () => {
   };
 
   const handleEdit = (student) => {
-    console.log("Editing student:", student);
     setSelectedStudent(student);
     setDialogOpen(true);
   };
@@ -148,24 +147,45 @@ const StudentPage = () => {
             setEditingStudent(null);
           }}
           onSave={handleSave}
-          student={editingStudent} // pass for edit
+          student={editingStudent}
         />
 
         <StuDlgDocUpload
           open={documentDialogOpen}
-          onClose={() => {
-            setDocumentDialogOpen(false);
-          }}
-          docStudentId={newStudentId} // pass for edit
-          documents={studentDocuments} // pass for edit
+          onClose={() => setDocumentDialogOpen(false)}
+          docStudentId={newStudentId}
+          documents={studentDocuments}
         />
+
         <StudentFeesDlg
           open={openFeesDetails}
-          onClose={() => {
-            setOpenFeesDetails(false);
-          }}
-          student={feesDetails} // pass for edit
+          onClose={() => setOpenFeesDetails(false)}
+          student={feesDetails}
         />
+
+      <ToastContainer
+  position="top-center"
+  autoClose={100000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="colored"
+  toastStyle={{
+    fontSize: "16px",
+    fontWeight: "500",
+    borderRadius: "10px",
+    padding: "12px 20px",
+    background: "rgb(67, 78, 243)",     // red error background
+    color: "#fff",
+    boxShadow: "0px 3px 10px rgba(0,0,0,0.2)",
+    textAlign: "center",
+  }}
+/>
+
       </Box>
     </Box>
   );

@@ -123,10 +123,10 @@ const MarksEntryPage = () => {
     (sub) =>
       (sub.obtainedTheoryMarks !== "" &&
         (Number(sub.obtainedTheoryMarks) < 0 ||
-          Number(sub.obtainedTheoryMarks) > 100)) ||
+          Number(sub.obtainedTheoryMarks) > sub.totalTheoryMarks)) ||
       (sub.obtainedInternalMarks !== "" &&
         (Number(sub.obtainedInternalMarks) < 0 ||
-          Number(sub.obtainedInternalMarks) > 100))
+          Number(sub.obtainedInternalMarks) > sub.totalInternalMarks))
   );
 
   return (
@@ -138,13 +138,12 @@ const MarksEntryPage = () => {
           Enter Student Marks
         </Typography>
 
-        <Paper elevation={3} sx={{ p: 3 , width:'65%'}}>
-          {/* Top Section */}
-          <Grid container spacing={2} >
-            <Grid item xs={12} sm={6} md={3} sx={{width:"150px"}}>
+        <Paper elevation={3} sx={{ p: 3, width: "65%" }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={3} sx={{ width: "150px" }}>
               <ClassDropDown onSelect={handleClassSelect} />
             </Grid>
-            <Grid item xs={12} sm={6} md={3} >
+            <Grid item xs={12} sm={6} md={3}>
               <Select
                 fullWidth
                 value={selectedStudent}
@@ -192,7 +191,6 @@ const MarksEntryPage = () => {
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Subject Entry Section */}
           <Typography variant="h6" gutterBottom>
             Subject Marks
           </Typography>
@@ -241,13 +239,14 @@ const MarksEntryPage = () => {
                           error={
                             sub.obtainedTheoryMarks !== "" &&
                             (Number(sub.obtainedTheoryMarks) < 0 ||
-                              Number(sub.obtainedTheoryMarks) > 100)
+                              Number(sub.obtainedTheoryMarks) >
+                                sub.totalTheoryMarks)
                           }
                           helperText={
                             sub.obtainedTheoryMarks !== "" &&
-                            (Number(sub.obtainedTheoryMarks) < 0 ||
-                              Number(sub.obtainedTheoryMarks) > 100)
-                              ? "Please enter marks between 0 and 100"
+                            Number(sub.obtainedTheoryMarks) >
+                              sub.totalTheoryMarks
+                              ? `Marks cannot be more than ${sub.totalTheoryMarks}`
                               : ""
                           }
                         />
@@ -290,13 +289,14 @@ const MarksEntryPage = () => {
                             error={
                               sub.obtainedInternalMarks !== "" &&
                               (Number(sub.obtainedInternalMarks) < 0 ||
-                                Number(sub.obtainedInternalMarks) > 100)
+                                Number(sub.obtainedInternalMarks) >
+                                  sub.totalInternalMarks)
                             }
                             helperText={
                               sub.obtainedInternalMarks !== "" &&
-                              (Number(sub.obtainedInternalMarks) < 0 ||
-                                Number(sub.obtainedInternalMarks) > 100)
-                                ? "Please enter marks between 0 and 100"
+                              Number(sub.obtainedInternalMarks) >
+                                sub.totalInternalMarks
+                                ? `Marks cannot be more than ${sub.totalInternalMarks}`
                                 : ""
                             }
                           />

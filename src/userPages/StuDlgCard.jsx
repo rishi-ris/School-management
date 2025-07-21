@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,12 +7,13 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import StuCommonDtlDlg from "./StuCommonDtlDlg";
 import StuPersonalDltDlg from "./StuPersonalDltDlg";
 import StuFamilyDltDlg from "./StuFamilyDltDlg";
 import StuDocDlg from "./StuDocDlg";
-import StuPhotosDltDlg from "./StuPhotosDltDlg";
 
 const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const [commonData, setCommonData] = useState({});
@@ -24,19 +25,17 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const [selectedRole, setSelectedRole] = useState({});
   const [errors, setErrors] = useState({});
 
+  const dialogContentRef = useRef(null);
+
   const requiredCommonFields = [
     "username", "password", "gender", "rollNumber", "scholarNumber",
-    "firstName", "lastName", "contactNumber", "dOB", "address", "city",
+    "firstName", "lastName", "contactNumber", "dob", "address", "city",
     "state", "pinCode", "country", "status", "feesDiscount", "totalFees",
   ];
 
-  const requiredDocuments = [
-    "aadharCard", "sssmid", "admissionForm", "casteCertificate", "previousMarksheet",
-  ];
-
   const requiredFamilyFields = [
-    "fatherName", "fatherOccupation", "fatherContactNumber",
-    "motherName", "motherOccupation", "motherContactNumber",
+    "fatherName", "fatherOccupation", "fatherPhone",
+    "motherName", "motherOccupation", "motherPhone",
   ];
 
   useEffect(() => {
@@ -53,40 +52,89 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
 
   const getTimestamp = () => new Date().toISOString();
 
+  const scrollToFirstError = (errorKeys) => {
+    if (!dialogContentRef.current) return;
+    for (const key of errorKeys) {
+      const field = dialogContentRef.current.querySelector(`[name="${key}"]`);
+      if (field) {
+        field.scrollIntoView({ behavior: "smooth", block: "center" });
+        field.focus();
+        break;
+      }
+    }
+  };
+
+  const beautify = (field) =>
+    field
+      .replace(/^family_/, "")
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (c) => c.toUpperCase());
+
   const handleSubmit = () => {
     let newErrors = {};
+    let missingFields = [];
 
-    // Common fields validation
     requiredCommonFields.forEach((field) => {
       if (!commonData[field]?.toString().trim()) {
-        newErrors[field] = `${field.replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase())} is required`;
+        newErrors[field] = `${beautify(field)} is required`;
+        missingFields.push(beautify(field));
       }
     });
 
-    // Document validation
-    requiredDocuments.forEach((docField) => {
-      if (!documents[docField]?.toString().trim()) {
-        newErrors[`doc_${docField}`] = `${docField.replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase())} is required`;
-      }
-    });
+    if (!selectedClass?.classId?.classId) {
+      newErrors.classId = "Class selection is required";
+      missingFields.push("Class");
+    }
 
-    // Family validation
+    if (!commonData?.dob) {
+      newErrors.dob = "Date of Birth is required";
+      missingFields.push("Date of Birth");
+    }
+
     requiredFamilyFields.forEach((field) => {
+      const key = `family_${field}`;
       if (!familyData[field]?.toString().trim()) {
-        newErrors[`family_${field}`] = `${field.replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase())} is required`;
+        newErrors[key] = `${beautify(key)} is required`;
+        missingFields.push(beautify(key));
+      }
+    });
+
+    ["fatherPhone", "motherPhone"].forEach((field) => {
+      const phone = familyData[field];
+      const key = `family_${field}`;
+      if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+        newErrors[key] = `${beautify(key)} must start with 6-9 and be 10 digits`;
+        missingFields.push(beautify(key));
       }
     });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors((prev) => {
-        const prevString = JSON.stringify(prev);
-        const newString = JSON.stringify(newErrors);
-        return prevString !== newString ? newErrors : prev;
+        const prevStr = JSON.stringify(prev);
+        const newStr = JSON.stringify(newErrors);
+        if (prevStr !== newStr) {
+          setTimeout(() => scrollToFirstError(Object.keys(newErrors)), 100);
+        }
+        return newErrors;
       });
+
+      toast.error(
+        `❌ Please fill: ${missingFields.slice(0, 5).join(", ")}${
+          missingFields.length > 5 ? ", ..." : ""
+        }`,
+        {
+          autoClose: 5000,
+          position: "top-center",
+        }
+      );
       return;
     }
 
     setErrors({});
+    toast.success("✅ Student details submitted successfully!", {
+      autoClose: 4000,
+      position: "top-center",
+    });
 
     const transformedStudent = {
       ...commonData,
@@ -105,9 +153,12 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       registrationNumber: personalData.registrationNumber,
       enrollmentNumber: personalData.enrollmentNumber,
       bloodGroup: personalData.bloodGroup,
-      className: selectedClass?.classId?.className,
-      classId: selectedClass?.classId?.classId,
-      role: selectedRole?.roleId,
+      schoolClass: {
+        classId: selectedClass?.classId?.classId,
+      },
+      role: {
+        roleId: selectedRole?.roleId,
+      },
       createdBy: "admin",
       createdAt: getTimestamp(),
       updatedAt: getTimestamp(),
@@ -150,7 +201,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth scroll="paper">
       <DialogTitle>
         <Typography
           width={180}
@@ -168,13 +219,14 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         </Typography>
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent dividers ref={dialogContentRef}>
         <StuCommonDtlDlg
           data={commonData}
           onChange={(val) => setCommonData((prev) => ({ ...prev, ...val }))}
           onClassSelect={(cls) => setSelectedClass(cls)}
           onRoleSelect={(role) => setSelectedRole(role)}
           errors={errors}
+          setErrors={setErrors}
         />
 
         <StuPersonalDltDlg
@@ -196,8 +248,6 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
           onChange={(val) => setDocuments((prev) => ({ ...prev, ...val }))}
           errors={errors}
         />
-
-        {/* You can also add StuPhotosDltDlg here if needed */}
       </DialogContent>
 
       <DialogActions>
