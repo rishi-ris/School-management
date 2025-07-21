@@ -61,7 +61,7 @@ const TeacherDashboardside= () => {
   return (
     <Box>
       {/* AppBar */}
-      <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main }}>
+      <AppBar position="static" sx={{backgroundColor: "var(--header-bg-color)",}}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} sx={{ mr: 2 }}>
             <MenuIcon />

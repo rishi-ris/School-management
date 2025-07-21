@@ -336,6 +336,7 @@ const TeacherMarksEntry = () => {
                 subjectMarks.length === 0 ||
                 isAnyInvalid // disable if any field is invalid
               }
+              sx={{backgroundColor: "var(--button-bg-color)",}}
             >
               Submit Marks
             </Button>

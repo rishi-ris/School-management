@@ -1,5 +1,18 @@
 :root {
-  --header-bg-color: #1976D2; /* header blue background color */
-  --button-bg-color: #1976D2; /* buttons blue backround color */
-  --buttonHover-bg-color:  #0364c5; /* buttonsHover darkblue backround color */
+  --header-bg-color: #1976d2; /*header blue background color */
+  /* --header-bg-color: #2ab750;  */
+  --button-bg-color: #1976d2; /* buttons blue backround color */
+  --buttonHover-bg-color: #0364c5; /* buttonsHover darkblue backround color */
+  --headerText: "Chandra Sekhar Azad Higher Secondary School";
+  /* --headerText: "Chandra Sekhar Azad Hr.Sec School"; */
+  /* --headerText: "hooooooooooo"; */
+  /* --adressText: "SEMLI KHURD SEHORE"; */
+  --addressText: "Semli Khurd Sehore";
+  /* --addressText: "885214796358"; */
+  /* --emailText: "Chppppppppppppppp"; */
+  --emailText: "Email: ChandraShekharAzad2003@gmail.com";
+  --contactNumber: "Contact: 9165918557, 9301054099";
+  /* --contactNumber: "Contact: 91ccccc57, 93cccccc9"; */
+  --schoolBoardAddress: "Affiliated to M.P. Board of Secondary Education";
+  /* --schoolBoardAddress: "Affiliat"; */
 }

@@ -212,7 +212,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
             padding: "5px",
             mt: 2,
             color: "white",
-            backgroundColor: "#1976D2",
+             backgroundColor: "var(--header-bg-color)",
           }}
         >
           Add New Student
@@ -252,7 +252,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
 
       <DialogActions>
         <Button onClick={onClose} variant="outlined">Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">Save</Button>
+        <Button onClick={handleSubmit} variant="contained" sx={{  backgroundColor: "var(--button-bg-color)",}}>Save</Button>
       </DialogActions>
     </Dialog>
   );

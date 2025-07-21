@@ -231,7 +231,7 @@ const AddNewEmpPage = () => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              sx={{ width: "200px", marginBottom: "15px" }}
+              sx={{ width: "200px", marginBottom: "15px",backgroundColor: "var(--button-bg-color)", }}
             >
               Submit
             </Button>

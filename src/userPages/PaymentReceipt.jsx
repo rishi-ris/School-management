@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, Paper, Divider, Button } from "@mui/material";
+import UseCommonText from "../CommonFile/UseCommonText";
 
 const PaymentReceipt = ({
   name = "First Student",
@@ -15,7 +16,8 @@ const PaymentReceipt = ({
   const handlePrint = () => {
     window.print();
   };
-
+const headerText = UseCommonText ("--headerText");
+ const addressText = UseCommonText ("--addressText");
   return (
     <Box>
      
@@ -36,9 +38,9 @@ const PaymentReceipt = ({
         {/* Header */}
         <Box textAlign="center" mb={3}>
           <Typography variant="h6" fontWeight="bold" color="error">
-            CHANDRA SEKHAR AZAD HR. SEC SCHOOL
+            {headerText}
           </Typography>
-          <Typography fontSize={14}>SEMLI KHURD SEHORE</Typography>
+          <Typography fontSize={14}>{addressText}</Typography>
           <Typography fontSize={14} color="text.secondary">
             Contact: 9165918557, 9301054099
           </Typography>

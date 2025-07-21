@@ -137,7 +137,7 @@ const TeacherTimeTablePage = () => {
       </Typography>
       <Box>
         <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-          <Button variant="contained" onClick={handleOpen}>
+          <Button variant="contained" onClick={handleOpen} sx={{backgroundColor: "var(--button-bg-color)",}}>
             Add Timetable
           </Button>
           <Grid item xs={12} sm={6}sx={{width:'280px'}}>

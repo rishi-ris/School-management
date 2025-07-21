@@ -34,7 +34,7 @@ const EnrollmentCard = () => {
         {/* Profile Photo */}
         <Avatar
           src="ProjectIMG/chandrashekhar-azad-watermark.png.png" // 🔁 Replace with actual image path
-          alt="Rishi Sharma"
+          alt="Rishi"
           sx={{
             width: 100,
             height: 100,

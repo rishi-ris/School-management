@@ -21,7 +21,7 @@ import {
   GridViewOutlined as GridViewOutlinedIcon,
   CurrencyRupeeOutlined as CurrencyRupeeOutlinedIcon,
 } from "@mui/icons-material";
-
+import UseCommonText from "../CommonFile/UseCommonText";
 
 // ✅ ONLY these 4 items will be displayed
 const drawerItems = [
@@ -55,13 +55,13 @@ const StudentDashboard = () => {
   const theme = useTheme();
 
   const toggleDrawer = (state) => () => setOpen(state);
-
+const headerText = UseCommonText ("--headerText");
   return (
     <Box>
       <AppBar
         position="fixed"
         sx={{
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: "var(--header-bg-color)",
           width: "100%",
           top: 0,
           left: 0,
@@ -84,7 +84,7 @@ const StudentDashboard = () => {
                       marginLeft={40}
                       letterSpacing={1}
                     >
-                      CHANDRA SHEKHAR AZAD HIGHER SECONDARY SCHOOL
+                     {headerText}
                     </Typography>
         </Toolbar>
       </AppBar>

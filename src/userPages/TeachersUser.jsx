@@ -97,7 +97,7 @@ const TeachersUser = () => {
                         variant="contained"
                         color="primary"
                         size="small"
-                        sx={{ m: 0.5 }}
+                        sx={{ m: 0.5,backgroundColor: "var(--button-bg-color)", }}
                         onClick={() => handleViewProfile(teacher.id)}
                       >
                         View Profile

@@ -135,7 +135,7 @@ const TeacherAttendancePage = () => {
               color="primary"
               fullWidth
               onClick={handleSubmit}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, backgroundColor: "var(--button-bg-color)", }}
             >
               Submit Attendance
             </Button>

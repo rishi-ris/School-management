@@ -9,7 +9,7 @@ import {
   DialogContent,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import UseCommonText from "../CommonFile/UseCommonText";
 const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
   const navigate = useNavigate();
   console.log("🔍 StudentFeesReceipt component rendered with student:", student);
@@ -30,7 +30,9 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
     }
       );
   };
-
+const headerText = UseCommonText ("--headerText");
+const addressText = UseCommonText ("--addressText");
+const contactNumber = UseCommonText ("--contactNumber");
   return (
     <>
       <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth>
@@ -60,22 +62,22 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
             textAlign="center"
             py={2}
             sx={{
-              background: "linear-gradient(90deg, #1976D2 60%, #42a5f5 100%)",
+             backgroundColor: "var(--header-bg-color)",
               borderTopLeftRadius: 4,
               borderTopRightRadius: 4,
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 700, color: "white", letterSpacing: 1 }}
-            >
-              CHANDRA SEKHAR AZAD HR. SEC SCHOOL
-            </Typography>
+             <Typography
+      variant="h5"
+      sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
+    >
+      {headerText}
+    </Typography>
             <Typography
               variant="subtitle2"
               sx={{ color: "#e3f2fd", fontWeight: 500, letterSpacing: 1 }}
             >
-              SEMLI KHURD SEHORE
+             {addressText}
             </Typography>
             <Typography
               variant="body2"
@@ -86,7 +88,7 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
                 mt: 0.5,
               }}
             >
-              Contact: 9165918557, 9301054099
+              {contactNumber}
             </Typography>
           </Box>
 
@@ -100,7 +102,7 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
               ml: 2,
               pl: 1,
               color: "white",
-              backgroundColor: "#1976D2",
+           backgroundColor: "var(--header-bg-color)",
             }}
           >
             Payment Recipt
@@ -145,7 +147,7 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
 
             {/* Close/Print Buttons */}
             <Box textAlign="center" mt={3} className="no-print">
-              <Button variant="contained" color="primary" onClick={onClose} sx={{ mr: 2 }}>
+              <Button variant="contained" color="primary" onClick={onClose} sx={{ mr: 2, backgroundColor: "var(--button-bg-color)", }}>
                 Close Receipt
               </Button>
               {showPrint && (

@@ -108,7 +108,7 @@ const StudentPaymentDlg = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleConfirm}>
+        <Button variant="contained" onClick={handleConfirm} sx={{backgroundColor: "var(--button-bg-color)",}}>
           Confirm Payment
         </Button>
       </DialogActions>

@@ -6,8 +6,11 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
-
+import UseCommonText from "../CommonFile/UseCommonText";
 const TcPage = () => {
+
+  const headerText = UseCommonText ("--headerText");
+
   return (
     <Paper
       elevation={6}
@@ -42,7 +45,7 @@ const TcPage = () => {
       {/* Header */}
       <Box textAlign="center" mb={2}>
         <Typography variant="h5" fontWeight="bold" color="error" letterSpacing={1}>
-          CHANDRA SHEKHAR AZAD HIGHER SECONDARY SCHOOL
+         {headerText}
         </Typography>
         <Typography fontSize={16} color="text.secondary">
           Jakhakhedi Jod, Distt. – Sehore (M.P.) – 466001
@@ -119,7 +122,7 @@ const TcPage = () => {
               Principal
             </Typography>
             <Typography fontSize={14} color="text.secondary">
-              Chandra Shekhar Azad School
+             {headerText}
             </Typography>
             <Typography fontSize={14} color="text.secondary">
               Semli Khurd, Sehore – 642140
