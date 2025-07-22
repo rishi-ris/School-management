@@ -4,7 +4,6 @@ import {
   Button,
   Checkbox,
   FormControl,
-  InputLabel,
   ListItemText,
   Menu,
   MenuItem,
@@ -12,13 +11,12 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Network from '../Application/Network';
-
+ 
 const MultiSelClassDropD = ({ onSelect, selectedClassIds = [] }) => {
   const [allClasses, setAllClasses] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [tempSelectedIds, setTempSelectedIds] = useState([]);
-
-  // Load classes
+ 
   useEffect(() => {
     Network.getAllClasses()
       .then((res) => {
@@ -36,12 +34,11 @@ const MultiSelClassDropD = ({ onSelect, selectedClassIds = [] }) => {
         setAllClasses([]);
       });
   }, []);
-
-  // Set preselected values on edit
+ 
   useEffect(() => {
     setTempSelectedIds(selectedClassIds);
   }, [selectedClassIds]);
-
+ 
   const handleToggle = (classId) => {
     setTempSelectedIds((prev) =>
       prev.includes(classId)
@@ -49,25 +46,25 @@ const MultiSelClassDropD = ({ onSelect, selectedClassIds = [] }) => {
         : [...prev, classId]
     );
   };
-
+ 
   const handleConfirm = () => {
     const selectedObjects = allClasses.filter(cls =>
       tempSelectedIds.includes(cls.classId)
     );
     onSelect(selectedObjects);
-    setAnchorEl(null); // close dropdown
+    setAnchorEl(null);
   };
-
+ 
   const displayText = allClasses
     .filter((cls) => tempSelectedIds.includes(cls.classId))
     .map((cls) => `${cls.className}-${cls.section}`)
     .join(', ');
-
+ 
   return (
     <Box sx={{ minWidth: 200 }}>
       <FormControl fullWidth>
-        <InputLabel shrink>Select Classes</InputLabel>
         <TextField
+          label="Select Classes"
           value={displayText}
           onClick={(e) => setAnchorEl(e.currentTarget)}
           placeholder="Select Classes"
@@ -77,7 +74,7 @@ const MultiSelClassDropD = ({ onSelect, selectedClassIds = [] }) => {
           }}
         />
       </FormControl>
-
+ 
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -101,5 +98,7 @@ const MultiSelClassDropD = ({ onSelect, selectedClassIds = [] }) => {
     </Box>
   );
 };
-
+ 
 export default MultiSelClassDropD;
+ 
+ 

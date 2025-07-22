@@ -7,7 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
   const navigate = useNavigate();
-  const gotoTCpage = () => navigate("/tcPage");
+  // const gotoTCpage = () => navigate("/tcPage");
+  const gotoTCpage = (id) => navigate(`/tcPage/${id}`);
+
 
   if (!Array.isArray(students) || students.length === 0) {
     return <Typography>No students found.</Typography>;
@@ -45,7 +47,8 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
                     Details
                   </Button>
                   <Button
-                    onClick={gotoTCpage}
+                    // onClick={gotoTCpage}
+                     onClick={() => gotoTCpage(student.studentId)} 
                     variant="outlined"
                     size="small"
                     color="info"

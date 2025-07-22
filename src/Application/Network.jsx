@@ -390,14 +390,39 @@ export default class Network {
     }
   }
 
-  static async getAttendanceByTeacher (teacherId) {
-    try{
-      const response = await axios.get( `${Endpoints.getAttendanceByTeacher}/${teacherId}/with-attendance`, {
-         headers: { "Content-Type": "application/json" },
-      })
+  static async getAttendanceByTeacher(teacherId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getAttendanceByTeacher}/${teacherId}/with-attendance`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       return response.data;
-    } catch(error) {
-
+    } catch (error) {}
+  }
+  static async getStudentDetails(studentId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.studentDetails}/${studentId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("⚠️ Error fetching student details", error);
+      throw error;
     }
   }
+   static async getStudentMarksheet(id) {
+    try {
+      const response = await axios.get(`${Endpoints.studentMarksheet}/${id}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching marksheet", error);
+      throw error;
+    }
+  }
+
 }

@@ -48,7 +48,9 @@ function App() {
           <Route path="/teachersUser" element={<TeachersUser />} />
           <Route path="/parentsusers" element={<ParentsUsers />} />
           <Route path="/fees" element={<FeesPage />} />
-          <Route path="/tcPage" element={<TcPage />} />
+          {/* <Route path="/tcPage" element={<TcPage />} /> */}
+          <Route path="/tcPage/:id" element={<TcPage />} />
+
           <Route path="/newEmployee" element={<AddNewEmpPage />} />
           <Route path="/timetable" element={<TimeTablePage />} />
           <Route path="/subjectManager" element={<SubjectManager />} />

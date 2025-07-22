@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import {
   Menu as MenuIcon,
-  SchoolOutlined as DescriptionIcon ,
+  SchoolOutlined as DescriptionIcon,
   AssignmentOutlined as AssignmentOutlinedIcon,
   LogoutOutlined as LogoutOutlinedIcon,
   GridViewOutlined as GridViewOutlinedIcon,
@@ -23,7 +23,7 @@ import {
 } from "@mui/icons-material";
 import UseCommonText from "../CommonFile/UseCommonText";
 
-// ✅ ONLY these 4 items will be displayed
+// ✅ Drawer items
 const drawerItems = [
   {
     label: "Profile",
@@ -40,22 +40,21 @@ const drawerItems = [
     icon: <DescriptionIcon />,
     path: "/studentMarksheet",
   },
-  
   {
     label: "Result",
     icon: <AssignmentOutlinedIcon />,
     path: "/result",
   },
-  
 ];
 
 const StudentDashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const headerText = UseCommonText("--headerText");
 
   const toggleDrawer = (state) => () => setOpen(state);
-const headerText = UseCommonText ("--headerText");
+
   return (
     <Box>
       <AppBar
@@ -68,7 +67,7 @@ const headerText = UseCommonText ("--headerText");
           zIndex: theme.zIndex.drawer + 1,
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -77,26 +76,30 @@ const headerText = UseCommonText ("--headerText");
           >
             <MenuIcon />
           </IconButton>
+
           <Typography
-                      variant="h5"
-                      fontWeight="bold"
-                      color="white"
-                      marginLeft={40}
-                      letterSpacing={1}
-                    >
-                     {headerText}
-                    </Typography>
+            variant="h5"
+            fontWeight="bold"
+            color="white"
+            sx={{
+              flexGrow: 1,
+              textAlign: { xs: "center", sm: "left" },
+              ml: { xs: 0, sm: 5 },
+              letterSpacing: 1,
+              fontSize: { xs: "1.1rem", sm: "1.5rem" },
+            }}
+          >
+            {headerText}
+          </Typography>
         </Toolbar>
-      </AppBar>
-      <Box>
         
-      </Box>
+      </AppBar>
 
       {/* Drawer */}
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
         <Box
           sx={{
-            width: 280,
+            width: { xs: 240, sm: 280 },
             display: "flex",
             flexDirection: "column",
             height: "100%",
@@ -158,7 +161,6 @@ const headerText = UseCommonText ("--headerText");
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Logout Button */}
           <Divider />
           <List sx={{ mb: 2 }}>
             <ListItem

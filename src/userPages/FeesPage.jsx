@@ -180,11 +180,11 @@ const FeesPage = () => {
             {/* 🔽 Watermark Image */}
             <Box
               component="img"
-              src="ProjectIMG/chandrashekhar-azad-watermark.png.png" 
+              src="ProjectIMG/chandrashekhar-azad-watermark.png.png"
               alt="Watermark"
               sx={{
                 position: "absolute",
-                
+
                 width: "60%",
                 opacity: 0.08, // ✅ some watermark effect
                 zIndex: 0,
@@ -196,8 +196,8 @@ const FeesPage = () => {
 
             {/*  Foreground Text */}
             {/* <Typography variant="h4" color="text.secondary" sx={{ zIndex: 1 }}>
-    CHANDRA SHEKHAR AZAD HR. SEC SCHOOL
-  </Typography> */}
+              CHANDRA SHEKHAR AZAD HR. SEC SCHOOL
+              </Typography> */}
           </Box>
         )}
       </Container>
