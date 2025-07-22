@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Grid,
   TextField,
+  MenuItem,
   Paper,
   Typography,
   Divider,
-  MenuItem,
 } from "@mui/material";
 import ClassDropDown from "../component/ClassDropDown";
-import RoleDropdown from "../component/RoleDropdown";
-import Network from "../Application/Network"; // Make sure this has getAllRoles()
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 const StuCommonDtlDlg = ({
   data,
@@ -19,31 +20,10 @@ const StuCommonDtlDlg = ({
   errors = {},
   setErrors,
 }) => {
-  const [touched, setTouched] = useState({});
-
-  // Set student role automatically on mount
-  useEffect(() => {
-    const fetchStudentRole = async () => {
-      try {
-        const res = await Network.getAllRoles();
-        const studentRole = res?.data?.find(
-          (role) => role.name?.toLowerCase() === "student"
-        );
-        if (studentRole) {
-          onRoleSelect({ roleId: studentRole.id });
-        }
-      } catch (err) {
-        console.error("Error fetching roles:", err);
-      }
-    };
-    fetchStudentRole();
-  }, [onRoleSelect]);
-
   const requiredCommonFields = [
     "username", "password", "gender", "rollNumber", "scholarNumber",
-    "firstName", "lastName", "contactNumber", "address",
-    "city", "state", "pinCode", "country", "status",
-    "feesDiscount", "totalFees",
+    "firstName", "lastName", "contactNumber", "dob", "address",
+    "city", "state", "pinCode", "country", "status", "feesDiscount", "totalFees"
   ];
 
   const numericFields = [
@@ -53,76 +33,71 @@ const StuCommonDtlDlg = ({
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const isNumeric = numericFields.includes(name);
-    let cleanValue = value;
+    let cleanValue = isNumeric
+      ? value.replace(/[^0-9]/g, "").slice(0, name === "pinCode" ? 6 : 10)
+      : value.slice(0, 20);
 
-    if (isNumeric) {
-      cleanValue = value.replace(/[^0-9]/g, "");
-      if (name === "contactNumber") {
-        cleanValue = cleanValue.slice(0, 10);
-      } else if (name === "pinCode") {
-        cleanValue = cleanValue.slice(0, 6);
-      } else {
-        cleanValue = cleanValue.slice(0, 20);
-      }
-    } else {
-      cleanValue = value.slice(0, 20);
+    if (isNumeric && name !== "contactNumber" && name !== "pinCode") {
+      cleanValue = cleanValue.slice(0, 20);
     }
 
-    setTouched((prev) => ({ ...prev, [name]: true }));
-
-    // Contact number validation
     if (name === "contactNumber") {
       if (cleanValue.length !== 10) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 10 digits" }));
       } else if (!/^[6-9]/.test(cleanValue)) {
         setErrors?.((prev) => ({
           ...prev,
-          [name]: "You can use only numbers starting with 6, 7, 8 or 9",
+          [name]: "Start number with 6, 7, 8 or 9",
         }));
       } else {
-        if (
-          errors[name] === "Only use 10 digits" ||
-          errors[name] === "You can use only numbers starting with 6, 7, 8 or 9"
-        ) {
-          setErrors?.((prev) => {
-            const newErr = { ...prev };
-            delete newErr[name];
-            return newErr;
-          });
-        }
+        const newErr = { ...errors };
+        delete newErr[name];
+        setErrors(newErr);
       }
     }
 
-    // Pincode validation
     if (name === "pinCode") {
       if (cleanValue.length !== 6) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 6 digits" }));
-      } else if (errors[name] === "Only use 6 digits") {
-        setErrors?.((prev) => {
-          const newErr = { ...prev };
-          delete newErr[name];
-          return newErr;
-        });
-      }
-    }
-
-    // Max length
-    if (cleanValue.length > 20) {
-      setErrors?.((prev) => ({ ...prev, [name]: "Maximum 20 characters allowed" }));
-      return;
-    } else if (errors[name] === "Maximum 20 characters allowed") {
-      setErrors?.((prev) => {
-        const newErr = { ...prev };
+      } else {
+        const newErr = { ...errors };
         delete newErr[name];
-        return newErr;
-      });
+        setErrors(newErr);
+      }
     }
 
     onChange({ [name]: cleanValue });
   };
 
+  const handleDOBChange = (newValue) => {
+    const formatted = dayjs(newValue).format("DD/MM/YYYY");
+    const isFuture = dayjs(newValue).isAfter(dayjs());
+    const age = dayjs().diff(dayjs(newValue), "year");
+
+    onChange({ dob: formatted });
+
+    if (!newValue || !dayjs(newValue).isValid()) {
+      setErrors?.((prev) => ({ ...prev, dob: "DOB is required" }));
+    } else if (isFuture) {
+      setErrors?.((prev) => ({ ...prev, dob: "DOB cannot be in the future" }));
+    } else if (age < 3 || age > 20) {
+      setErrors?.((prev) => ({
+        ...prev,
+        dob: "Age must be between 3 and 20",
+      }));
+    } else {
+      setErrors?.((prev) => {
+        const newErr = { ...prev };
+        delete newErr.dob;
+        return newErr;
+      });
+    }
+  };
+
   const handleClassSelect = (cls) => {
     onClassSelect({ classId: cls });
+    onRoleSelect({ roleId: 4 });
+    onChange({ roleId: 4 });
   };
 
   return (
@@ -133,33 +108,26 @@ const StuCommonDtlDlg = ({
       <Divider sx={{ mb: 2 }} />
 
       <Grid container spacing={2}>
-        {/* Class Dropdown */}
-        <Grid item xs={12} sm={6} sx={{ minWidth: 200 }}>
+        <Grid item xs={12} sm={6} sx={{ width: "200px" }}>
           <ClassDropDown
             selectedClassId={data?.classId || ""}
             onSelect={handleClassSelect}
             value={data?.classId || ""}
           />
+          {errors.classId && (
+            <Typography color="error" variant="caption">
+              {errors.classId}
+            </Typography>
+          )}
         </Grid>
 
-        {/* RoleDropdown is hidden since we auto-select student */}
-        {/* You can keep this for debugging:
-        <Grid item xs={12} sm={6} sx={{ minWidth: 200 }}>
-          <RoleDropdown
-            selectedRoleId={data?.roleId || ""}
-            onSelect={(role) => onRoleSelect({ roleId: role })}
-            value={data?.roleId || ""}
-          />
-        </Grid> */}
-
-        {/* Other Fields */}
         {requiredCommonFields.map((field) => (
           <Grid item xs={12} sm={6} key={field}>
             {field === "gender" ? (
               <TextField
+                sx={{ width: "200px" }}
                 select
                 fullWidth
-                sx={{ minWidth: 200 }}
                 name="gender"
                 label="Gender"
                 value={data?.gender || ""}
@@ -170,10 +138,41 @@ const StuCommonDtlDlg = ({
                 <MenuItem value="Male">Male</MenuItem>
                 <MenuItem value="Female">Female</MenuItem>
               </TextField>
+            ) : field === "status" ? (
+              <TextField
+                sx={{ width: "200px" }}
+                select
+                fullWidth
+                name="status"
+                label="Status"
+                value={data?.status || ""}
+                onChange={(e) => onChange({ status: e.target.value })}
+                error={!!errors.status}
+                helperText={errors.status || ""}
+              >
+                <MenuItem value="ACTIVE">Active</MenuItem>
+                <MenuItem value="INACTIVE">Inactive</MenuItem>
+              </TextField>
+            ) : field === "dob" ? (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  sx={{ width: "200px" }}
+                  label="Date of Birth"
+                  value={data?.dob ? dayjs(data.dob, "DD/MM/YYYY") : null}
+                  onChange={handleDOBChange}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      name: "dob",
+                      error: !!errors.dob,
+                      helperText: errors.dob || "",
+                    },
+                  }}
+                />
+              </LocalizationProvider>
             ) : (
               <TextField
                 fullWidth
-                sx={{ minWidth: 200 }}
                 label={field
                   .replace(/([A-Z])/g, " $1")
                   .replace(/^./, (c) => c.toUpperCase())}
@@ -183,8 +182,6 @@ const StuCommonDtlDlg = ({
                 error={!!errors[field]}
                 helperText={errors[field] || ""}
                 inputProps={{
-                  inputMode: numericFields.includes(field) ? "numeric" : "text",
-                  pattern: numericFields.includes(field) ? "\\d*" : undefined,
                   maxLength:
                     field === "contactNumber"
                       ? 10
@@ -192,15 +189,6 @@ const StuCommonDtlDlg = ({
                       ? 6
                       : 20,
                 }}
-                onKeyPress={
-                  numericFields.includes(field)
-                    ? (e) => {
-                        if (!/[0-9]/.test(e.key)) {
-                          e.preventDefault();
-                        }
-                      }
-                    : undefined
-                }
               />
             )}
           </Grid>

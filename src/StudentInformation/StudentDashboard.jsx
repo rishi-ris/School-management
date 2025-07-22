@@ -21,9 +21,9 @@ import {
   GridViewOutlined as GridViewOutlinedIcon,
   CurrencyRupeeOutlined as CurrencyRupeeOutlinedIcon,
 } from "@mui/icons-material";
-import UseCommonText from "../CommonFile/UseCommonText";
 
-// ✅ Drawer items
+
+// ✅ ONLY these 4 items will be displayed
 const drawerItems = [
   {
     label: "Profile",
@@ -51,10 +51,10 @@ const StudentDashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
-  const headerText = UseCommonText("--headerText");
+  // const headerText = UseCommonText("--headerText");
 
   const toggleDrawer = (state) => () => setOpen(state);
-
+const headerText = UseCommonText ("--headerText");
   return (
     <Box>
       <AppBar
@@ -78,19 +78,14 @@ const StudentDashboard = () => {
           </IconButton>
 
           <Typography
-            variant="h5"
-            fontWeight="bold"
-            color="white"
-            sx={{
-              flexGrow: 1,
-              textAlign: { xs: "center", sm: "left" },
-              ml: { xs: 0, sm: 5 },
-              letterSpacing: 1,
-              fontSize: { xs: "1.1rem", sm: "1.5rem" },
-            }}
-          >
-            {headerText}
-          </Typography>
+                      variant="h5"
+                      fontWeight="bold"
+                      color="white"
+                      marginLeft={40}
+                      letterSpacing={1}
+                    >
+                      CHANDRA SHEKHAR AZAD HIGHER SECONDARY SCHOOL
+                    </Typography>
         </Toolbar>
         
       </AppBar>

@@ -31,7 +31,6 @@ const textOnlyFields = [
 
 const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
   const [showSiblingFields, setShowSiblingFields] = useState(data.isSibling || false);
-  const [touched, setTouched] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -46,50 +45,46 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
     // Numeric Validation
     if (numericFields.includes(name)) {
       const numericOnly = value.replace(/[^0-9]/g, "");
+
       if (name.includes("Phone") && numericOnly.length !== 10) {
-        setErrors?.((prev) => ({
+        setErrors((prev) => ({
           ...prev,
           [`family_${name}`]: "Phone number must be 10 digits",
         }));
       } else if (name.includes("Aadhar") && numericOnly.length !== 12) {
-        setErrors?.((prev) => ({
+        setErrors((prev) => ({
           ...prev,
           [`family_${name}`]: "Aadhar number must be 12 digits",
         }));
       } else {
-        setErrors?.((prev) => {
-          const newErr = { ...prev };
-          delete newErr[`family_${name}`];
-          return newErr;
-        });
+        const newErrors = { ...errors };
+        delete newErrors[`family_${name}`];
+        setErrors(newErrors);
       }
+
       onChange({ [name]: numericOnly });
     }
 
-    // Text-only validation
+    // Text Validation
     else if (textOnlyFields.includes(name)) {
       const textOnly = value.replace(/[^a-zA-Z\s]/g, "");
       if (value !== textOnly) {
-        setErrors?.((prev) => ({
+        setErrors((prev) => ({
           ...prev,
           [`family_${name}`]: "Only alphabets allowed",
         }));
       } else {
-        setErrors?.((prev) => {
-          const newErr = { ...prev };
-          delete newErr[`family_${name}`];
-          return newErr;
-        });
+        const newErrors = { ...errors };
+        delete newErrors[`family_${name}`];
+        setErrors(newErrors);
       }
       onChange({ [name]: textOnly });
     }
 
-    // Default case
+    // Default
     else {
       onChange({ [name]: val });
     }
-
-    setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
   const renderTextField = (field) => (
@@ -105,20 +100,8 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
         helperText={errors[`family_${field}`] || ""}
         inputProps={{
           inputMode: numericFields.includes(field) ? "numeric" : "text",
-          pattern: numericFields.includes(field) ? "\\d*" : undefined,
           maxLength: field.includes("Aadhar") ? 12 : field.includes("Phone") ? 10 : 50,
         }}
-        onKeyPress={
-          numericFields.includes(field)
-            ? (e) => {
-                if (!/[0-9]/.test(e.key)) e.preventDefault();
-              }
-            : textOnlyFields.includes(field)
-            ? (e) => {
-                if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault();
-              }
-            : undefined
-        }
       />
     </Grid>
   );

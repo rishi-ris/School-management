@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, Grid, Divider, Paper } from "@mui/material";
@@ -21,6 +22,20 @@ const TcPage = () => {
   }, [id]);
 
   if (!student) return <Typography>Loading...</Typography>;
+=======
+import React from "react";
+import {
+  Box,
+  Typography,
+  Grid,
+  Divider,
+  Paper,
+} from "@mui/material";
+import UseCommonText from "../CommonFile/UseCommonText";
+const TcPage = () => {
+
+  const headerText = UseCommonText ("--headerText");
+>>>>>>> 6a1720b3827e30c389d7990950247d7176039dd2
 
   return (
     <Paper
@@ -53,6 +68,7 @@ const TcPage = () => {
       }}
     >
       <Box textAlign="center" mb={2}>
+<<<<<<< HEAD
         <Typography
           variant="h5"
           fontWeight="bold"
@@ -60,6 +76,10 @@ const TcPage = () => {
           letterSpacing={1}
         >
           {headerText}
+=======
+        <Typography variant="h5" fontWeight="bold" color="error" letterSpacing={1}>
+         {headerText}
+>>>>>>> 6a1720b3827e30c389d7990950247d7176039dd2
         </Typography>
         <Typography fontSize={16} color="text.secondary">
           {addressText }
@@ -174,7 +194,11 @@ const TcPage = () => {
               Principal
             </Typography>
             <Typography fontSize={14} color="text.secondary">
+<<<<<<< HEAD
               {headerText || "N/A"}
+=======
+             {headerText}
+>>>>>>> 6a1720b3827e30c389d7990950247d7176039dd2
             </Typography>
             <Typography fontSize={14} color="text.secondary">
               {addressText || "N/A"}

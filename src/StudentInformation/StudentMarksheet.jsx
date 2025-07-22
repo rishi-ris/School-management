@@ -12,15 +12,10 @@ import {
   Grid,
 } from "@mui/material";
 import StudentDashboard from "./StudentDashboard";
-import UseCommonText from "../CommonFile/UseCommonText";
-import Network from "../Application/Network";
+// import Network from "../Application/Network";
+// import Endpoints from "../Application/Endpoints";
 
 const StudentMarksheet = () => {
-  const headerText = UseCommonText("--headerText");
-  const emailText = UseCommonText("--emailText");
-  const contactNumber = UseCommonText("--contactNumber");
-  const schoolBoardAddress = UseCommonText("--schoolBoardAddress");
-
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -97,17 +92,23 @@ const StudentMarksheet = () => {
             padding: 1,
           }}
         >
-          <Typography variant="h6" fontWeight="bold" color="error" letterSpacing={1}>
-            {headerText}
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            color="error"
+            letterSpacing={1}
+          >
+            CHANDRA SHEKHAR AZAD HIGHER SECONDARY SCHOOL
           </Typography>
           <Typography fontSize={14} color="text.secondary">
             Jakhakhedi Jod, Distt. – Sehore (M.P.) – 466001
           </Typography>
-          <Typography fontSize={13} color="text.secondary">
-            {contactNumber} | {emailText}
+          <Typography fontSize={15} color="text.secondary">
+            Mobile : 9165918557, 9301054099 | Email:
+            ChandraShekharAzad2003@gmail.com
           </Typography>
-          <Typography fontWeight="bold" fontSize={13} color="primary.dark">
-            {schoolBoardAddress}
+          <Typography fontWeight="bold" fontSize={15} color="primary.dark">
+            Affiliated to M.P. Board of Secondary Education
           </Typography>
         </Box>
 
