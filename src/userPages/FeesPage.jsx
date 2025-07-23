@@ -52,12 +52,14 @@ const FeesPage = () => {
   return (
     <Box
       sx={{
+        
         width: "100vw",
         height: "100vh",
         m: 0,
         p: 0,
         overflow: "hidden",
         background: "#f9f9f9",
+        
       }}
     >
       <Sidekick />
@@ -73,6 +75,7 @@ const FeesPage = () => {
 
           display: "flex",
           background: "#f9f9f9",
+          
         }}
       >
         <Box sx={{ width: 400, height: "100%", minHeight: "100%", p: 0 }}>
@@ -84,7 +87,7 @@ const FeesPage = () => {
               minHeight: "100%",
               borderRadius: 0,
               boxShadow: 0,
-              //  border: "1px solid black",
+               border: "1px solid black",
 
               display: "flex",
               flexDirection: "column",

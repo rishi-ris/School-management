@@ -1,9 +1,14 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, Grid, Divider, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Divider,
+  Paper,
+} from "@mui/material";
 import UseCommonText from "../CommonFile/UseCommonText";
-import Network from "../Application/Network"; // 🟢 Cleaned network logic
+import Network from "../Application/Network"; // ✅ Network import
 
 const TcPage = () => {
   const [student, setStudent] = useState(null);
@@ -22,20 +27,6 @@ const TcPage = () => {
   }, [id]);
 
   if (!student) return <Typography>Loading...</Typography>;
-=======
-import React from "react";
-import {
-  Box,
-  Typography,
-  Grid,
-  Divider,
-  Paper,
-} from "@mui/material";
-import UseCommonText from "../CommonFile/UseCommonText";
-const TcPage = () => {
-
-  const headerText = UseCommonText ("--headerText");
->>>>>>> 6a1720b3827e30c389d7990950247d7176039dd2
 
   return (
     <Paper
@@ -68,30 +59,20 @@ const TcPage = () => {
       }}
     >
       <Box textAlign="center" mb={2}>
-<<<<<<< HEAD
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          color="error"
-          letterSpacing={1}
-        >
-          {headerText}
-=======
         <Typography variant="h5" fontWeight="bold" color="error" letterSpacing={1}>
-         {headerText}
->>>>>>> 6a1720b3827e30c389d7990950247d7176039dd2
+          {headerText}
         </Typography>
         <Typography fontSize={16} color="text.secondary">
-          {addressText }
+          {addressText}
         </Typography>
         <Typography fontSize={15} color="text.secondary">
-          {contactNumber }  
+          {contactNumber}
         </Typography>
-         <Typography fontSize={15} color="text.secondary">
-         {emailText}
+        <Typography fontSize={15} color="text.secondary">
+          {emailText}
         </Typography>
         <Typography fontWeight="bold" fontSize={15} color="primary.dark">
-          {schoolBoardAddress }
+          {schoolBoardAddress}
         </Typography>
         <Divider sx={{ my: 2, borderColor: "#bdbdbd" }} />
         <Typography
@@ -113,60 +94,58 @@ const TcPage = () => {
       <Grid container spacing={2} sx={{ mt: 1, mb: 2 }}>
         <Grid item xs={12} sm={6}>
           <Typography mb={1}>
-  1. Name of Pupil:{" "}
-  <strong>{student.firstName} {student.lastName}</strong>
-</Typography>
-<Typography mb={1}>
-  2. Father's Name: <strong>{student.family?.[0]?.fatherName || "N/A"}</strong>
-</Typography>
-<Typography mb={1}>
-  3. Mother's Name: <strong>{student.family?.[0]?.motherName || "N/A"}</strong>
-</Typography>
-<Typography mb={1}>
-  4. Nationality: <strong>{student.nationality || "N/A"}</strong>
-</Typography>
-<Typography mb={1}>
-  5. Category: <strong>{student.caste || "N/A"}</strong>
-</Typography>
-<Typography mb={1}>
-  6. Admission Date: <strong>{student.admissionDate || "N/A"}</strong> {/* Add this field if missing */}
-</Typography>
-<Typography mb={1}>
-  7. Date of Birth: <strong>{student.dob || "N/A"}</strong>
-</Typography>
-
+            1. Name of Pupil:{" "}
+            <strong>{student.firstName} {student.lastName}</strong>
+          </Typography>
+          <Typography mb={1}>
+            2. Father's Name: <strong>{student.family?.[0]?.fatherName || "N/A"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            3. Mother's Name: <strong>{student.family?.[0]?.motherName || "N/A"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            4. Nationality: <strong>{student.nationality || "N/A"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            5. Category: <strong>{student.caste || "N/A"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            6. Admission Date: <strong>{student.admissionDate || "N/A"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            7. Date of Birth: <strong>{student.dob || "N/A"}</strong>
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography mb={1}>
-  8. Last Class Studied: <strong>{student.className || "N/A"} {student.section}</strong>
-</Typography>
-<Typography mb={1}>
-  9. Exam Result: <strong>{student.result || "Pass"}</strong> {/* Add logic if needed */}
-</Typography>
-<Typography mb={1}>
-  10. Promotion: <strong>{student.promotionReason || "Promoted"}</strong>
-</Typography>
-<Typography mb={1}>
-  11. Total Working Days: <strong>{student.totalDays || "N/A"}</strong>
-</Typography>
-<Typography mb={1}>
-  12. Conduct: <strong>{student.conduct || "Good"}</strong>
-</Typography>
-
+            8. Last Class Studied: <strong>{student.className || "N/A"} {student.section}</strong>
+          </Typography>
+          <Typography mb={1}>
+            9. Exam Result: <strong>{student.result || "Pass"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            10. Promotion: <strong>{student.promotionReason || "Promoted"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            11. Total Working Days: <strong>{student.totalDays || "N/A"}</strong>
+          </Typography>
+          <Typography mb={1}>
+            12. Conduct: <strong>{student.conduct || "Good"}</strong>
+          </Typography>
         </Grid>
       </Grid>
 
       <Box mt={3} mb={2}>
         <Typography variant="body1" fontSize={16}>
-  This is to certify that <strong>{student.firstName}</strong> S/o/D/o{" "}
-  <strong>{student.family?.[0]?.fatherName || "N/A"}</strong> &{" "}
-  <strong>{student.family?.[0]?.motherName || "N/A"}</strong>, caste{" "}
-  <strong>{student.caste || "N/A"}</strong>, attended this school from{" "}
-  <strong>{student.admissionDate || "N/A"}</strong> to{" "}
-  <strong>{student.tcDate || "N/A"}</strong>. He/She passed the exam of
-  class <strong>{student.className || "N/A"}</strong> in year{" "}
-  <strong>{student.passoutYear || "N/A"}</strong>.
-</Typography>
+          This is to certify that <strong>{student.firstName}</strong> S/o/D/o{" "}
+          <strong>{student.family?.[0]?.fatherName || "N/A"}</strong> &{" "}
+          <strong>{student.family?.[0]?.motherName || "N/A"}</strong>, caste{" "}
+          <strong>{student.caste || "N/A"}</strong>, attended this school from{" "}
+          <strong>{student.admissionDate || "N/A"}</strong> to{" "}
+          <strong>{student.tcDate || "N/A"}</strong>. He/She passed the exam of
+          class <strong>{student.className || "N/A"}</strong> in year{" "}
+          <strong>{student.passoutYear || "N/A"}</strong>.
+        </Typography>
 
         <Typography mt={2} fontSize={15} color="text.secondary">
           Date of issue: <strong>{student.tcDate || "N/A"}</strong>
@@ -194,11 +173,7 @@ const TcPage = () => {
               Principal
             </Typography>
             <Typography fontSize={14} color="text.secondary">
-<<<<<<< HEAD
               {headerText || "N/A"}
-=======
-             {headerText}
->>>>>>> 6a1720b3827e30c389d7990950247d7176039dd2
             </Typography>
             <Typography fontSize={14} color="text.secondary">
               {addressText || "N/A"}

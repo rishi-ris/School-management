@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
-import Sidekick from "../component/Sidekick";
 import TeacherDashboardside from "./TeacherDasboardside";
 
 const TeacherMarksEntry = () => {
@@ -59,17 +58,6 @@ const TeacherMarksEntry = () => {
       setSelectedStudent(studentPin);
       setRollNumber(selected.rollNumber);
 
-      // const resetMarks = subjects.map((sub) => ({
-      //   subjectId: sub.subjectId,
-      //   subjectName: sub.subjectName,
-      //   totalTheoryMarks: sub.totalTheoryMarks,
-      //   totalInternalMarks: sub.totalInternalMarks,
-      //   passingTheoryMarks: sub.passingTheoryMarks,
-      //   passingInternalMarks: sub.passingInternalMarks,
-      //   obtainedTheoryMarks: "",
-      //   obtainedInternalMarks: "",
-      // }));
-      // setSubjectMarks(resetMarks);
       const initialMarks = subjects.map((sub) => ({
         subjectId: sub.subjectId,
         subjectName: sub.subjectName,
@@ -79,7 +67,7 @@ const TeacherMarksEntry = () => {
         passingInternalMarks: sub.passingInternalMarks,
         obtainedTheoryMarks: "",
         obtainedInternalMarks: "",
-        hasInternal: sub.hasInternal, // ✅ add this
+        hasInternal: sub.hasInternal,
       }));
       setSubjectMarks(initialMarks);
     }
@@ -92,7 +80,6 @@ const TeacherMarksEntry = () => {
   };
 
   const handleSubmit = () => {
-    // ✅ Check if any obtained marks are empty
     const isAnyEmpty = subjectMarks.some((m) => {
       return (
         m.obtainedTheoryMarks === "" ||
@@ -136,27 +123,27 @@ const TeacherMarksEntry = () => {
     (sub) =>
       (sub.obtainedTheoryMarks !== "" &&
         (Number(sub.obtainedTheoryMarks) < 0 ||
-          Number(sub.obtainedTheoryMarks) > 100)) ||
+          Number(sub.obtainedTheoryMarks) > sub.totalTheoryMarks)) ||
       (sub.obtainedInternalMarks !== "" &&
         (Number(sub.obtainedInternalMarks) < 0 ||
-          Number(sub.obtainedInternalMarks) > 100))
+          Number(sub.obtainedInternalMarks) > sub.totalInternalMarks))
   );
 
   return (
     <Box>
-   <TeacherDashboardside/>
+<TeacherDashboardside/>
 
       <Container maxWidth="lg">
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom mt={2}>
           Enter Student Marks
         </Typography>
 
-        <Paper elevation={3} sx={{ p: 3 }}>
+        <Paper elevation={3} sx={{ p: 3, width: "65%" }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3} sx={{width:"200px"}}>
+            <Grid item xs={12} sm={6} md={3} sx={{ width: "150px" }}>
               <ClassDropDown onSelect={handleClassSelect} />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Select
                 fullWidth
                 value={selectedStudent}
@@ -174,7 +161,7 @@ const TeacherMarksEntry = () => {
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Select
                 fullWidth
                 value={selectedYear}
@@ -191,7 +178,7 @@ const TeacherMarksEntry = () => {
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <TextField
                 label="Roll Number"
                 fullWidth
@@ -217,7 +204,6 @@ const TeacherMarksEntry = () => {
                       <b>{sub.subjectName}</b>
                     </Typography>
 
-                    {/* First Row - Theory Marks */}
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
                         <TextField
@@ -243,31 +229,30 @@ const TeacherMarksEntry = () => {
                           type="number"
                           fullWidth
                           value={sub.obtainedTheoryMarks}
-                          onChange={(e) => {
-                            const value = e.target.value;
+                          onChange={(e) =>
                             handleMarksChange(
                               index,
                               "obtainedTheoryMarks",
-                              value
-                            );
-                          }}
+                              e.target.value
+                            )
+                          }
                           error={
                             sub.obtainedTheoryMarks !== "" &&
                             (Number(sub.obtainedTheoryMarks) < 0 ||
-                              Number(sub.obtainedTheoryMarks) > 100)
+                              Number(sub.obtainedTheoryMarks) >
+                                sub.totalTheoryMarks)
                           }
                           helperText={
                             sub.obtainedTheoryMarks !== "" &&
-                            (Number(sub.obtainedTheoryMarks) < 0 ||
-                              Number(sub.obtainedTheoryMarks) > 100)
-                              ? "Please enter marks between 0 and 100"
-                              : ""
+                            Number(sub.obtainedTheoryMarks) >
+                            `  sub.totalTheoryMarks
+                              ? Marks cannot be more than ${sub.totalTheoryMarks}
+                              : ""`
                           }
                         />
                       </Grid>
                     </Grid>
 
-                    {/* Second Row - Internal Marks (only if hasInternal === true) */}
                     {sub.hasInternal && (
                       <Grid container spacing={2} mt={1}>
                         <Grid item xs={6}>
@@ -294,25 +279,25 @@ const TeacherMarksEntry = () => {
                             type="number"
                             fullWidth
                             value={sub.obtainedInternalMarks}
-                            onChange={(e) => {
-                              const value = e.target.value;
+                            onChange={(e) =>
                               handleMarksChange(
                                 index,
                                 "obtainedInternalMarks",
-                                value
-                              );
-                            }}
+                                e.target.value
+                              )
+                            }
                             error={
                               sub.obtainedInternalMarks !== "" &&
                               (Number(sub.obtainedInternalMarks) < 0 ||
-                                Number(sub.obtainedInternalMarks) > 100)
+                                Number(sub.obtainedInternalMarks) >
+                                  sub.totalInternalMarks)
                             }
                             helperText={
                               sub.obtainedInternalMarks !== "" &&
-                              (Number(sub.obtainedInternalMarks) < 0 ||
-                                Number(sub.obtainedInternalMarks) > 100)
-                                ? "Please enter marks between 0 and 100"
-                                : ""
+                              Number(sub.obtainedInternalMarks) >
+                              `sub.totalInternalMarks
+                                ? Marks cannot be more than ${sub.totalInternalMarks}
+                                : ""`
                             }
                           />
                         </Grid>
@@ -334,7 +319,7 @@ const TeacherMarksEntry = () => {
                 !selectedStudent ||
                 !selectedYear ||
                 subjectMarks.length === 0 ||
-                isAnyInvalid // disable if any field is invalid
+                isAnyInvalid
               }
               sx={{backgroundColor: "var(--button-bg-color)",}}
             >
@@ -347,4 +332,4 @@ const TeacherMarksEntry = () => {
   );
 };
 
-export default TeacherMarksEntry;
+export default  TeacherMarksEntry;

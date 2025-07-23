@@ -68,7 +68,7 @@ const Dashboard = ({ stats, navigate }) => {
       label: "Total Students",
       bgcolor: "#ef5350",
       icon: <School />,
-      onClick: () => navigate("/students", { state: stats.totalStudents.ids })
+      onClick: () => navigate("/TotalStuCard", { state: stats.totalStudents.ids })
     },
  
 

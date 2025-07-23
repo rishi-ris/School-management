@@ -2,28 +2,31 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Container,
   Typography,
-  Grid,
   Box,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
   Paper,
   Button,
   Divider,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 
 import Network from "../Application/Network";
-import RoleDropdown from "../component/RoleDropdown";
-
 import TeacherDashboardside from "./TeacherDasboardside";
 import { AuthContext } from "../auth/AuthProvider";
 
 const TeacherDasboardAttendance = () => {
-   const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [teachers, setTeachers] = useState([]);
   const [attendance, setAttendance] = useState({});
 
-  const todayDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const todayDate = new Date().toISOString().split("T")[0];
 
   const handleAttendanceChange = (teacherId, status) => {
     setAttendance((prev) => ({
@@ -33,11 +36,11 @@ const TeacherDasboardAttendance = () => {
   };
 
   const handleSubmit = () => {
-   const payload = teachers.map((teacher) => ({
-  teacherId: teacher.id,
-  date: todayDate,
-  isPresent: attendance[teacher.id] === "present",
-}));
+    const payload = teachers.map((teacher) => ({
+      teacherId: teacher.id,
+      date: todayDate,
+      isPresent: attendance[teacher.id] === "present",
+    }));
 
     console.log("Submitting Attendance Payload:", payload);
 
@@ -46,14 +49,19 @@ const TeacherDasboardAttendance = () => {
       .catch(() => alert("Error submitting attendance"));
   };
 
+  useEffect(() => {
+    if (!user?.data?.data?.id) return;
 
-useEffect(()=> {
+    console.log("User ID:", user.data.data.id);
 
-  Network.getAttendanceByTeacher(user.data.data.id)
+    Network.getAttendanceByTeacher(user.data.data.id)
       .then((res) => {
-        setTeachers(res);
+        console.log("API Teacher Data:", res);
 
-        const initialAttendance = res.reduce((acc, teacher) => {
+        const teacherList = Array.isArray(res) ? res : [res];
+        setTeachers(teacherList);
+
+        const initialAttendance = teacherList.reduce((acc, teacher) => {
           const todayAttendance = teacher.attendance?.find(
             (a) => a.date === todayDate
           );
@@ -62,87 +70,98 @@ useEffect(()=> {
             ? todayAttendance.isPresent
               ? "present"
               : "absent"
-            : "absent"; // default if no record
+            : "absent";
           return acc;
         }, {});
 
         setAttendance(initialAttendance);
-
-
       })
       .catch((err) => {
         console.error("Error loading teachers:", err);
         setTeachers([]);
         setAttendance({});
       });
-}, [])
+  }, [user]);
+
+  if (!user?.data?.data?.id) {
+    return <Typography>Loading user data...</Typography>;
+  }
+
   return (
     <Box>
-    <TeacherDashboardside/>
-    
-    <Container maxWidth="md">
-      <Typography variant="h4" gutterBottom>
-        Teacher Attendance
-      </Typography>
+      <TeacherDashboardside />
 
-      <Paper sx={{ p: 3 }}>
-  
+      <Container maxWidth="lg">
+        <Typography variant="h4" gutterBottom>
+          Teacher Attendance
+        </Typography>
 
-        <Divider sx={{ my: 3 }} />
+        <Paper sx={{ p: 3 }}>
+          <Divider sx={{ my: 3 }} />
 
-       
-          <>
-            {teachers.map((teacher) => (
-              <Grid
-                container
-                spacing={2}
-                key={teacher.id}
-                alignItems="center"
-                sx={{ mb: 2 }}
+          {teachers.length === 0 ? (
+            <Typography>No teacher data found.</Typography>
+          ) : (
+            <>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell><strong>ID</strong></TableCell>
+                      <TableCell><strong>Name</strong></TableCell>
+                      <TableCell><strong>Contact</strong></TableCell>
+                      <TableCell><strong>Attendance</strong></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {teachers.map((teacher) => (
+                      <TableRow key={teacher.id}>
+                        <TableCell>{teacher.id}</TableCell>
+                        <TableCell>
+                          {teacher.firstName} {teacher.lastName}
+                        </TableCell>
+                        <TableCell>{teacher.contactNumber}</TableCell>
+                        <TableCell>
+                          <RadioGroup
+                            row
+                            value={attendance[teacher.id]}
+                            onChange={(e) =>
+                              handleAttendanceChange(teacher.id, e.target.value)
+                            }
+                          >
+                            <FormControlLabel
+                              value="present"
+                              control={<Radio />}
+                              label="Present"
+                            />
+                            <FormControlLabel
+                              value="absent"
+                              control={<Radio />}
+                              label="Absent"
+                            />
+                          </RadioGroup>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleSubmit}
+                sx={{ mt: 2 }}
               >
-                <Grid item xs={6}>
-                  <Typography>
-                    {teacher.firstName} {teacher.lastName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <RadioGroup
-                    row
-                    value={attendance[teacher.id]}
-                    onChange={(e) =>
-                      handleAttendanceChange(teacher.id, e.target.value)
-                    }
-                  >
-                    <FormControlLabel
-                      value="present"
-                      control={<Radio />}
-                      label="Present"
-                    />
-                    <FormControlLabel
-                      value="absent"
-                      control={<Radio />}
-                      label="Absent"
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-            ))}
-
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleSubmit}
-              sx={{ mt: 2,  }}
-            >
-              Submit Attendance
-            </Button>
-          </>
-        
-      </Paper>
-    </Container>
+                Submit Attendance
+              </Button>
+            </>
+          )}
+        </Paper>
+      </Container>
     </Box>
   );
 };
 
-export default TeacherDasboardAttendance ;
+export default TeacherDasboardAttendance;

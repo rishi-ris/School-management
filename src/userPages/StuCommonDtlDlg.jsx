@@ -11,7 +11,7 @@ import ClassDropDown from "../component/ClassDropDown";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-
+ 
 const StuCommonDtlDlg = ({
   data,
   onChange,
@@ -22,25 +22,25 @@ const StuCommonDtlDlg = ({
 }) => {
   const requiredCommonFields = [
     "username", "password", "gender", "rollNumber", "scholarNumber",
-    "firstName", "lastName", "contactNumber", "dob", "address",
+    "firstName", "lastName", "contactNumber", "dob", "address", "bloodGroup",
     "city", "state", "pinCode", "country", "status", "feesDiscount", "totalFees"
   ];
-
+ 
   const numericFields = [
     "rollNumber", "contactNumber", "scholarNumber", "pinCode", "feesDiscount", "totalFees"
   ];
-
+ 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const isNumeric = numericFields.includes(name);
     let cleanValue = isNumeric
       ? value.replace(/[^0-9]/g, "").slice(0, name === "pinCode" ? 6 : 10)
       : value.slice(0, 20);
-
+ 
     if (isNumeric && name !== "contactNumber" && name !== "pinCode") {
       cleanValue = cleanValue.slice(0, 20);
     }
-
+ 
     if (name === "contactNumber") {
       if (cleanValue.length !== 10) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 10 digits" }));
@@ -55,7 +55,7 @@ const StuCommonDtlDlg = ({
         setErrors(newErr);
       }
     }
-
+ 
     if (name === "pinCode") {
       if (cleanValue.length !== 6) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 6 digits" }));
@@ -65,17 +65,17 @@ const StuCommonDtlDlg = ({
         setErrors(newErr);
       }
     }
-
+ 
     onChange({ [name]: cleanValue });
   };
-
+ 
   const handleDOBChange = (newValue) => {
     const formatted = dayjs(newValue).format("DD/MM/YYYY");
     const isFuture = dayjs(newValue).isAfter(dayjs());
     const age = dayjs().diff(dayjs(newValue), "year");
-
+ 
     onChange({ dob: formatted });
-
+ 
     if (!newValue || !dayjs(newValue).isValid()) {
       setErrors?.((prev) => ({ ...prev, dob: "DOB is required" }));
     } else if (isFuture) {
@@ -93,20 +93,22 @@ const StuCommonDtlDlg = ({
       });
     }
   };
-
+ 
   const handleClassSelect = (cls) => {
     onClassSelect({ classId: cls });
     onRoleSelect({ roleId: 4 });
     onChange({ roleId: 4 });
   };
-
+ 
+  const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
+ 
   return (
     <Paper elevation={3} sx={{ p: 3, mt: 2 }}>
       <Typography variant="h6" gutterBottom>
         Common Details
       </Typography>
       <Divider sx={{ mb: 2 }} />
-
+ 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} sx={{ width: "200px" }}>
           <ClassDropDown
@@ -120,7 +122,7 @@ const StuCommonDtlDlg = ({
             </Typography>
           )}
         </Grid>
-
+ 
         {requiredCommonFields.map((field) => (
           <Grid item xs={12} sm={6} key={field}>
             {field === "gender" ? (
@@ -170,6 +172,24 @@ const StuCommonDtlDlg = ({
                   }}
                 />
               </LocalizationProvider>
+            ) : field === "bloodGroup" ? (
+              <TextField
+                select
+                fullWidth
+                name="bloodGroup"
+                label="Blood Group"
+                value={data?.bloodGroup || ""}
+                onChange={(e) => onChange({ bloodGroup: e.target.value })}
+                error={!!errors.bloodGroup}
+                helperText={errors.bloodGroup || ""}
+                sx={{ width: "200px" }}
+              >
+                {bloodGroups.map((group) => (
+                  <MenuItem key={group} value={group}>
+                    {group}
+                  </MenuItem>
+                ))}
+              </TextField>
             ) : (
               <TextField
                 fullWidth
@@ -197,5 +217,6 @@ const StuCommonDtlDlg = ({
     </Paper>
   );
 };
-
+ 
 export default StuCommonDtlDlg;
+ 

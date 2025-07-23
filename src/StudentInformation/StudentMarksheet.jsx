@@ -12,10 +12,14 @@ import {
   Grid,
 } from "@mui/material";
 import StudentDashboard from "./StudentDashboard";
-// import Network from "../Application/Network";
-// import Endpoints from "../Application/Endpoints";
+import UseCommonText from "../CommonFile/UseCommonText";
+import Network from "../Application/Network";
 
 const StudentMarksheet = () => {
+  const headerText = UseCommonText("--headerText");
+  const emailText = UseCommonText("--emailText");
+  const contactNumber = UseCommonText("--contactNumber");
+  const schoolBoardAddress = UseCommonText("--schoolBoardAddress");
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -24,7 +28,7 @@ const StudentMarksheet = () => {
         setData(res.data);
       })
       .catch((err) => {
-        console.error("Failed to load marksheet:", err);
+        console.error("Failed to load marksheet0:", err);
       });
   }, []);
 
@@ -53,7 +57,6 @@ const StudentMarksheet = () => {
         maxWidth: { xs: "100%", sm: 900 },
         mx: "auto",
         my: 10,
-        // px: { xs: 1, sm: 2 },
         bgcolor: "#fff",
         border: "1px solid #ccc",
         fontFamily: "Arial, sans-serif",
@@ -92,23 +95,17 @@ const StudentMarksheet = () => {
             padding: 1,
           }}
         >
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            color="error"
-            letterSpacing={1}
-          >
-            CHANDRA SHEKHAR AZAD HIGHER SECONDARY SCHOOL
+          <Typography variant="h6" fontWeight="bold" color="error" letterSpacing={1}>
+            {headerText}
           </Typography>
           <Typography fontSize={14} color="text.secondary">
             Jakhakhedi Jod, Distt. – Sehore (M.P.) – 466001
           </Typography>
-          <Typography fontSize={15} color="text.secondary">
-            Mobile : 9165918557, 9301054099 | Email:
-            ChandraShekharAzad2003@gmail.com
+          <Typography fontSize={13} color="text.secondary">
+            {contactNumber} | {emailText}
           </Typography>
-          <Typography fontWeight="bold" fontSize={15} color="primary.dark">
-            Affiliated to M.P. Board of Secondary Education
+          <Typography fontWeight="bold" fontSize={13} color="primary.dark">
+            {schoolBoardAddress}
           </Typography>
         </Box>
 

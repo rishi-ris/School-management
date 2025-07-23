@@ -29,6 +29,12 @@ import {
 
 
 const drawerItems = [
+
+    {
+      label: "Dashboard",
+      icon: <GridViewOutlinedIcon />,
+      path: "/TeacherDasboard",
+    },
   
       {
         label: "Attendance",
@@ -46,6 +52,11 @@ const drawerItems = [
           path: "/teacherMarksEntryPage",
         },
 
+          // {
+          //   label: "Timetable",
+          //   icon: <CalendarMonthOutlinedIcon />,
+          //   path: "/TeacherDasboardTimeTable",
+          // },
 
  
 ];

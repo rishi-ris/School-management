@@ -30,8 +30,10 @@ const InfoItem = ({ label, value }) => (
   </Paper>
 );
 
-const StudentInfoTabs = () => {
+const StudentInfoTabs = (props) => {
+  console.log("***props****", props.studentDetails);
   const [tabIndex, setTabIndex] = useState(0);
+  const [studentDetails, setStudentDetails] = useState(props.studentDetails);
   const theme = useTheme();
 
   // 🔴 Optional: Store API response if needed
@@ -40,7 +42,7 @@ const StudentInfoTabs = () => {
   // ✅ Call API on tab change or on first render
   useEffect(() => {
     axios
-      .get("http://localhost:8080/marksheets/evaluate/1")
+      .get("http://192.168.1.17:8080/marksheets/evaluate/1")
       .then((res) => {
         console.log("📦 API Response:", res.data);
         setApiData(res.data); // Optional: store if you want to use it
@@ -61,10 +63,8 @@ const StudentInfoTabs = () => {
         width: 750,
         bgcolor: "#f1f4f9",
         borderRadius: 2,
-       
-      
+
         height: "100%",
-       
       }}
     >
       {/* Tabs */}
@@ -97,61 +97,67 @@ const StudentInfoTabs = () => {
       <TabPanel value={tabIndex} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Class" value="10th A" />
+            <InfoItem label="Class" value={studentDetails.lastName} />
           </Grid>
           <Grid item xs={12} md={3}>
             <InfoItem label="Role" value="Student" />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Username" value="rishi-ris" />
+            <InfoItem label="Username" value={studentDetails.username} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Password" value="********" />
+            <InfoItem label="Password" value={studentDetails.password} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Gender" value="Male" />
+            <InfoItem label="Gender" value={studentDetails.gender} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Roll No" value="24" />
+            <InfoItem label="Roll No" value={studentDetails.rollNumber} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Scholar No" value="2024SCH123" />
+            <InfoItem label="Scholar No" value={studentDetails.scholarNumber} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="First Name" value="Rishi" />
+            <InfoItem label="First Name" value={studentDetails.firstName} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Last Name" value="Sharma" />
+            <InfoItem label="Last Name" value={studentDetails.lastName} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Contact Number" value="9876543210" />
+            <InfoItem
+              label="Contact Number"
+              value={studentDetails.contactNumber}
+            />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="DOB" value="2006-08-15" />
+            <InfoItem label="DOB" value={studentDetails.dob} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Address" value="123 School Lane" />
+            <InfoItem label="Address" value={studentDetails.address} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="City" value="Delhi" />
+            <InfoItem label="City" value={studentDetails.city} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="State" value="Delhi" />
+            <InfoItem label="State" value={studentDetails.state} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Pincode" value="110001" />
+            <InfoItem label="Pincode" value={studentDetails.pinCode} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Country" value="India" />
+            <InfoItem label="Country" value={studentDetails.country} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Status" value="Active" />
+            <InfoItem label="Status" value={studentDetails.status} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Fees Discount" value="15%" />
+            <InfoItem
+              label="Fees Discount"
+              value={studentDetails.feesDiscount}
+            />
           </Grid>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Total Fees" value="₹50,000" />
+            <InfoItem label="Total Fees" value={studentDetails.totalFees} />
           </Grid>
         </Grid>
       </TabPanel>
@@ -197,7 +203,7 @@ const StudentInfoTabs = () => {
 
       <TabPanel value={tabIndex} index={2}>
         <Box>
-          <Typography sx={{ fontWeight: "bold" }}>1st</Typography>
+          <Typography sx={{ fontWeight: "bold" }}>Previous School</Typography>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} md={4}>
               <InfoItem label="School" value="School......." />
@@ -219,31 +225,6 @@ const StudentInfoTabs = () => {
             </Grid>
             <Grid item xs={12} md={4}>
               <InfoItem label="Roll No" value="00000604" />
-            </Grid>
-          </Grid>
-
-          <Typography sx={{ fontWeight: "bold", mt: 2 }}>2nd</Typography>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="School" value="Govt HS School Bareli MP" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Board" value="MP Board " />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Passing Year" value="2024" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Max. Marks" value="500" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Marks Obtained" value="286" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Percentage" value="57.20%" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Roll No" value="246531929" />
             </Grid>
           </Grid>
         </Box>

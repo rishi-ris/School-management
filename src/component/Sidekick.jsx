@@ -75,18 +75,18 @@ const drawerItems = [
     icon: <CalendarMonthOutlinedIcon />,
     path: "/timetable",
   },
-   {
+//    {
 
-    label: "teacherdetls",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/TeacherDasboard",
-  },
+//     label: "teacherdetls",
+//     icon: <CalendarMonthOutlinedIcon />,
+//     path: "/TeacherDasboard",
+//   },
  
-{
-    label: "StudentInfo",
-    icon: <CalendarMonthOutlinedIcon />,
-    path: "/studentinfo",
-  },
+// {
+//     label: "StudentInfo",
+//     icon: <CalendarMonthOutlinedIcon />,
+//     path: "/studentinfo",
+//   },
 
 ];
 

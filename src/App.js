@@ -69,6 +69,7 @@ function App() {
           <Route path="/TeacherSubjectManager" element={<TeacherSubjectManager />} />
           <Route path="/teacherDasboradAttendance" element={<TeacherDasboardAttendance />} />
           <Route path="/teacherMarksEntryPage" element={<TeacherMarksEntry />} />
+          {/* <Route path="/TeacherDasboardTimeTable" element ={<TeacherDasboardTimeTable/>}/> */}
 
           {/* Fallback Route */}
           <Route path="*" element={<h1>404 Not Found</h1>} />

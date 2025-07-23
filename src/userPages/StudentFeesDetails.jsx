@@ -30,7 +30,6 @@ const StudentFeesDetails = ({ student }) => {
 
   if (!student) return null;
 
-  // ✅ Normalize backend student object
   const normalizedStudent = {
     studentName: student.studentName,
     fatherName: student.fatherName,
@@ -43,17 +42,6 @@ const StudentFeesDetails = ({ student }) => {
     dueFees: parseFloat(student.dueFees || 0, 10),
   };
 
-  // useEffect(() => {
-  //   setPaid(normalizedStudent.paid);
-  //   setDue(normalizedStudent.due);
-  //   setLastPayment(null);
-  //   setPaymentMethod("");
-  //   setOpen(false);
-  //   setShowReceipt(false);
-  //   setReceiptInfo(null);
-  //   setShowSuccess(false);
-  // }, [student]);
-
   const handlePayClick = () => {
     setOpen(true);
   };
@@ -64,38 +52,37 @@ const StudentFeesDetails = ({ student }) => {
   };
 
   const handleConfirm = async (amount, method) => {
-  setOpen(false);
-  setPaymentMethod("");
+    setOpen(false);
+    setPaymentMethod("");
 
-  const paymentPayload = {
-    totalFees: student.totalFees,
-    paymentMode: method,
-    paymentRefNum: "",
-    receivedBy: "Admin",
-    paidAmount: amount,
-    status: "Paid",
-    studentId: student.studentId,
-    paymentDate: new Date().toISOString(),
+    const paymentPayload = {
+      totalFees: student.totalFees,
+      paymentMode: method,
+      paymentRefNum: "",
+      receivedBy: "Admin",
+      paidAmount: amount,
+      status: "Paid",
+      studentId: student.studentId,
+      paymentDate: new Date().toISOString(),
+    };
+
+    try {
+      await Network.saveStudentPayment(paymentPayload);
+      setReceiptInfo({
+        amount,
+        method,
+        date: new Date().toLocaleString(),
+      });
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        setShowReceipt(true);
+      }, 1500);
+    } catch (error) {
+      console.error("❌ Failed to save payment:", error);
+      alert("Error saving payment. Please try again.");
+    }
   };
-
-  try {
-    await Network.saveStudentPayment(paymentPayload);
-    setReceiptInfo({
-      amount,
-      method,
-      date: new Date().toLocaleString(),
-    });
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      setShowReceipt(true);
-    }, 1500);
-  } catch (error) {
-    console.error("❌ Failed to save payment:", error);
-    alert("Error saving payment. Please try again.");
-  }
-};
-
 
   const handleReceiptClose = () => {
     if (receiptInfo) {
@@ -114,35 +101,40 @@ const StudentFeesDetails = ({ student }) => {
     setReceiptInfo(null);
   };
 
-   const headerText = UseCommonText ("--headerText");
-    const addressText = UseCommonText ("--addressText");
+  const headerText = UseCommonText("--headerText");
+  const addressText = UseCommonText("--addressText");
+
   return (
-    <Box width="100%" bgcolor="#f4f8fb"  pb={4} >
-      
-      <Box height="100vh" display="flex" justifyContent="center">
+    <Box width="100%" bgcolor="#f4f8fb" pb={4}>
+      <Box
+        height="100vh"
+        display="flex"
+        justifyContent="center"
+        sx={{ overflowY: "auto" }} // ✅ Scroll Enabled
+      >
         <Paper
           elevation={0}
-          sx={{ width: "100%", maxWidth: "100vw",  background: "#fff" }}
+          sx={{ width: "100%", maxWidth: "100vw", background: "#fff" }}
         >
           <Box
             textAlign="center"
             mt={0}
             p={2}
             sx={{
-            backgroundColor: "var(--header-bg-color)",
+              backgroundColor: "var(--header-bg-color)",
             }}
           >
-             <Typography
-      variant="h5"
-      sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
-    >
-      {headerText}
-    </Typography>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
+            >
+              {headerText}
+            </Typography>
             <Typography
               variant="h6"
               sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
             >
-             {addressText}
+              {addressText}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "#e3f2fd", mt: 1 }}>
               Session: 2025-2026
@@ -185,7 +177,6 @@ const StudentFeesDetails = ({ student }) => {
                     <TableCell><strong>Class</strong></TableCell>
                     <TableCell>{normalizedStudent.className}</TableCell>
                   </TableRow>
-                  
                   <TableRow>
                     <TableCell><strong>Total Fees</strong></TableCell>
                     <TableCell>₹{normalizedStudent.totalFees}</TableCell>
@@ -193,7 +184,7 @@ const StudentFeesDetails = ({ student }) => {
                   <TableRow>
                     <TableCell><strong>Paid</strong></TableCell>
                     <TableCell sx={{ color: "green", fontWeight: 600 }}>
-                      ₹{normalizedStudent.totalPaid}
+                      ₹{normalizedStudent.paidFees}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -210,7 +201,6 @@ const StudentFeesDetails = ({ student }) => {
                         </Typography>
                       </TableCell>
                     </TableRow>
-
                   )}
                 </TableBody>
               </Table>
@@ -222,7 +212,13 @@ const StudentFeesDetails = ({ student }) => {
                 color="primary"
                 onClick={handlePayClick}
                 disabled={due > 0}
-                sx={{ borderRadius: 2, fontWeight: 600, px: 4, py: 1, backgroundColor: "var(--button-bg-color)",}}
+                sx={{
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  px: 4,
+                  py: 1,
+                  backgroundColor: "var(--button-bg-color)",
+                }}
               >
                 Pay Fees
               </Button>
