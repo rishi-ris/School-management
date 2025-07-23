@@ -133,7 +133,8 @@ const MarksEntryPage = () => {
     <Box>
       <Sidekick />
 
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{mt: "80px"}}>
+        
         <Typography variant="h4" gutterBottom mt={2}>
           Enter Student Marks
         </Typography>

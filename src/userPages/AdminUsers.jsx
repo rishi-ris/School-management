@@ -41,7 +41,16 @@ const StyledCard = styled(Card)(({ bgcolor }) => ({
   textAlign: "center",
   borderRadius: "12px",
   cursor: "pointer",
+  transition: "transform 0.4s ease, box-shadow 0.4s ease",
+  transformStyle: "preserve-3d",
+  "&:hover": {
+    transform: "rotateX(3deg) rotateY(3deg) scale(1.03)", 
+    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.3)",           
+    backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.1))",
+  },
 }));
+
+
 
 const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
   return (
@@ -141,7 +150,7 @@ const AdminUsers = () => {
   return (
     <Box>
       <Sidekick />
-      <Box p={2}>
+      <Box p={2} sx={{marginTop: "50px"}}>
         <Dashboard stats={stats} navigate={navigate} />
       </Box>
     </Box>

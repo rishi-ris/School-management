@@ -22,34 +22,53 @@ const StudentPaymentDlg = ({
   onConfirm,
   student,
 }) => {
+  // Local state
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [methodError, setMethodError] = useState("");
 
+  // Parse student's fee data safely
   const due = student ? parseFloat(student.dueFees, 10) : 0;
-  const paid = student ? parseFloat(student.totalPaid, 10) : 0;
   const total = student ? parseFloat(student.totalFees, 10) : 0;
   const entered = amount ? parseFloat(amount, 10) : 0;
+
+  // Remaining due fees after payment
   const remaining = due - entered >= 0 ? due - entered : due;
 
+  // Normalize student fee values
+  const normalizedStudent = {
+    totalFees: parseFloat(student.totalFees || 0, 10),
+    paidFees: parseFloat(student.totalPaid || 0, 10),
+    dueFees: parseFloat(student.dueFees || 0, 10),
+  };
+
+  // New paid amount after current entry
+  const updatedPaid = normalizedStudent.paidFees + entered;
+
+  // Handle amount input change
   const handleAmountChange = (e) => {
     setAmount(e.target.value);
     setError("");
   };
 
+  // Handle confirm payment
   const handleConfirm = () => {
     if (!amount || entered <= 0) {
       setError("Please enter a valid amount");
       return;
     }
+
     if (!paymentMethod) {
       setMethodError("Please select a payment method");
       return;
     }
+
     if (entered > due) {
       setError("Amount exceeds due fees");
       return;
     }
+
+    // All validations passed
     setError("");
     setMethodError("");
     onConfirm(entered, paymentMethod);
@@ -58,24 +77,33 @@ const StudentPaymentDlg = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
+      {/* Dialog Header */}
       <Box
         width="100%"
         sx={{ backgroundColor: "var(--header-bg-color)", color: "white" }}
       >
         <DialogTitle>Pay Student Fees</DialogTitle>
       </Box>
+
+      {/* Dialog Body */}
       <DialogContent>
+        {/* Fee Summary */}
         <Box mb={2}>
           <Typography variant="body2">
             <b>Due Fees:</b> ₹{due}
           </Typography>
-          <Typography variant="body2">
-            <b>Paid Fees:</b> ₹{paid}
-          </Typography>
+
+          {/* Paid Fees can be shown if needed */}
+          {/* <Typography variant="body2">
+            <b>Paid Fees:</b> ₹{normalizedStudent.paidFees}
+          </Typography> */}
+
           <Typography variant="body2">
             <b>Total Fees:</b> ₹{total}
           </Typography>
         </Box>
+
+        {/* Input: Amount */}
         <TextField
           label="Amount to Pay"
           type="number"
@@ -87,9 +115,20 @@ const StudentPaymentDlg = ({
           helperText={error}
           sx={{ mb: 2 }}
         />
-        <Typography variant="body2" sx={{ mb: 2 }}>
+
+        {/* Remaining Fee */}
+        <Typography variant="body2" sx={{ mb: 1 }}>
           <b>Remaining Due after Payment:</b> ₹{remaining}
         </Typography>
+
+        {/* Updated Paid Amount */}
+        {entered > 0 && (
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            <b>Just Deposited:</b> ₹{updatedPaid}
+          </Typography>
+        )}
+
+        {/* Payment Method Selection */}
         <FormControl component="fieldset" error={!!methodError} sx={{ mb: 1 }}>
           <RadioGroup
             value={paymentMethod}
@@ -101,14 +140,24 @@ const StudentPaymentDlg = ({
             <FormControlLabel value="cash" control={<Radio />} label="Cash" />
             <FormControlLabel value="Other" control={<Radio />} label="Other" />
           </RadioGroup>
+
+          {/* Payment Method Error */}
           {methodError && (
-            <Typography variant="caption" color="error">{methodError}</Typography>
+            <Typography variant="caption" color="error">
+              {methodError}
+            </Typography>
           )}
         </FormControl>
       </DialogContent>
+
+      {/* Dialog Footer */}
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleConfirm} sx={{backgroundColor: "var(--button-bg-color)",}}>
+        <Button
+          variant="contained"
+          onClick={handleConfirm}
+          sx={{ backgroundColor: "var(--button-bg-color)" }}
+        >
           Confirm Payment
         </Button>
       </DialogActions>

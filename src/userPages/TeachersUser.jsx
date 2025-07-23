@@ -45,24 +45,27 @@ const TeachersUser = () => {
 
   return (
     <>
-     
-<Sidekick/>
       <Box display="flex" justifyContent="center" mt={4}>
+         <Sidekick />
         <TableContainer
           component={Paper}
-          sx={{ maxWidth: 1250, width: "100%", boxShadow: 3 }}
+          sx={{ maxWidth: 1250, width: "100%", boxShadow: 3, marginTop: "50px", }}
         >
-    
-<Fade in={true} timeout={1000}>
-  <Typography
-    variant="h5"
-    align="center"
-    sx={{ backgroundColor: "var(--header-bg-color)", color: "white", py: 2 }}
-  >
-    Teacher Information Table
-  </Typography>
-</Fade>
+         
 
+          <Fade in={true} timeout={1000}>
+            <Typography
+              variant="h5"
+              align="center"
+              sx={{
+                backgroundColor: "var(--header-bg-color)",
+                color: "white",
+                py: 2,
+              }}
+            >
+              Teacher Information Table
+            </Typography>
+          </Fade>
 
           <Box px={2} py={2}>
             <Grid container spacing={2}>
@@ -75,7 +78,7 @@ const TeachersUser = () => {
           <Divider />
 
           <Table>
-            <TableHead sx={{ backgroundColor: "var(--header-bg-color)", }}>
+            <TableHead sx={{ backgroundColor: "var(--header-bg-color)" }}>
               <TableRow>
                 <TableCell sx={{ color: "white" }}>Name</TableCell>
                 <TableCell sx={{ color: "white" }}>Subject</TableCell>
@@ -88,16 +91,23 @@ const TeachersUser = () => {
               {teachers.length > 0 ? (
                 teachers.map((teacher) => (
                   <TableRow key={teacher.id}>
-                    <TableCell>{`${teacher.firstName || ""} ${teacher.lastName || ""}`}</TableCell>
+                    <TableCell>{`${teacher.firstName || ""} ${
+                      teacher.lastName || ""
+                    }`}</TableCell>
                     <TableCell>{teacher.subject || "-"}</TableCell>
                     <TableCell>{teacher.salary || "-"}</TableCell>
-                    <TableCell>{teacher.phone || teacher.mobile || "-"}</TableCell>
+                    <TableCell>
+                      {teacher.phone || teacher.mobile || "-"}
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="contained"
                         color="primary"
                         size="small"
-                        sx={{ m: 0.5,backgroundColor: "var(--button-bg-color)", }}
+                        sx={{
+                          m: 0.5,
+                          backgroundColor: "var(--button-bg-color)",
+                        }}
                         onClick={() => handleViewProfile(teacher.id)}
                       >
                         View Profile

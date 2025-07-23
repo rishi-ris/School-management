@@ -182,7 +182,7 @@ const AddNewEmpPage = () => {
         sx={{
           maxWidth: "65%",
           margin: "auto",
-          mt: 4,
+          mt: 15,
           height: "400px",
           p: 3,
           borderRadius: 2,
@@ -228,13 +228,23 @@ const AddNewEmpPage = () => {
 
           {/* Submit Button */}
           <Grid item xs={12} sx={{ fontWeight: "bold", fontSize: "40px" }}>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              sx={{ width: "200px", marginBottom: "15px",backgroundColor: "var(--button-bg-color)", }}
-            >
-              Submit
-            </Button>
+           <Button
+                         variant="contained"
+                         onClick={handleSubmit}
+                         sx={{
+                           backgroundColor: "var(--button-bg-color)",
+                           mb: "10px",
+                           height: "55px",
+                           width: "200px",
+                           fontWeight: "bold",
+                           textTransform: "none",
+                           "&:hover": {
+                             transform: "scale(1.03)", // optional subtle zoom effect
+                           },
+                         }}
+                       >
+                         Add Subject
+                       </Button>
           </Grid>
         </Grid>
 

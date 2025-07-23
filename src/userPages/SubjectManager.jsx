@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -15,25 +15,25 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
-  Typography
-} from '@mui/material';
-import MultiSelClassDropD from '../component/MultiSelClassDropD';
-import Network from '../Application/Network';
-import Sidekick from '../component/Sidekick';
-import ClassDropDown from '../component/ClassDropDown';
+  Typography,
+} from "@mui/material";
+import MultiSelClassDropD from "../component/MultiSelClassDropD";
+import Network from "../Application/Network";
+import Sidekick from "../component/Sidekick";
+import ClassDropDown from "../component/ClassDropDown";
 
 const SubjectManager = () => {
   const [open, setOpen] = useState(false);
-  const [subjectName, setSubjectName] = useState('');
+  const [subjectName, setSubjectName] = useState("");
   const [selectedClass, setSelectedClass] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [errors, setErrors] = useState({});
 
-  const [totalTheoryMarks, setTotalTheoryMarks] = useState('');
-  const [passingTheoryMarks, setPassingTheoryMarks] = useState('');
+  const [totalTheoryMarks, setTotalTheoryMarks] = useState("");
+  const [passingTheoryMarks, setPassingTheoryMarks] = useState("");
   const [hasInternal, setHasInternal] = useState(false);
-  const [totalInternalMarks, setTotalInternalMarks] = useState('');
-  const [passingInternalMarks, setPassingInternalMarks] = useState('');
+  const [totalInternalMarks, setTotalInternalMarks] = useState("");
+  const [passingInternalMarks, setPassingInternalMarks] = useState("");
 
   useEffect(() => {
     fetchSubjects();
@@ -45,7 +45,10 @@ const SubjectManager = () => {
       if (Array.isArray(response.data)) {
         const formatted = response.data.map((subj) => ({
           title: subj.title,
-          className: subj.classes?.map(cls => `${cls.className} - ${cls.section}`).join(', ') || '',
+          className:
+            subj.classes
+              ?.map((cls) => `${cls.className} - ${cls.section}`)
+              .join(", ") || "",
           totalTheoryMarks: subj.totalTheoryMarks,
           passingTheoryMarks: subj.passingTheoryMarks,
           hasInternal: subj.hasInternal,
@@ -55,19 +58,19 @@ const SubjectManager = () => {
         setSubjects(formatted);
       }
     } catch (err) {
-      console.error('❌ Failed to load subjects:', err);
-      alert('Error loading subject list.');
+      console.error("❌ Failed to load subjects:", err);
+      alert("Error loading subject list.");
     }
   };
 
   const resetForm = () => {
-    setSubjectName('');
+    setSubjectName("");
     setSelectedClass([]);
-    setTotalTheoryMarks('');
-    setPassingTheoryMarks('');
+    setTotalTheoryMarks("");
+    setPassingTheoryMarks("");
     setHasInternal(false);
-    setTotalInternalMarks('');
-    setPassingInternalMarks('');
+    setTotalInternalMarks("");
+    setPassingInternalMarks("");
     setErrors({});
   };
 
@@ -83,21 +86,26 @@ const SubjectManager = () => {
 
   const validate = () => {
     const err = {};
-    if (!subjectName.trim()) err.subjectName = 'Subject Name is required';
-    if (selectedClass.length === 0) err.selectedClass = 'Please select at least one class';
+    if (!subjectName.trim()) err.subjectName = "Subject Name is required";
+    if (selectedClass.length === 0)
+      err.selectedClass = "Please select at least one class";
 
-    if (totalTheoryMarks === '') err.totalTheoryMarks = 'Required';
-    else if (totalTheoryMarks < 0 || totalTheoryMarks > 100) err.totalTheoryMarks = '0–100 only';
+    if (totalTheoryMarks === "") err.totalTheoryMarks = "Required";
+    else if (totalTheoryMarks < 0 || totalTheoryMarks > 100)
+      err.totalTheoryMarks = "0–100 only";
 
-    if (passingTheoryMarks === '') err.passingTheoryMarks = 'Required';
-    else if (passingTheoryMarks < 0 || passingTheoryMarks > 100) err.passingTheoryMarks = '0–100 only';
+    if (passingTheoryMarks === "") err.passingTheoryMarks = "Required";
+    else if (passingTheoryMarks < 0 || passingTheoryMarks > 100)
+      err.passingTheoryMarks = "0–100 only";
 
     if (hasInternal) {
-      if (totalInternalMarks === '') err.totalInternalMarks = 'Required';
-      else if (totalInternalMarks < 0 || totalInternalMarks > 100) err.totalInternalMarks = '0–100 only';
+      if (totalInternalMarks === "") err.totalInternalMarks = "Required";
+      else if (totalInternalMarks < 0 || totalInternalMarks > 100)
+        err.totalInternalMarks = "0–100 only";
 
-      if (passingInternalMarks === '') err.passingInternalMarks = 'Required';
-      else if (passingInternalMarks < 0 || passingInternalMarks > 100) err.passingInternalMarks = '0–100 only';
+      if (passingInternalMarks === "") err.passingInternalMarks = "Required";
+      else if (passingInternalMarks < 0 || passingInternalMarks > 100)
+        err.passingInternalMarks = "0–100 only";
     }
 
     setErrors(err);
@@ -109,21 +117,26 @@ const SubjectManager = () => {
 
     const payload = {
       title: subjectName.trim(),
-      classIds: selectedClass.map(cls => cls.classId),
+      classIds: selectedClass.map((cls) => cls.classId),
       totalTheoryMarks: parseInt(totalTheoryMarks),
       passingTheoryMarks: parseInt(passingTheoryMarks),
       hasInternal,
       totalInternalMarks: hasInternal ? parseInt(totalInternalMarks || 0) : 0,
-      passingInternalMarks: hasInternal ? parseInt(passingInternalMarks || 0) : 0,
+      passingInternalMarks: hasInternal
+        ? parseInt(passingInternalMarks || 0)
+        : 0,
     };
 
     try {
       const response = await Network.addSubject(payload);
-      if (!response.data) throw new Error('Save failed');
+      if (!response.data) throw new Error("Save failed");
       await fetchSubjects();
       handleClose();
     } catch (err) {
-      console.error('❌ Error saving subject:', err.response.data.errors.unique_constraint);
+      console.error(
+        "❌ Error saving subject:",
+        err.response.data.errors.unique_constraint
+      );
       alert(err.response.data.errors.unique_constraint);
     }
   };
@@ -136,7 +149,10 @@ const SubjectManager = () => {
       if (Array.isArray(response.data)) {
         const formatted = response.data.map((subj) => ({
           title: subj.title,
-          className: subj.classes?.map(cls => `${cls.className} - ${cls.section}`).join(', ') || '',
+          className:
+            subj.classes
+              ?.map((cls) => `${cls.className} - ${cls.section}`)
+              .join(", ") || "",
           totalTheoryMarks: subj.totalTheoryMarks,
           passingTheoryMarks: subj.passingTheoryMarks,
           hasInternal: subj.hasInternal,
@@ -146,27 +162,59 @@ const SubjectManager = () => {
         setSubjects(formatted);
       }
     } catch (err) {
-      console.error('❌ Failed to filter subjects:', err);
-      alert('Error filtering subjects by class.');
+      console.error("❌ Failed to filter subjects:", err);
+      alert("Error filtering subjects by class.");
     }
   };
 
   return (
     <Box>
       <Sidekick />
-      <Box p={3}>
-        <Grid container spacing={2}>
+      <Box p={3} sx={{ marginTop: "65px" }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
           <Grid item>
-            <Button variant="contained" onClick={handleOpen} sx={{backgroundColor: "var(--button-bg-color)",}}>Add Subject</Button>
+            <Button
+              variant="contained"
+              onClick={handleOpen}
+              sx={{
+                backgroundColor: "var(--button-bg-color)",
+                height: "55px",
+                fontWeight: "bold",
+                textTransform: "none",
+                "&:hover": {
+                  transform: "scale(1.03)", // optional subtle zoom effect
+                },
+              }}
+            >
+              Add Subject
+            </Button>
           </Grid>
-          <Grid item sx={{width:"180px"}}>
+          <Grid
+            item
+            sx={{
+              width: "180px",
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                 transform: "scale(1.03)",
+              },
+            }}
+          >
             <ClassDropDown onSelect={handleClassFilter} />
           </Grid>
         </Grid>
 
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-          <DialogTitle >Add Subject</DialogTitle>
-          <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+          <DialogTitle>Add Subject</DialogTitle>
+          <DialogContent
+            sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
+          >
             <TextField
               label="Subject Name"
               value={subjectName}
@@ -178,10 +226,12 @@ const SubjectManager = () => {
 
             <MultiSelClassDropD
               onSelect={setSelectedClass}
-              selectedClassIds={selectedClass.map(cls => cls.classId)}
+              selectedClassIds={selectedClass.map((cls) => cls.classId)}
             />
             {errors.selectedClass && (
-              <Typography color="error" variant="caption">{errors.selectedClass}</Typography>
+              <Typography color="error" variant="caption">
+                {errors.selectedClass}
+              </Typography>
             )}
 
             <TextField
@@ -205,7 +255,12 @@ const SubjectManager = () => {
             />
 
             <FormControlLabel
-              control={<Checkbox checked={hasInternal} onChange={(e) => setHasInternal(e.target.checked)} />}
+              control={
+                <Checkbox
+                  checked={hasInternal}
+                  onChange={(e) => setHasInternal(e.target.checked)}
+                />
+              }
               label="Has Internal Marks"
             />
 
@@ -233,8 +288,12 @@ const SubjectManager = () => {
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} variant="outlined">Cancel</Button>
-            <Button onClick={handleSave} variant="contained">Save</Button>
+            <Button onClick={handleClose} variant="outlined">
+              Cancel
+            </Button>
+            <Button onClick={handleSave} variant="contained">
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
 
@@ -259,14 +318,16 @@ const SubjectManager = () => {
                     <TableCell>{subj.className}</TableCell>
                     <TableCell>{subj.totalTheoryMarks}</TableCell>
                     <TableCell>{subj.passingTheoryMarks}</TableCell>
-                    <TableCell>{subj.hasInternal ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{subj.hasInternal ? "Yes" : "No"}</TableCell>
                     <TableCell>{subj.totalInternalMarks}</TableCell>
                     <TableCell>{subj.passingInternalMarks}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">No subjects found</TableCell>
+                  <TableCell colSpan={7} align="center">
+                    No subjects found
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>

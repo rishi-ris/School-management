@@ -78,14 +78,14 @@ const TeacherAttendancePage = () => {
     <Box>
    <Sidekick/>
     
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{marginTop: "80px"}}>
       <Typography variant="h4" gutterBottom>
         Teacher Attendance
       </Typography>
 
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} width={200}>
             <RoleDropdown onSelect={onRolesSelect} />
           </Grid>
         </Grid>

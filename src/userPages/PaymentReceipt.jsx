@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Paper, Divider, Button } from "@mui/material";
 import UseCommonText from "../CommonFile/UseCommonText";
 
+// PaymentReceipt Component
 const PaymentReceipt = ({
   name = "First Student",
   className = "1 - A",
@@ -13,16 +14,21 @@ const PaymentReceipt = ({
   paymentMode = "cash",
   paymentDateTime = "12/07/2025, 22:02:19",
 }) => {
+  // Trigger browser print dialog
   const handlePrint = () => {
     window.print();
   };
-const headerText = UseCommonText ("--headerText");
- const addressText = UseCommonText ("--addressText");
+
+  // Dynamic school info (custom hook)
+  const headerText = UseCommonText("--headerText");
+  const addressText = UseCommonText("--addressText");
+
+  // Calculated total paid till now
+  const totalPaidSoFar = totalFees - dueFees;
+
   return (
     <Box>
-     
-
-      {/* Receipt Content */}
+      {/* Receipt container */}
       <Paper
         elevation={6}
         sx={{
@@ -33,10 +39,27 @@ const headerText = UseCommonText ("--headerText");
           borderRadius: 4,
           border: "2px solid #bdbdbd",
           background: "#fff",
+          position: "relative", // For watermark positioning
         }}
       >
-        {/* Header */}
-        <Box textAlign="center" mb={3}>
+        {/* Watermark image */}
+        <Box
+          component="img"
+          src="ProjectIMG/chandrashekhar-azad-watermark.png.png"
+          alt="Watermark"
+          sx={{
+            position: "absolute",
+            width: "60%",
+            opacity: 0.08,
+            zIndex: 0,
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+
+        {/* Header section */}
+        <Box textAlign="center" mb={3} sx={{ position: "relative", zIndex: 1 }}>
           <Typography variant="h6" fontWeight="bold" color="error">
             {headerText}
           </Typography>
@@ -44,7 +67,10 @@ const headerText = UseCommonText ("--headerText");
           <Typography fontSize={14} color="text.secondary">
             Contact: 9165918557, 9301054099
           </Typography>
+
           <Divider sx={{ my: 2 }} />
+
+          {/* Receipt title */}
           <Typography
             variant="h6"
             fontWeight="bold"
@@ -59,8 +85,15 @@ const headerText = UseCommonText ("--headerText");
           </Typography>
         </Box>
 
-        {/* Payment Info */}
-        <Box sx={{ lineHeight: 2, fontSize: 16 }}>
+        {/* Payment Details */}
+        <Box
+          sx={{
+            lineHeight: 2,
+            fontSize: 16,
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
           <Typography><strong>Name:</strong> {name}</Typography>
           <Typography><strong>Class:</strong> {className}</Typography>
           <Typography><strong>Roll No:</strong> {rollNo}</Typography>
@@ -68,24 +101,28 @@ const headerText = UseCommonText ("--headerText");
           <Typography><strong>Paid Fees (after payment):</strong> ₹{paidFees}</Typography>
           <Typography><strong>Due Fees (after payment):</strong> ₹{dueFees}</Typography>
           <Typography><strong>Amount Paid:</strong> ₹{amountPaid}</Typography>
+          <Typography><strong>Aapne abhi tak kitne fees jama kar di hai:</strong> ₹{totalPaidSoFar}</Typography>
           <Typography><strong>Payment Mode:</strong> {paymentMode}</Typography>
           <Typography><strong>Date & Time:</strong> {paymentDateTime}</Typography>
         </Box>
 
-        {/* Footer */}
-        <Box textAlign="right" mt={6}>
+        {/* Signature Section */}
+        <Box textAlign="right" mt={6} sx={{ position: "relative", zIndex: 1 }}>
           <Typography fontWeight="bold" fontSize={14}>Signature</Typography>
-          <Divider sx={{ width: 120, ml: "auto", mt: 4, borderColor: "#bdbdbd" }} />
+          <Divider
+            sx={{
+              width: 120,
+              ml: "auto",
+              mt: 4,
+              borderColor: "#bdbdbd",
+            }}
+          />
         </Box>
       </Paper>
 
-       {/* Print Button (hidden when printing) */}
+      {/* Print Button (hidden in print view) */}
       <Box textAlign="center" my={2} sx={{ displayPrint: "none" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handlePrint}
-        >
+        <Button variant="contained" color="primary" onClick={handlePrint}>
           Print Receipt
         </Button>
       </Box>

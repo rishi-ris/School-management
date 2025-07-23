@@ -8,7 +8,7 @@ import StuDlgDocUpload from "./StuDlgDocUpload";
 import StudentFeesDlg from "./StudentFeesDlg";
 import Sidekick from "../component/Sidekick";
 import { ToastContainer } from "react-toastify"; // ✅ Toast import
-import "react-toastify/dist/ReactToastify.css";   // ✅ Toast CSS
+import "react-toastify/dist/ReactToastify.css"; // ✅ Toast CSS
 
 const StudentPage = () => {
   const [students, setStudents] = useState([]);
@@ -38,7 +38,7 @@ const StudentPage = () => {
     try {
       setLoading(true);
       const response = await Network.getStudentDetails(studentId);
-      const fullStudent = response.data;
+      const fullStudent = response;
 
       setEditingStudent(fullStudent);
       setNewStudentId(studentId);
@@ -109,84 +109,125 @@ const StudentPage = () => {
   };
 
   return (
-    <Box>
+    <Box p={3}>
+      {/* Side Navigation or Info */}
       <Sidekick />
 
-      <Box p={3}>
-        <Box display="flex" justifyContent="space-between" mb={2}>
-          <Typography variant="h4" fontWeight="bold">
-            Student Table
-          </Typography>
-          <AddStuButton
-            onClick={() => {
-              setSelectedStudent(null);
-              setDialogOpen(true);
-            }}
-          />
-        </Box>
+      {/* Header Bar with Title and Add Button */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        maxWidth={1200}
+        mx="auto"
+        mt={8}
+        p={2}
+        border="2px solid #191818ff"
+        borderRadius={2}
+        sx={{
+          background: "linear-gradient(to right, #f0f4ff, #ffffff)",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.06)",
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.1)",
+            transform: "scale(1.01)",
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{
+            color: "#2c3e50",
+            letterSpacing: "1px",
+            fontFamily: "Roboto, sans-serif",
+            transition: "all 0.3s ease-in-out",
+            "&:hover": {
+              transform: "scale(1.05)",
+              color: "#1a237e",
+              cursor: "pointer",
+            },
+          }}
+        >
+          Student Table
+        </Typography>
 
-        {loading ? (
-          <Box display="flex" justifyContent="center" mt={5}>
-            <CircularProgress size={40} />
-          </Box>
-        ) : (
+        <AddStuButton
+          onClick={() => {
+            setSelectedStudent(null);
+            setDialogOpen(true);
+          }}
+        />
+      </Box>
+
+      {/* Loading Spinner */}
+      {loading ? (
+        <Box display="flex" justifyContent="center" mt={5}>
+          <CircularProgress size={40} />
+        </Box>
+      ) : (
+        // Student Table Component
+        <Box mt={4}>
           <StuTable
             students={students}
             onEdit={handleDetails}
             documentsDetails={handleDocumentsDetails}
             payFees={handleFeesDetails}
           />
-        )}
+        </Box>
+      )}
 
-        <StuDlgCard
-          open={dialogOpen}
-          onClose={() => {
-            setDialogOpen(false);
-            setSelectedStudent(null);
-            setNewStudentId(null);
-            setEditingStudent(null);
-          }}
-          onSave={handleSave}
-          student={editingStudent}
-        />
+      {/* Student Registration Dialog */}
+      <StuDlgCard
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setSelectedStudent(null);
+          setNewStudentId(null);
+          setEditingStudent(null);
+        }}
+        onSave={handleSave}
+        student={editingStudent}
+      />
 
-        <StuDlgDocUpload
-          open={documentDialogOpen}
-          onClose={() => setDocumentDialogOpen(false)}
-          docStudentId={newStudentId}
-          documents={studentDocuments}
-        />
+      {/* Document Upload Dialog */}
+      <StuDlgDocUpload
+        open={documentDialogOpen}
+        onClose={() => setDocumentDialogOpen(false)}
+        docStudentId={newStudentId}
+        documents={studentDocuments}
+      />
 
-        <StudentFeesDlg
-          open={openFeesDetails}
-          onClose={() => setOpenFeesDetails(false)}
-          student={feesDetails}
-        />
+      {/* Fees Details Dialog */}
+      <StudentFeesDlg
+        open={openFeesDetails}
+        onClose={() => setOpenFeesDetails(false)}
+        student={feesDetails}
+      />
 
+      {/* Toast Notifications */}
       <ToastContainer
-  position="top-center"
-  autoClose={100000}
-  hideProgressBar={false}
-  newestOnTop={false}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme="colored"
-  toastStyle={{
-    fontSize: "16px",
-    fontWeight: "500",
-    borderRadius: "10px",
-    padding: "12px 20px",
-    background: "rgb(67, 78, 243)",     // red error background
-    color: "#fff",
-    boxShadow: "0px 3px 10px rgba(0,0,0,0.2)",
-    textAlign: "center",
-  }}
-/>
-
-      </Box>
+        position="top-center"
+        autoClose={100000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        toastStyle={{
+          fontSize: "16px",
+          fontWeight: "500",
+          borderRadius: "10px",
+          padding: "12px 20px",
+          background: "rgb(67, 78, 243)",
+          color: "#fff",
+          boxShadow: "0px 3px 10px rgba(0,0,0,0.2)",
+          textAlign: "center",
+        }}
+      />
     </Box>
   );
 };

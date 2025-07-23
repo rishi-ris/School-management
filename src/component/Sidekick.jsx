@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Box,
   AppBar,
@@ -14,6 +13,7 @@ import {
   Divider,
   useTheme,
 } from "@mui/material";
+
 import {
   Menu as MenuIcon,
   SchoolOutlined as SchoolOutlinedIcon,
@@ -28,10 +28,10 @@ import {
   CurrencyRupeeOutlined as CurrencyRupeeOutlinedIcon,
 } from "@mui/icons-material";
 
-
+// Drawer Items
 const drawerItems = [
   {
-    label: "Add Staff", // 10 characters (with space)
+    label: "Add Staff",
     icon: <PersonAddAltOutlinedIcon />,
     path: "/newEmployee",
   },
@@ -75,21 +75,18 @@ const drawerItems = [
     icon: <CalendarMonthOutlinedIcon />,
     path: "/timetable",
   },
-//    {
-
-//     label: "teacherdetls",
-//     icon: <CalendarMonthOutlinedIcon />,
-//     path: "/TeacherDasboard",
-//   },
- 
-// {
-//     label: "StudentInfo",
-//     icon: <CalendarMonthOutlinedIcon />,
-//     path: "/studentinfo",
-//   },
-
+  // Uncomment to enable more items
+  // {
+  //   label: "teacherdetls",
+  //   icon: <CalendarMonthOutlinedIcon />,
+  //   path: "/TeacherDasboard",
+  // },
+  // {
+  //   label: "StudentInfo",
+  //   icon: <CalendarMonthOutlinedIcon />,
+  //   path: "/studentinfo",
+  // },
 ];
-
 
 const Sidekick = () => {
   const [open, setOpen] = useState(false);
@@ -101,9 +98,17 @@ const Sidekick = () => {
   return (
     <Box>
       {/* AppBar */}
-      <AppBar position="static" sx={{backgroundColor: "var(--header-bg-color)",}}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: "var(--header-bg-color)" }}
+      >
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={toggleDrawer(true)} sx={{ mr: 2 }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={toggleDrawer(true)}
+            sx={{ mr: 2 }}
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" fontWeight={600}>
@@ -125,7 +130,15 @@ const Sidekick = () => {
           role="presentation"
           onClick={toggleDrawer(false)}
         >
-          <Typography variant="h6" sx={{ px: 3, py: 2, fontWeight: "bold", color: theme.palette.primary.main }}>
+          <Typography
+            variant="h6"
+            sx={{
+              px: 3,
+              py: 2,
+              fontWeight: "bold",
+              color: theme.palette.primary.main,
+            }}
+          >
             Menu
           </Typography>
 
@@ -153,7 +166,14 @@ const Sidekick = () => {
                   },
                 }}
               >
-                <Box sx={{ mr: 2, display: "flex", alignItems: "center", color: theme.palette.primary.main }}>
+                <Box
+                  sx={{
+                    mr: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    color: theme.palette.primary.main,
+                  }}
+                >
                   {item.icon}
                 </Box>
                 <ListItemText primary={item.label} />
@@ -163,7 +183,7 @@ const Sidekick = () => {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Divider and Logout */}
+          {/* Logout */}
           <Divider />
           <List sx={{ mb: 2 }}>
             <ListItem

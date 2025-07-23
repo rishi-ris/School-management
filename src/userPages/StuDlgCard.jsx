@@ -244,7 +244,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
             backgroundColor: "var(--header-bg-color)",
           }}
         >
-          Add New Student
+          Update New Student
         </Typography>
       </DialogTitle>
 
