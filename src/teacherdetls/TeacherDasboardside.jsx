@@ -52,11 +52,16 @@ const drawerItems = [
           path: "/teacherMarksEntryPage",
         },
 
-          // {
-          //   label: "Timetable",
-          //   icon: <CalendarMonthOutlinedIcon />,
-          //   path: "/TeacherDasboardTimeTable",
-          // },
+          {
+            label: "Timetable",
+            icon: <CalendarMonthOutlinedIcon />,
+            path: "/TeacherDasTable",
+          },
+            {
+              label: "Students",
+              icon: <SchoolOutlinedIcon />,
+              path: "/TeacherDasStudent",
+            },
 
  
 ];

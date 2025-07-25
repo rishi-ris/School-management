@@ -80,7 +80,7 @@ const Dashboard = ({ stats, navigate }) => {
       label: "Pending Fees",
       bgcolor: "#fbc02d",
       icon: <Payment />,
-      onClick: () => navigate("/pending-fees", { state: stats.totalPendingFees.students })
+      onClick: () => navigate("/TotalFeecard", { state: stats.totalPendingFees})
     },
     {
       count: stats.totalStudents.count,
@@ -108,14 +108,14 @@ const Dashboard = ({ stats, navigate }) => {
       label: "Student Birthdays",
       bgcolor: "#ab47bc",
       icon: <CalendarToday />,
-      onClick: () => navigate("/birthdays/students", { state: stats.studentBirthdaysToday.students })
+      onClick: () => navigate("/BdayStudent", { state: stats.studentBirthdaysToday.students})
     },
     {
       count: stats.teacherBirthdaysToday.count,
       label: "Teacher Birthdays",
       bgcolor: "#7e57c2",
       icon: <CalendarToday />,
-      onClick: () => navigate("/birthdays/teachers", { state: stats.teacherBirthdaysToday.students })
+      onClick: () => navigate("/TeacherBirthday", { state: stats.teacherBirthdaysToday.students })
     },
   ];
 

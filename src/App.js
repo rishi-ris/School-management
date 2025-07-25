@@ -32,6 +32,11 @@ import TeacherDasboardAttendance from "./teacherdetls/TeacherDasboardAttendance"
 import TeacherDasboard from "./teacherdetls/TeacherDashboard";
 import TeacherMarksEntry from "./teacherdetls/TeacherMarksEntry";
 import { AuthProvider } from "./auth/AuthProvider";
+import TotalFeecard from "./Carddata/Pendingfeecard";
+import TeacherDasTablePage from "./teacherdetls/TeacherDastable";
+import TeacherDasStudent from "./teacherdetls/TeacherDasStudent";
+import BdayStudents from "./Carddata/bdayStudents";
+import TeacherBirthday from "./Carddata/BdayTeacher";
 
 function App() {
   return (
@@ -69,7 +74,15 @@ function App() {
           <Route path="/TeacherSubjectManager" element={<TeacherSubjectManager />} />
           <Route path="/teacherDasboradAttendance" element={<TeacherDasboardAttendance />} />
           <Route path="/teacherMarksEntryPage" element={<TeacherMarksEntry />} />
-          {/* <Route path="/TeacherDasboardTimeTable" element ={<TeacherDasboardTimeTable/>}/> */}
+          <Route path="/TeacherDasTable" element ={<TeacherDasTablePage/>}/>
+          <Route path="/TeacherDasStudent" element={<TeacherDasStudent/>}/>
+
+
+           {/* card data Route */}
+            <Route path="/TotalFeecard" element={<TotalFeecard/>}/>
+            <Route path="/BdayStudent" element={<BdayStudents/>}/>
+            <Route path="/TeacherBirthday" element={<TeacherBirthday/>}/>
+ 
 
           {/* Fallback Route */}
           <Route path="*" element={<h1>404 Not Found</h1>} />

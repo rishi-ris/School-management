@@ -81,8 +81,6 @@ const TeachersUser = () => {
             <TableHead sx={{ backgroundColor: "var(--header-bg-color)" }}>
               <TableRow>
                 <TableCell sx={{ color: "white" }}>Name</TableCell>
-                <TableCell sx={{ color: "white" }}>Subject</TableCell>
-                <TableCell sx={{ color: "white" }}>Salary</TableCell>
                 <TableCell sx={{ color: "white" }}>Phone</TableCell>
                 <TableCell sx={{ color: "white" }}>Actions</TableCell>
               </TableRow>
@@ -94,10 +92,8 @@ const TeachersUser = () => {
                     <TableCell>{`${teacher.firstName || ""} ${
                       teacher.lastName || ""
                     }`}</TableCell>
-                    <TableCell>{teacher.subject || "-"}</TableCell>
-                    <TableCell>{teacher.salary || "-"}</TableCell>
                     <TableCell>
-                      {teacher.phone || teacher.mobile || "-"}
+                      {teacher.phone || teacher.contactNumber || "-"}
                     </TableCell>
                     <TableCell>
                       <Button
