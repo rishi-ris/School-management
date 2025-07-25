@@ -12,6 +12,9 @@ import { keyframes } from "@emotion/react";
 import RoleDropdown from "../component/RoleDropdown";
 import Network from "../Application/Network";
 import Sidekick from "../component/Sidekick";
+import { useTheme, useMediaQuery } from "@mui/material";
+
+
 
 const initialFormState = {
   username: "",
@@ -58,7 +61,11 @@ const AddNewEmpPage = () => {
 
     if (name === "contactNumber" && !/^\d{0,10}$/.test(value)) return;
     if (name === "pinCode" && !/^\d{0,6}$/.test(value)) return;
-    if ((name === "firstName" || name === "lastName") && /[^a-zA-Z\s]/.test(value)) return;
+    if (
+      (name === "firstName" || name === "lastName") &&
+      /[^a-zA-Z\s]/.test(value)
+    )
+      return;
     if (value.length > 20) return;
 
     setForm({ ...form, [name]: value });
@@ -81,7 +88,10 @@ const AddNewEmpPage = () => {
     const requiredFields = Object.keys(initialFormState);
 
     requiredFields.forEach((field) => {
-      if (!form[field] || (typeof form[field] === "string" && form[field].trim() === "")) {
+      if (
+        !form[field] ||
+        (typeof form[field] === "string" && form[field].trim() === "")
+      ) {
         newErrors[field] = "This field is required";
       }
     });
@@ -110,54 +120,70 @@ const AddNewEmpPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  
+// 👇 Inside your component
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const handleSubmit = async () => {
-    if (!validate()) return;
+  if (!validate()) return;
 
-    const payload = {
-      username: form.username,
-      password: form.password,
-      role: {
-        roleId: form.roleId?.roleId || form.roleId,
-      },
-      gender: form.gender,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      contactNumber: form.contactNumber,
-      dOB: formatDate(form.dOB),
-      address: form.address,
-      city: form.city,
-      state: form.state,
-      pinCode: form.pinCode,
-      country: form.country,
-      status: form.status,
-      createdBy: "system",
-    };
+  const payload = {
+    username: form.username,
+    password: form.password,
+    role: {
+      roleId: form.roleId?.roleId || form.roleId,
+    },
+    gender: form.gender,
+    firstName: form.firstName,
+    lastName: form.lastName,
+    contactNumber: form.contactNumber,
+    dOB: formatDate(form.dOB),
+    address: form.address,
+    city: form.city,
+    state: form.state,
+    pinCode: form.pinCode,
+    country: form.country,
+    status: form.status,
+    createdBy: "system",
+  };
 
-    try {
-      const response = await Network.addNewUser(payload);
-      if (response.status === 200 || response.status === 201) {
-        setSnackbar({
-          open: true,
-          message: "User created successfully!",
-          severity: "success",
-        });
-        setForm(initialFormState);
-        setErrors({});
-      } else {
-        setSnackbar({
-          open: true,
-          message: "Failed to create user.",
-          severity: "error",
-        });
-      }
-    } catch (error) {
+  try {
+    const response = await Network.addNewUser(payload);
+
+    if (response.status === 200 || response.status === 201) {
       setSnackbar({
         open: true,
-        message: "API Error: " + error.message,
+        message: "User created successfully!",
+        severity: "success",
+      });
+      setForm(initialFormState);
+      setErrors({});
+    } else {
+      const errorMessage = response.data?.message || "Failed to create user.";
+      setSnackbar({
+        open: true,
+        message: errorMessage,
         severity: "error",
       });
     }
-  };
+  } catch (error) {
+    // 🔥 This part changed
+    const backendError = error?.response?.data?.errors?.unique_constraint;
+    const apiMessage =
+      backendError ||
+      error?.response?.data?.message ||
+      error.message ||
+      "API Error occurred.";
+
+    setSnackbar({
+      open: true,
+      message: apiMessage,
+      severity: "error",
+    });
+  }
+};
+
 
   const formFields = [
     { name: "username", label: "Username" },
@@ -178,86 +204,99 @@ const AddNewEmpPage = () => {
   return (
     <>
       <Sidekick />
-      <Box
+     <Box
+  sx={{
+    width: { xs: "95%", sm: "90%", md: "80%", lg: "70%" },
+    margin: "auto",
+    
+    mt: { xs: 8, md: 18 },
+    p: { xs: 2, sm: 3 },
+    borderRadius: 2,
+    boxShadow: 8,
+    backgroundColor: "#eeebebff",
+    animation: `${fadeInUp} 0.8s ease-out`,
+  }}
+>
+  <Grid container spacing={2}>
+    {/* Role Dropdown */}
+    <Grid item xs={12} sm={6} sx={{width:'230px'}}>
+      <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId} />
+      {errors.roleId && (
+        <span style={{ color: "red", fontSize: "12px" }}>
+          {errors.roleId}
+        </span>
+      )}
+    </Grid>
+
+    {/* All Form Fields */}
+    {formFields.map(({ name, label, select, options, type }) => {
+      const isDateField = type === "date";
+      const today = new Date().toISOString().split("T")[0];
+
+      return (
+        <Grid item xs={12} sm={6} key={name} sx={{width:'230px'}}>
+          <TextField
+            sx={{ width: "100%" }}
+            fullWidth
+            label={label}
+            name={name}
+            type={isDateField ? "date" : type || "text"}
+            value={form[name]}
+            onChange={handleChange}
+            InputLabelProps={isDateField ? { shrink: true } : {}}
+            select={!!select}
+            error={Boolean(errors[name])}
+            helperText={errors[name]}
+            inputProps={isDateField ? { max: today } : {}}
+          >
+            {select &&
+              options.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+          </TextField>
+        </Grid>
+      );
+    })}
+
+    {/* Submit Button */}
+    <Grid item xs={12} sx={{ textAlign: "center" }}>
+      <Button
+        variant="contained"
+        onClick={handleSubmit}
         sx={{
-          maxWidth: "65%",
-          margin: "auto",
-          mt: 15,
-          height: "400px",
-          p: 3,
-          borderRadius: 2,
-          boxShadow: 8,
-          backgroundColor: "#eeebebff",
-          animation: `${fadeInUp} 0.8s ease-out`,
+          backgroundColor: "var(--button-bg-color)",
+          mb: "10px",
+          height: "50px",
+          width: { xs: "100%", sm: "200px" },
+          fontWeight: "bold",
+          textTransform: "none",
+          "&:hover": {
+            transform: "scale(1.03)",
+          },
         }}
       >
-        <Grid container spacing={2} sx={{ marginTop: "20px" }}>
-          {/* Role Dropdown */}
-          <Grid item xs={12} sm={6} sx={{ width: "200px" }}>
-            <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId} />
-            {errors.roleId && (
-              <span style={{ color: "red", fontSize: "12px" }}>{errors.roleId}</span>
-            )}
-          </Grid>
+        Add Employee
+      </Button>
+    </Grid>
+  </Grid>
 
-          {/* Form Fields */}
-          {formFields.map(({ name, label, select, options, type }) => (
-            <Grid item xs={12} sm={6} key={name}>
-              <TextField
-                sx={{ width: "200px" }}
-                fullWidth
-                label={label}
-                name={name}
-                type={type === "date" ? "date" : type || "text"}
-                value={form[name]}
-                onChange={handleChange}
-                InputLabelProps={type === "date" ? { shrink: true } : {}}
-                select={!!select}
-                error={Boolean(errors[name])}
-                helperText={errors[name]}
-              >
-                {select &&
-                  options.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-              </TextField>
-            </Grid>
-          ))}
+ 
+   {/* Snackbar */}
+ <Snackbar
+  open={snackbar.open}
+  autoHideDuration={3000}
+  onClose={() => setSnackbar({ ...snackbar, open: false })}
+  anchorOrigin={{
+    vertical: isMobile ? "center" : "top",  // 👈 mobile = center, else top
+    horizontal: "center",
+  }}
+>
+  <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+</Snackbar>
+</Box>
 
-          {/* Submit Button */}
-          <Grid item xs={12} sx={{ fontWeight: "bold", fontSize: "40px" }}>
-           <Button
-                         variant="contained"
-                         onClick={handleSubmit}
-                         sx={{
-                           backgroundColor: "var(--button-bg-color)",
-                           mb: "10px",
-                           height: "55px",
-                           width: "200px",
-                           fontWeight: "bold",
-                           textTransform: "none",
-                           "&:hover": {
-                             transform: "scale(1.03)", // optional subtle zoom effect
-                           },
-                         }}
-                       >
-                         Add Subject
-                       </Button>
-          </Grid>
-        </Grid>
-
-        {/* Snackbar */}
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={3000}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
-        </Snackbar>
-      </Box>
     </>
   );
 };
