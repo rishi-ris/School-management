@@ -176,7 +176,7 @@ const TeacherSubjectManager = () => {
             <Button
               variant="contained"
               onClick={handleOpen}
-              sx={{ backgroundColor: "var(--button-bg-color)",  }}
+              sx={{ backgroundColor: "var(--button-bg-color)", width:"150px",height:"50px"  }}
             >
               Add Subject
             </Button>

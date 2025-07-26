@@ -108,14 +108,15 @@ const Dashboard = ({ stats, navigate }) => {
       label: "Student Birthdays",
       bgcolor: "#ab47bc",
       icon: <CalendarToday />,
-      onClick: () => navigate("/BdayStudent", { state: stats.studentBirthdaysToday.students})
+      onClick: () => navigate("/BdayStudent", { state: stats.studentBirthdaysToday})
     },
+     
     {
-      count: stats.teacherBirthdaysToday.count,
+     count: stats.teacherBirthdaysToday.count,
       label: "Teacher Birthdays",
       bgcolor: "#7e57c2",
       icon: <CalendarToday />,
-      onClick: () => navigate("/TeacherBirthday", { state: stats.teacherBirthdaysToday.students })
+      onClick: () => navigate("/TeacherBirthday", { state: stats.teacherBirthdaysToday})
     },
   ];
 
