@@ -10,6 +10,7 @@ import {
   TableBody,
   Checkbox,
   TableContainer,
+  Button,
 } from "@mui/material";
 import Sidekick from "../component/Sidekick";
 import { useLocation } from "react-router-dom";
@@ -18,7 +19,7 @@ const TotalFeecard = () => {
   const navigate = useLocation();
   const [students, setStudents] = useState(navigate.state?.students || []);
   const [allSelected, setAllSelected] = useState(false);
-  console.log(students)
+  console.log(students);
 
   const handleFeeToggle = (id) => {
     setStudents((prevStudents) =>
@@ -43,6 +44,23 @@ const TotalFeecard = () => {
     const allChecked = students.length > 0 && students.every((s) => s.feePaid);
     setAllSelected(allChecked);
   }, [students]);
+
+  const handleSendMessage = () => {
+    const selectedStudents = students.filter((s) => s.feePaid);
+    if (selectedStudents.length === 0) {
+      alert("No students selected!");
+      return;
+    }
+
+    selectedStudents.forEach((student) => {
+      const phone = student.fatherPhone;
+      const message = encodeURIComponent(
+        `Dear ${student.fatherName}, please pay the pending fee amount of ₹${student.pendingAmount} for ${student.name}.`
+      );
+      // Opens WhatsApp (works on desktop and mobile)
+      window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+    });
+  };
 
   return (
     <>
@@ -91,6 +109,16 @@ const TotalFeecard = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSendMessage}
+          >
+            Send Message to Selected
+          </Button>
+        </Box>
       </Box>
     </>
   );

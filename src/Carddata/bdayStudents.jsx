@@ -7,7 +7,7 @@ const BdayStudents = () => {
   const navigate = useLocation();
   console.log("state", );
   const [students, setStudents] = useState(navigate.state.students);
-  console.log(students)
+ 
 
 
   return (
