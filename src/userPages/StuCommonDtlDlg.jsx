@@ -21,18 +21,39 @@ const StuCommonDtlDlg = ({
   setErrors,
 }) => {
   const requiredCommonFields = [
-    "username", "password", "gender", "rollNumber", "scholarNumber",
-    "firstName", "lastName", "contactNumber", "dob", "address", "bloodGroup",
-    "city", "state", "pinCode", "country", "status", "feesDiscount", "totalFees"
+    "username",
+    "password",
+    "gender",
+    "rollNumber",
+    "scholarNumber",
+    "firstName",
+    "lastName",
+    "contactNumber",
+    "dob",
+    "address",
+    "bloodGroup",
+    "city",
+    "state",
+    "pinCode",
+    "country",
+    "status",
+    "totalFees",
+    "feesDiscount",
   ];
 
   const numericFields = [
-    "rollNumber", "contactNumber", "scholarNumber", "pinCode", "feesDiscount", "totalFees"
+    "rollNumber",
+    "contactNumber",
+    "scholarNumber",
+    "pinCode",
+    "feesDiscount",
+    "totalFees",
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const isNumeric = numericFields.includes(name);
+
     let cleanValue = isNumeric
       ? value.replace(/[^0-9]/g, "").slice(0, name === "pinCode" ? 6 : 10)
       : value.slice(0, 20);
@@ -41,6 +62,12 @@ const StuCommonDtlDlg = ({
       cleanValue = cleanValue.slice(0, 20);
     }
 
+    // 🚫 Username should not contain spaces
+    if (name === "username") {
+      cleanValue = value.replace(/\s/g, ""); // remove all spaces
+    }
+
+    // 📞 Contact number validation
     if (name === "contactNumber") {
       if (cleanValue.length !== 10) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 10 digits" }));
@@ -56,6 +83,7 @@ const StuCommonDtlDlg = ({
       }
     }
 
+    // 📮 Pin code validation
     if (name === "pinCode") {
       if (cleanValue.length !== 6) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 6 digits" }));
@@ -66,19 +94,44 @@ const StuCommonDtlDlg = ({
       }
     }
 
+    // 💰 feesDiscount should not exceed totalFees
+    if (name === "feesDiscount" || name === "totalFees") {
+      const updatedFeesDiscount =
+        name === "feesDiscount"
+          ? Number(cleanValue)
+          : Number(data.feesDiscount || 0);
+      const updatedTotalFees =
+        name === "totalFees" ? Number(cleanValue) : Number(data.totalFees || 0);
+
+      if (updatedFeesDiscount > updatedTotalFees) {
+        setErrors?.((prev) => ({
+          ...prev,
+          feesDiscount: "Discount cannot be more than Total Fees",
+        }));
+      } else {
+        setErrors?.((prev) => {
+          const newErr = { ...prev };
+          delete newErr.feesDiscount;
+          return newErr;
+        });
+      }
+    }
+
+    // ✅ Final update
     onChange({ [name]: cleanValue });
   };
 
   const handleDOBChange = (newValue) => {
-    const formatted = dayjs(newValue).format("DD/MM/YYYY");
-    const isFuture = dayjs(newValue).isAfter(dayjs());
-    const age = dayjs().diff(dayjs(newValue), "year");
-
-    onChange({ dob: formatted });
-
     if (!newValue || !dayjs(newValue).isValid()) {
       setErrors?.((prev) => ({ ...prev, dob: "DOB is required" }));
-    } else if (isFuture) {
+      return;
+    }
+
+    const isFuture = dayjs(newValue).isAfter(dayjs(), "day");
+    const age = dayjs().diff(dayjs(newValue), "year");
+    const formatted = dayjs(newValue).format("DD/MM/YYYY");
+
+    if (isFuture) {
       setErrors?.((prev) => ({ ...prev, dob: "DOB cannot be in the future" }));
     } else if (age < 3 || age > 20) {
       setErrors?.((prev) => ({
@@ -91,6 +144,7 @@ const StuCommonDtlDlg = ({
         delete newErr.dob;
         return newErr;
       });
+      onChange({ dob: formatted });
     }
   };
 
@@ -110,12 +164,11 @@ const StuCommonDtlDlg = ({
       <Divider sx={{ mb: 2 }} />
 
       <Grid container spacing={2}>
-        <Grid item  sx={{ width: "200px" }}>
+        <Grid item sx={{ width: "200px" }}>
           <ClassDropDown
             selectedClassId={data?.classId || ""}
             onSelect={handleClassSelect}
             value={data?.classId || ""}
-           
           />
           {errors.classId && (
             <Typography color="error" variant="caption">
@@ -158,14 +211,18 @@ const StuCommonDtlDlg = ({
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date of Birth"
+                  format="DD/MM/YYYY"
                   value={data?.dob ? dayjs(data.dob, "DD/MM/YYYY") : null}
                   onChange={handleDOBChange}
+                  disableFuture // Disables selection of future dates via UI
+                  maxDate={dayjs()} // Also disables selecting beyond today
                   slotProps={{
                     textField: {
                       name: "dob",
+                      fullWidth: true,
+                      variant: "outlined",
                       error: !!errors.dob,
                       helperText: errors.dob || "",
-                      fullWidth: true,
                       sx: { width: "200px" },
                     },
                   }}
