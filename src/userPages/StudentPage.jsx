@@ -88,16 +88,18 @@ const StudentPage = () => {
   const handleSave = async (flatData) => {
     try {
       setLoading(true);
-      flatData?.studentPin
+
+      const response = flatData?.studentPin
         ? await Network.updateStudent(flatData)
         : await Network.createStudent(flatData);
+      console.log("******hello******", response);
       alert("✅ Student saved!");
       await fetchStudents();
       setDialogOpen(false);
-      setSelectedStudent(null);
+      setSelectedStudent(null); 
     } catch (error) {
-      console.error("❌ Error saving student:", error);
-      alert("❌ Failed to save student.");
+      console.error("❌ Error saving student:"  , error.response.data.errors.unique_constraint);
+    alert("❌ " + error.response.data.errors.error);
     } finally {
       setLoading(false);
     }

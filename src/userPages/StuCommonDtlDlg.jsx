@@ -11,7 +11,7 @@ import ClassDropDown from "../component/ClassDropDown";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
- 
+
 const StuCommonDtlDlg = ({
   data,
   onChange,
@@ -25,22 +25,22 @@ const StuCommonDtlDlg = ({
     "firstName", "lastName", "contactNumber", "dob", "address", "bloodGroup",
     "city", "state", "pinCode", "country", "status", "feesDiscount", "totalFees"
   ];
- 
+
   const numericFields = [
     "rollNumber", "contactNumber", "scholarNumber", "pinCode", "feesDiscount", "totalFees"
   ];
- 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const isNumeric = numericFields.includes(name);
     let cleanValue = isNumeric
       ? value.replace(/[^0-9]/g, "").slice(0, name === "pinCode" ? 6 : 10)
       : value.slice(0, 20);
- 
+
     if (isNumeric && name !== "contactNumber" && name !== "pinCode") {
       cleanValue = cleanValue.slice(0, 20);
     }
- 
+
     if (name === "contactNumber") {
       if (cleanValue.length !== 10) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 10 digits" }));
@@ -55,7 +55,7 @@ const StuCommonDtlDlg = ({
         setErrors(newErr);
       }
     }
- 
+
     if (name === "pinCode") {
       if (cleanValue.length !== 6) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 6 digits" }));
@@ -65,17 +65,17 @@ const StuCommonDtlDlg = ({
         setErrors(newErr);
       }
     }
- 
+
     onChange({ [name]: cleanValue });
   };
- 
+
   const handleDOBChange = (newValue) => {
     const formatted = dayjs(newValue).format("DD/MM/YYYY");
     const isFuture = dayjs(newValue).isAfter(dayjs());
     const age = dayjs().diff(dayjs(newValue), "year");
- 
+
     onChange({ dob: formatted });
- 
+
     if (!newValue || !dayjs(newValue).isValid()) {
       setErrors?.((prev) => ({ ...prev, dob: "DOB is required" }));
     } else if (isFuture) {
@@ -93,28 +93,29 @@ const StuCommonDtlDlg = ({
       });
     }
   };
- 
+
   const handleClassSelect = (cls) => {
     onClassSelect({ classId: cls });
     onRoleSelect({ roleId: 4 });
     onChange({ roleId: 4 });
   };
- 
+
   const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
- 
+
   return (
     <Paper elevation={3} sx={{ p: 3, mt: 2 }}>
       <Typography variant="h6" gutterBottom>
         Common Details
       </Typography>
       <Divider sx={{ mb: 2 }} />
- 
+
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} sx={{ width: "200px" }}>
+        <Grid item  sx={{ width: "200px" }}>
           <ClassDropDown
             selectedClassId={data?.classId || ""}
             onSelect={handleClassSelect}
             value={data?.classId || ""}
+           
           />
           {errors.classId && (
             <Typography color="error" variant="caption">
@@ -122,35 +123,33 @@ const StuCommonDtlDlg = ({
             </Typography>
           )}
         </Grid>
- 
+
         {requiredCommonFields.map((field) => (
-          <Grid item xs={12} sm={6} key={field}>
+          <Grid item key={field}>
             {field === "gender" ? (
               <TextField
-                sx={{ width: "200px" }}
                 select
-                fullWidth
                 name="gender"
                 label="Gender"
                 value={data?.gender || ""}
                 onChange={(e) => onChange({ gender: e.target.value })}
                 error={!!errors.gender}
                 helperText={errors.gender || ""}
+                sx={{ width: "200px" }}
               >
                 <MenuItem value="Male">Male</MenuItem>
                 <MenuItem value="Female">Female</MenuItem>
               </TextField>
             ) : field === "status" ? (
               <TextField
-                sx={{ width: "200px" }}
                 select
-                fullWidth
                 name="status"
                 label="Status"
                 value={data?.status || ""}
                 onChange={(e) => onChange({ status: e.target.value })}
                 error={!!errors.status}
                 helperText={errors.status || ""}
+                sx={{ width: "200px" }}
               >
                 <MenuItem value="ACTIVE">Active</MenuItem>
                 <MenuItem value="INACTIVE">Inactive</MenuItem>
@@ -158,16 +157,16 @@ const StuCommonDtlDlg = ({
             ) : field === "dob" ? (
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  sx={{ width: "200px" }}
                   label="Date of Birth"
                   value={data?.dob ? dayjs(data.dob, "DD/MM/YYYY") : null}
                   onChange={handleDOBChange}
                   slotProps={{
                     textField: {
-                      fullWidth: true,
                       name: "dob",
                       error: !!errors.dob,
                       helperText: errors.dob || "",
+                      fullWidth: true,
+                      sx: { width: "200px" },
                     },
                   }}
                 />
@@ -175,7 +174,6 @@ const StuCommonDtlDlg = ({
             ) : field === "bloodGroup" ? (
               <TextField
                 select
-                fullWidth
                 name="bloodGroup"
                 label="Blood Group"
                 value={data?.bloodGroup || ""}
@@ -192,7 +190,6 @@ const StuCommonDtlDlg = ({
               </TextField>
             ) : (
               <TextField
-                fullWidth
                 label={field
                   .replace(/([A-Z])/g, " $1")
                   .replace(/^./, (c) => c.toUpperCase())}
@@ -201,6 +198,7 @@ const StuCommonDtlDlg = ({
                 onChange={handleInputChange}
                 error={!!errors[field]}
                 helperText={errors[field] || ""}
+                sx={{ width: "200px" }}
                 inputProps={{
                   maxLength:
                     field === "contactNumber"
@@ -217,6 +215,5 @@ const StuCommonDtlDlg = ({
     </Paper>
   );
 };
- 
+
 export default StuCommonDtlDlg;
- 

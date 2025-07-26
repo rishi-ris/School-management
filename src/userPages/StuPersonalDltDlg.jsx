@@ -9,7 +9,7 @@ import {
   FormControlLabel,
   MenuItem,
 } from "@mui/material";
- 
+
 const fields = [
   { name: "religion", label: "Religion" },
   { name: "nationality", label: "Nationality" },
@@ -20,118 +20,102 @@ const fields = [
   { name: "registrationNumber", label: "Registration No." },
   { name: "enrollmentNumber", label: "Enrollment No." },
 ];
- 
+
 const numericFields = ["apaarId", "registrationNumber", "enrollmentNumber"];
 const textOnlyFields = [
   "religion",
   "nationality",
   "motherToungue",
-  "hospitalName",
   "prevSchool",
   "prevEduBoard",
   "disabilityType",
 ];
- 
+
 const casteOptions = ["General", "SC", "ST", "OBC"];
- 
+const medicalOptions = ["Yes", "No"];
+
 const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let newErrors = { ...errors };
- 
+
     if (numericFields.includes(name)) {
       const numericOnly = value.replace(/[^0-9]/g, "");
-      if (!numericOnly) {
-        newErrors[`personal_${name}`] = "This field is required and must be numeric";
+      if (!numericOnly.trim()) {
+        newErrors[name] = "This field is required and must be numeric";
       } else {
-        delete newErrors[`personal_${name}`];
+        delete newErrors[name];
       }
       setErrors(newErrors);
       onChange({ [name]: numericOnly });
- 
     } else if (textOnlyFields.includes(name)) {
-      // Hospital Name validation only if medicalHistory === "Yes"
-      if (name === "hospitalName" && data.medicalHistory !== "Yes") {
-        onChange({ [name]: null });
-        delete newErrors[`personal_${name}`];
-        setErrors(newErrors);
-        return;
-      }
- 
       const textOnly = value.replace(/[^a-zA-Z\s]/g, "");
       if (!textOnly.trim()) {
-        newErrors[`personal_${name}`] = "This field is required and must contain only letters";
+        newErrors[name] = "This field is required and must contain only letters";
       } else {
-        delete newErrors[`personal_${name}`];
+        delete newErrors[name];
       }
       setErrors(newErrors);
       onChange({ [name]: textOnly });
- 
     } else {
       if (!value.trim()) {
-        newErrors[`personal_${name}`] = "This field is required";
+        newErrors[name] = "This field is required";
       } else {
-        delete newErrors[`personal_${name}`];
+        delete newErrors[name];
       }
       setErrors(newErrors);
       onChange({ [name]: value });
     }
   };
- 
-  const handleMedicalChange = (e) => {
-    const value = e.target.value;
-    let newErrors = { ...errors };
- 
-    if (!value) {
-      newErrors.personal_medicalHistory = "Medical History is required";
-    } else {
-      delete newErrors.personal_medicalHistory;
-    }
- 
-    if (value === "No") {
-      delete newErrors.personal_hospitalName;
-      onChange({ medicalHistory: "No", hospitalName: null });
-    } else {
-      onChange({ medicalHistory: "Yes" });
-    }
- 
-    setErrors(newErrors);
-  };
- 
+
   const handleCasteChange = (e) => {
     const value = e.target.value;
     let newErrors = { ...errors };
- 
+
     if (!value) {
-      newErrors.personal_caste = "Caste is required";
+      newErrors["caste"] = "Caste is required";
     } else {
-      delete newErrors.personal_caste;
+      delete newErrors["caste"];
     }
- 
+
     setErrors(newErrors);
     onChange({ caste: value });
   };
- 
+
+  const handleMedicalChange = (e) => {
+    const value = e.target.value;
+    let newErrors = { ...errors };
+
+    if (!value) {
+      newErrors["medicalHistory"] = "Medical history is required";
+    } else {
+      delete newErrors["medicalHistory"];
+    }
+
+    setErrors(newErrors);
+    onChange({ medicalHistory: value });
+  };
+
   return (
     <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 2 }}>
       <Typography variant="h6" gutterBottom>
         Personal Details
       </Typography>
       <Divider sx={{ mb: 3 }} />
- 
-      <Grid container spacing={3}>
+
+      <Grid container spacing={2}>
         {/* Caste Dropdown */}
-        <Grid item xs={12} sm={6}>
+        <Grid item>
           <TextField
             select
-            sx={{ width: "200px" }}
             variant="outlined"
             label="Caste"
             name="caste"
             value={data.caste || ""}
             onChange={handleCasteChange}
-            error={!!errors.personal_caste}
-            helperText={errors.personal_caste || ""}
+            error={!!errors["caste"]}
+            helperText={errors["caste"] || ""}
+            sx={{ width: "200px" }}
           >
             {casteOptions.map((option) => (
               <MenuItem key={option} value={option}>
@@ -140,81 +124,67 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
             ))}
           </TextField>
         </Grid>
- 
-        {/* Other fields */}
+
+        {/* All Form Fields */}
         {fields.map(({ name, label }) => (
-          <Grid item xs={12} sm={6} key={name}>
+          <Grid item key={name}>
             <TextField
-              fullWidth
               variant="outlined"
               label={label}
               name={name}
               value={data[name] || ""}
               onChange={handleInputChange}
-              error={!!errors[`personal_${name}`]}
-              helperText={errors[`personal_${name}`] || ""}
+              error={!!errors[name]}
+              helperText={errors[name] || ""}
               inputProps={{
                 inputMode: numericFields.includes(name) ? "numeric" : "text",
                 maxLength: 20,
               }}
+              sx={{ width: "200px" }}
             />
           </Grid>
         ))}
- 
+
         {/* Medical History Dropdown */}
-        <Grid item xs={12} sm={6}>
+        <Grid item>
           <TextField
             select
-            sx={{ width: "200px" }}
             variant="outlined"
             label="Medical History"
             name="medicalHistory"
             value={data.medicalHistory || ""}
             onChange={handleMedicalChange}
-            error={!!errors.personal_medicalHistory}
-            helperText={errors.personal_medicalHistory || ""}
+            error={!!errors["medicalHistory"]}
+            helperText={errors["medicalHistory"] || ""}
+            sx={{ width: "200px" }}
           >
-            <MenuItem value="Yes">Yes</MenuItem>
-            <MenuItem value="No">No</MenuItem>
+            {medicalOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
           </TextField>
         </Grid>
- 
-        {/* Hospital Name only if Medical History is Yes */}
-        {data.medicalHistory === "Yes" && (
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Hospital Name"
-              name="hospitalName"
-              value={data.hospitalName || ""}
-              onChange={handleInputChange}
-              error={!!errors.personal_hospitalName}
-              helperText={errors.personal_hospitalName || ""}
-              inputProps={{ maxLength: 20 }}
-            />
-          </Grid>
-        )}
- 
-        {/* Disability Type if isDisable is true */}
+
+        {/* Disability Type Field (conditional) */}
         {data.isDisable && (
-          <Grid item xs={12} sm={6}>
+          <Grid item>
             <TextField
-              fullWidth
               variant="outlined"
               label="Disability Type"
               name="disabilityType"
               value={data.disabilityType || ""}
               onChange={handleInputChange}
-              error={!!errors.personal_disabilityType}
-              helperText={errors.personal_disabilityType || ""}
+              error={!!errors["disabilityType"]}
+              helperText={errors["disabilityType"] || ""}
               inputProps={{ maxLength: 20 }}
+              sx={{ width: "200px" }}
             />
           </Grid>
         )}
- 
-        {/* Checkbox */}
-        <Grid item xs={12} sm={6}>
+
+        {/* Disabled Checkbox */}
+        <Grid item>
           <FormControlLabel
             control={
               <Checkbox
@@ -230,5 +200,5 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
     </Paper>
   );
 };
- 
+
 export default StuPersonalDltDlg;

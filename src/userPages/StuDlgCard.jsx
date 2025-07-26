@@ -28,39 +28,26 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const dialogContentRef = useRef(null);
 
   const requiredCommonFields = [
-    "username",
-    "password",
-    "gender",
-    "rollNumber",
-    "scholarNumber",
-    "firstName",
-    "lastName",
-    "contactNumber",
-    "dob",
-    "address",
-    "city",
-    "state",
-    "pinCode",
-    "country",
-    "status",
-    "feesDiscount",
-    "totalFees",
+    "username", "password", "gender", "rollNumber", "scholarNumber",
+    "firstName", "lastName", "contactNumber", "dob", "address", "city",
+    "state", "pinCode", "country", "status", "feesDiscount", "totalFees"
+  ];
+
+  const requiredPersonalFields = [
+    "caste", "religion", "nationality", "motherToungue", "apaarId",
+    "registrationNumber", "enrollmentNumber", "prevEduBoard", "prevSchool"
   ];
 
   const requiredFamilyFields = [
-    "fatherName",
-    "fatherOccupation",
-    "fatherPhone",
-    "motherName",
-    "motherOccupation",
-    "motherPhone",
+    "fatherName", "fatherOccupation", "fatherPhone",
+    "motherName", "motherOccupation", "motherPhone"
   ];
 
   useEffect(() => {
     if (student) {
       setCommonData({ ...student });
-      setFamilyData(student.family?.[0] || {});
       setPersonalData({ ...student });
+      setFamilyData(student.family?.[0] || {});
       setDocuments({ ...student.documents });
       setPhotos({ ...student.photos });
       setSelectedClass(student.schoolClass);
@@ -99,15 +86,12 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       }
     });
 
-    if (!selectedClass?.classId?.classId) {
-      newErrors.classId = "Class selection is required";
-      missingFields.push("Class");
-    }
-
-    if (!commonData?.dob) {
-      newErrors.dob = "Date of Birth is required";
-      missingFields.push("Date of Birth");
-    }
+    requiredPersonalFields.forEach((field) => {
+      if (!personalData[field]?.toString().trim()) {
+        newErrors[field] = `${beautify(field)} is required`;
+        missingFields.push(beautify(field));
+      }
+    });
 
     requiredFamilyFields.forEach((field) => {
       const key = `family_${field}`;
@@ -121,12 +105,15 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       const phone = familyData[field];
       const key = `family_${field}`;
       if (phone && !/^[6-9]\d{9}$/.test(phone)) {
-        newErrors[key] = `${beautify(
-          key
-        )} must start with 6-9 and be 10 digits`;
+        newErrors[key] = `${beautify(key)} must start with 6-9 and be 10 digits`;
         missingFields.push(beautify(key));
       }
     });
+
+    if (!selectedClass?.classId?.classId) {
+      newErrors.classId = "Class selection is required";
+      missingFields.push("Class");
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors((prev) => {
@@ -151,10 +138,6 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
     }
 
     setErrors({});
-    toast.success("✅ Student details submitted successfully!", {
-      autoClose: 4000,
-      position: "top-center",
-    });
 
     const transformedStudent = {
       ...commonData,
@@ -220,17 +203,47 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       },
     };
 
-    onSave(transformedStudent);
+    // ✅ Save student with try-catch to check if save is successful
+    try {
+      onSave(transformedStudent);
+
+      toast.success("✅ Student details submitted successfully!", {
+        autoClose: 4000,
+        position: "top-center",
+      });
+
+      // ✅ Clear only if save success
+      setCommonData({});
+      setPersonalData({});
+      setFamilyData({});
+      setDocuments({});
+      setPhotos({});
+      setSelectedClass({});
+      setSelectedRole({});
+      setErrors({});
+    } catch (err) {
+      console.error("Save failed:", err);
+      toast.error("❌ Failed to save student. Please try again.", {
+        autoClose: 4000,
+        position: "top-center",
+      });
+    }
+  };
+
+  const handleClose = () => {
+    setCommonData({});
+    setPersonalData({});
+    setFamilyData({});
+    setDocuments({});
+    setPhotos({});
+    setSelectedClass({});
+    setSelectedRole({});
+    setErrors({});
+    onClose();
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-      scroll="paper"
-    >
+    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth scroll="paper">
       <DialogTitle>
         <Typography
           width={180}
@@ -280,7 +293,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} variant="outlined">
+        <Button onClick={handleClose} variant="outlined">
           Cancel
         </Button>
         <Button

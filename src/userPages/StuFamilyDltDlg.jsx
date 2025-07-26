@@ -116,8 +116,8 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
         <Typography variant="subtitle1" fontWeight={600} gutterBottom>Father Details</Typography>
         <Grid container spacing={3}>
           {[
-            "fatherName", "fatherPhone", "fatherEmail",
-            "fatherAadharNum", "fatherEducation", "fatherOccupation",
+            "fatherName", "fatherPhone","fatherOccupation", "fatherEmail",
+            "fatherAadharNum", "fatherEducation", 
           ].map(renderTextField)}
         </Grid>
       </Paper>
@@ -127,8 +127,9 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
         <Typography variant="subtitle1" fontWeight={600} gutterBottom>Mother Details</Typography>
         <Grid container spacing={3}>
           {[
-            "motherName", "motherPhone", "motherEmail",
-            "motherAadharNum", "motherEducation", "motherOccupation",
+            "motherName", "motherPhone",  "motherOccupation",
+            "motherEmail",
+            "motherAadharNum", "motherEducation", 
           ].map(renderTextField)}
         </Grid>
       </Paper>
