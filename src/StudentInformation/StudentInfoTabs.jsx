@@ -42,7 +42,7 @@ const StudentInfoTabs = (props) => {
   // ✅ Call API on tab change or on first render
   useEffect(() => {
     axios
-      .get("http://192.168.1.17:8080/marksheets/evaluate/1")
+      .get("http://192.168.1.6:8080/marksheets/evaluate/1")
       .then((res) => {
         console.log("📦 API Response:", res.data);
         setApiData(res.data); // Optional: store if you want to use it
@@ -97,7 +97,7 @@ const StudentInfoTabs = (props) => {
       <TabPanel value={tabIndex} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={3}>
-            <InfoItem label="Class" value={studentDetails.lastName} />
+            <InfoItem label="Class" value={studentDetails.className} />
           </Grid>
           <Grid item xs={12} md={3}>
             <InfoItem label="Role" value="Student" />

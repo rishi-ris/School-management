@@ -14,8 +14,11 @@ import {
 import StudentDashboard from "./StudentDashboard";
 import UseCommonText from "../CommonFile/UseCommonText";
 import Network from "../Application/Network";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const StudentMarksheet = () => {
+  const location = useLocation();
+  const studentId = location.state?.studentId;
   const headerText = UseCommonText("--headerText");
   const emailText = UseCommonText("--emailText");
   const contactNumber = UseCommonText("--contactNumber");
@@ -23,7 +26,7 @@ const StudentMarksheet = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    Network.getStudentMarksheet(1)
+    Network.getStudentMarksheet(studentId)
       .then((res) => {
         setData(res.data);
       })

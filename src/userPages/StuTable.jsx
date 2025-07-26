@@ -9,7 +9,10 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
   const navigate = useNavigate();
   // const gotoTCpage = () => navigate("/tcPage");
   const gotoTCpage = (id) => navigate(`/tcPage/${id}`);
-
+const gotoMarksheetPage = (id) => {
+  console.log("Navigating to marksheet for student ID:", id);
+  navigate("/studentMarksheet", { state: { studentId: id } });
+}
 
   if (!Array.isArray(students) || students.length === 0) {
     return <Typography>No students found.</Typography>;
@@ -65,6 +68,16 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
                     sx={{backgroundColor: "var(--button-bg-color)",}}
                   >
                     Pay Fees
+                  </Button>
+                  <Button
+                    // onClick={gotoTCpage}
+                     onClick={() => gotoMarksheetPage(student.studentId)} 
+                    variant="outlined"
+                    size="small"
+                    color="info"
+                    sx={{ mx: 1 }}
+                  >
+                    MARKSHEET
                   </Button>
                 </TableCell>
                 <TableCell>

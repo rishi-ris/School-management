@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -22,6 +22,7 @@ import {
   CurrencyRupeeOutlined as CurrencyRupeeOutlinedIcon,
 } from "@mui/icons-material";
 import UseCommonText from "../CommonFile/UseCommonText";
+import { AuthContext } from "../auth/AuthProvider";
 
 // ✅ Drawer items
 const drawerItems = [
@@ -38,7 +39,7 @@ const drawerItems = [
   {
     label: "Marksheet",
     icon: <DescriptionIcon />,
-    path: "/studentMarksheet",
+    path: "/studentMarksheet", // We'll pass studentId dynamically
   },
   {
     label: "Result",
@@ -50,10 +51,14 @@ const drawerItems = [
 const StudentDashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const theme = useTheme();
   const headerText = UseCommonText("--headerText");
 
   const toggleDrawer = (state) => () => setOpen(state);
+
+  // ✅ Assume you have studentId from somewhere (auth, API, etc.)
+  const studentId = "12345"; // Replace with actual studentId from props/state
 
   return (
     <Box>
@@ -126,7 +131,11 @@ const StudentDashboard = () => {
               <ListItem
                 button
                 key={index}
-                onClick={() => navigate(item.path)}
+                onClick={() =>
+                  item.label === "Marksheet"
+                    ? navigate(item.path, { state: { studentId: user.data.studentPin } }) // ✅ Pass studentId here
+                    : navigate(item.path)
+                }
                 sx={{
                   px: 3,
                   py: 1.5,

@@ -35,7 +35,6 @@ const AddTimetableDialog = ({
 }) => {
   const [subjects, setSubjects] = useState([]);
 
-  //Fetch subjects from your predefined endpoint
   useEffect(() => {
     if (open) {
       Network.getAllSubjects()
@@ -47,44 +46,43 @@ const AddTimetableDialog = ({
     }
   }, [open]);
 
-  // Submit handler with duplicate subject validation
- const handleSubmit = () => {
-  if (!selectedClass?.classId) {
-    toast.error("Please select a class");
-    return;
-  }
-
-  if (!dayOfWeek) {
-    toast.error("Please select a day");
-    return;
-  }
-
-  const subjectIds = new Set();
-  const timeSlots = new Set();
-
-  for (let i = 0; i < periods.length; i++) {
-    const p = periods[i];
-    if (!p.startTime || !p.endTime || !p.subjectId || !p.teacherId) {
-      toast.error(`Please fill all fields for Period ${p.period}`);
+  const handleSubmit = () => {
+    if (!selectedClass?.classId) {
+      toast.error("Please select a class");
       return;
     }
 
-    if (subjectIds.has(p.subjectId)) {
-      toast.error(`Duplicate subject selected in Period ${p.period}`);
+    if (!dayOfWeek) {
+      toast.error("Please select a day");
       return;
     }
-    subjectIds.add(p.subjectId);
 
-    const slotKey = `${p.startTime}-${p.endTime}`;
-    if (timeSlots.has(slotKey)) {
-      toast.error(`Duplicate time slot in Period ${p.period}`);
-      return;
+    const subjectIds = new Set();
+    const timeSlots = new Set();
+
+    for (let i = 0; i < periods.length; i++) {
+      const p = periods[i];
+      if (!p.startTime || !p.endTime || !p.subjectId || !p.teacherId) {
+        toast.error(`Please fill all fields for Period ${p.period}`);
+        return;
+      }
+
+      if (subjectIds.has(p.subjectId)) {
+        toast.error(`Duplicate subject selected in Period ${p.period}`);
+        return;
+      }
+      subjectIds.add(p.subjectId);
+
+      const slotKey = `${p.startTime}-${p.endTime}`;
+      if (timeSlots.has(slotKey)) {
+        toast.error(`Duplicate time slot in Period ${p.period}`);
+        return;
+      }
+      timeSlots.add(slotKey);
     }
-    timeSlots.add(slotKey);
-  }
 
-  onSubmit(); //  If all valid
-};
+    onSubmit();
+  };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -216,11 +214,12 @@ const AddTimetableDialog = ({
                     }
                     label="Teacher"
                   >
-                    {teachers.map((t) => (
-                      <MenuItem key={t.id} value={t.id}>
-                        {t.firstName} {t.lastName}
-                      </MenuItem>
-                    ))}
+                    {Array.isArray(teachers) &&
+                      teachers.map((t) => (
+                        <MenuItem key={t.id} value={t.id}>
+                          {t.firstName} {t.lastName}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -237,6 +236,10 @@ const AddTimetableDialog = ({
       </DialogActions>
     </Dialog>
   );
+};
+
+AddTimetableDialog.defaultProps = {
+  teachers: [],
 };
 
 export default AddTimetableDialog;
