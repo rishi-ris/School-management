@@ -1,78 +1,114 @@
-import React from "react";
-import {
-  Box,
-  Typography,
-  Paper,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Divider,
-} from "@mui/material";
-import CakeIcon from "@mui/icons-material/Cake";
+import { Box, Typography, Paper, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { useState } from "react";
 import Sidekick from "../component/Sidekick";
+import { useLocation } from "react-router-dom";
 
 const TeacherBirthday = () => {
-  // Static sample data
-  const teacherBirthdays = [
-    { id: 1, name: "Mr. Arjun Patel", subject: "Mathematics" },
-    { id: 2, name: "Ms. Sneha Verma", subject: "English" },
-    { id: 3, name: "Mrs. Komal Singh", subject: "Biology" },
-  ];
+  const navigate = useLocation();
+  console.log("state", );
+  const [students, setStudents] = useState(navigate.state.students);
+ 
+
 
   return (
     <>
-    <Sidekick/>
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(to right, #fbc2eb, #fdfdfdff)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 4,
-      }}
-    >
-      <Paper
-        elevation={6}
+      <Sidekick />
+      <Box
         sx={{
+          minHeight: "100vh",
+          background: "linear-gradient(to right, #f4f4f5ff, #f2f5f7ff)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           padding: 4,
-          borderRadius: "20px",
-          width: 420,
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
         }}
       >
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "#333" }}
+        <Paper
+          elevation={8}
+          sx={{
+            padding: 4,
+            borderRadius: "20px",
+            width: "380px",
+            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            backdropFilter: "blur(10px)",
+          }}
         >
-          🎉 Teacher Birthdays
-        </Typography>
-        <Divider sx={{ mb: 2 }} />
-        <List>
-          {teacherBirthdays.map((teacher) => (
-            <ListItem key={teacher.id}>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "#ff8fab" }}>
-                  <CakeIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={teacher.name}
-                secondary={teacher.subject}
-                primaryTypographyProps={{ fontWeight: 600 }}
-                secondaryTypographyProps={{ color: "#666" }}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
-    </Box>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#333" }}
+          >
+            🎂 Today's Birthdays
+          </Typography>
+          <Divider sx={{ my: 2 }} />
+
+          {Array.isArray(students) && students.some(s => s?.name) ? (
+            <List>
+              {students.map((student) => (
+                <ListItem key={student.id}>
+                  <ListItemText
+                    primary={student.name}
+                    primaryTypographyProps={{
+                      fontSize: "1.1rem",
+                      fontWeight: 500,
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography align="center" sx={{ color: "#777", mt: 2 }}>
+              No birthdays today.
+            </Typography>
+          )}
+        </Paper>
+      </Box>
     </>
   );
 };
 
 export default TeacherBirthday;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+

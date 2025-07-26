@@ -8,11 +8,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  MenuItem,
-  Select,
-  TextField,
-  FormControl,
-  InputLabel,
   Paper,
   Snackbar,
   Alert,
@@ -28,7 +23,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
-import TeacherDashboardside from "./TeacherDasboardside";
+import TeacherDasboardside from "../teacherdetls/TeacherDasboardside";
+// import AddTimetableDialog from "../component/AddTimetableDialog"; // 👉 dialog moved to separate file
 
 const TeacherDasTable = () => {
   const [teachers, setTeachers] = useState([]);
@@ -36,19 +32,31 @@ const TeacherDasTable = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
   const [dayOfWeek, setDayOfWeek] = useState("");
-  const [periods, setPeriods] = useState(
-    Array.from({ length: 8 }, (_, i) => ({
-      period: i + 1,
-      startTime: "",
-      endTime: "",
-      subjectId: "",
-      teacherId: "",
-    }))
-  );
+  const [periods, setPeriods] = useState([
+    { period: 1, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 2, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 3, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 4, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 5, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 6, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 7, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+    { period: 8, startTime: "", endTime: "", subjectId: "", teacherId: "" },
+  ]);
   const [timetable, setTimetable] = useState([]);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
-  const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const days = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+  ];
 
   useEffect(() => {
     Network.getAllUsersByRoleId(3).then(setTeachers).catch(console.error);
@@ -60,10 +68,7 @@ const TeacherDasTable = () => {
   useEffect(() => {
     if (selectedClass?.classId) {
       Network.getAllSubjectsByClassId(selectedClass.classId)
-        .then((res) => {
-          const subjectArray = Array.isArray(res.data) ? res.data : res;
-          setSubjects(subjectArray);
-        })
+        .then((res) => setSubjects(Array.isArray(res.data) ? res.data : res))
         .catch(() => setSubjects([]));
     }
   }, [selectedClass]);
@@ -80,10 +85,9 @@ const TeacherDasTable = () => {
   };
 
   const handleTimetableClassChange = async (cls) => {
-    const classId = cls.classId;
     setSelectedClass(cls);
     try {
-      const response = await Network.getTimeTableByClass(classId);
+      const response = await Network.getTimeTableByClass(cls.classId);
       setTimetable(response);
     } catch (error) {
       console.error("Failed to load timetable", error);
@@ -103,173 +107,179 @@ const TeacherDasTable = () => {
     };
     Network.addTimeTable(payload)
       .then(() => {
-        setSnackbar({ open: true, message: "Timetable added successfully!", severity: "success" });
+        setSnackbar({
+          open: true,
+          message: "Timetable added successfully!",
+          severity: "success",
+        });
         handleClose();
         setDayOfWeek("");
-        setPeriods(Array.from({ length: 8 }, (_, i) => ({
-          period: i + 1,
-          startTime: "",
-          endTime: "",
-          subjectId: "",
-          teacherId: "",
-        })));
+        setPeriods(
+          periods.map((p) => ({
+            ...p,
+            startTime: "",
+            endTime: "",
+            subjectId: "",
+            teacherId: "",
+          }))
+        );
       })
-      .catch(() => setSnackbar({ open: true, message: "Failed to add timetable.", severity: "error" }));
+      .catch(() =>
+        setSnackbar({
+          open: true,
+          message: "Failed to add timetable.",
+          severity: "error",
+        })
+      );
   };
 
   return (
+    <>
+    <TeacherDasboardside/>
     <Box>
-      <TeacherDashboardside />
-      <Container maxWidth={false} sx={{ mt: 2 }}>
-        <Typography variant="h4" gutterBottom>Teacher Timetable</Typography>
+      
+ 
+      <Container maxWidth={false} sx={{ mt: 10 }}>
+        <Typography variant="h4" gutterBottom>
+          Teacher Timetable
+        </Typography>
 
-        <Box sx={{ display: "flex", gap: 3 }}>
-          <Grid item xs={12} sm={6} sx={{ width: '280px' }}>
-            <ClassDropDown onSelect={handleTimetableClassChange} selectedClass={selectedClass} />
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+          {/* <Button variant="contained" onClick={handleOpen}>
+            Add Timetable
+          </Button> */}
+          <Grid item xs={12} sm={6} sx={{ width: "280px" }}>
+            <ClassDropDown
+              onSelect={handleTimetableClassChange}
+              selectedClass={selectedClass}
+            />
           </Grid>
         </Box>
 
-        <Dialog open={openDialog} onClose={handleClose} fullWidth maxWidth="lg">
-          <DialogTitle sx={{ backgroundColor: "#1976d2", color: "white" }}>Add Timetable</DialogTitle>
-          <DialogContent>
-            <Box sx={{ display: "flex", gap: 2, my: 2 }}>
-              <ClassDropDown onSelect={setSelectedClass} selectedClass={selectedClass?.classId} />
-              <FormControl fullWidth sx={{ minWidth: 200 }}>
-                <InputLabel>Day</InputLabel>
-                <Select value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)} label="Day">
-                  {days.map((d) => (
-                    <MenuItem key={d} value={d}>{d}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-            {periods.map((p, index) => (
-              <Grid container spacing={2} alignItems="center" key={p.period} sx={{ mb: 1 }}>
-                <Grid item xs={12} sm={1.2}>
-                  <TextField label="Period" value={p.period} disabled fullWidth />
-                </Grid>
-                <Grid item xs={12} sm={2.5}>
-                  <TextField
-                    type="time"
-                    label="Start Time"
-                    value={p.startTime}
-                    onChange={(e) => handlePeriodChange(index, "startTime", e.target.value)}
-                    fullWidth
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={2.5}>
-                  <TextField
-                    type="time"
-                    label="End Time"
-                    value={p.endTime}
-                    onChange={(e) => handlePeriodChange(index, "endTime", e.target.value)}
-                    fullWidth
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <FormControl fullWidth sx={{ minWidth: 200 }}>
-                    <InputLabel>Subject</InputLabel>
-                    <Select
-                      value={p.subjectId}
-                      onChange={(e) => handlePeriodChange(index, "subjectId", e.target.value)}
-                      label="Subject"
-                    >
-                      {subjects.map((s) => (
-                        <MenuItem key={s.subjectId} value={s.subjectId}>{s.title}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <FormControl fullWidth sx={{ minWidth: 200 }}>
-                    <InputLabel>Teacher</InputLabel>
-                    <Select
-                      value={p.teacherId}
-                      onChange={(e) => handlePeriodChange(index, "teacherId", e.target.value)}
-                      label="Teacher"
-                    >
-                      {teachers.map((t) => (
-                        <MenuItem key={t.id} value={t.id}>{t.firstName} {t.lastName}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button variant="contained" onClick={handleSubmit}>Submit</Button>
-          </DialogActions>
-        </Dialog>
+        {/* Dialog moved to separate file */}
+        {/* <AddTimetableDialog
+          open={openDialog}
+          onClose={handleClose}
+          onSubmit={handleSubmit}
+          selectedClass={selectedClass}
+          setSelectedClass={setSelectedClass}
+          dayOfWeek={dayOfWeek}
+          setDayOfWeek={setDayOfWeek}
+          periods={periods}
+          setPeriods={setPeriods}
+          subjects={subjects}
+          teachers={teachers}
+          handlePeriodChange={handlePeriodChange}
+        /> */}
 
         <Grid container direction="column" spacing={3} sx={{ mt: 1 }}>
           {selectedClass && timetable.length > 0 && (
             <Grid item xs={12}>
-              <Paper elevation={4} sx={{ overflowX: "auto", width: '100%' }}>
-                <Typography variant="h5" gutterBottom textAlign="center" sx={{ m: 2 }}>
+              <Paper
+                elevation={4}
+                sx={{
+                  overflowX: "auto",
+                  width: "100%",
+                  p: 1,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  textAlign="center"
+                  sx={{ m: 2, fontWeight: "bold" }}
+                >
                   Timetable for Class {selectedClass?.classId}
                 </Typography>
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: "#1976d2" }}>
-                      <TableCell sx={{ color: "white", fontWeight: "bold" }}>Day</TableCell>
-                      {periods.map((p) => (
+
+                <Box sx={{ minWidth: "600px" }}>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: "#1976d2" }}>
                         <TableCell
-                          key={p.period}
-                          align="center"
-                          sx={{ color: "white", fontWeight: "bold" }}
+                          sx={{
+                            color: "white",
+                            fontWeight: "bold",
+                            minWidth: "80px",
+                          }}
                         >
-                          Period {p.period}
+                          Day
                         </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {days.map((day) => (
-                      <TableRow key={day}>
-                        <TableCell sx={{ fontWeight: "bold" }}>{day}</TableCell>
-                        {periods.map((p) => {
-                          const entry = timetable.find(
-                            (item) => item.dayOfWeek === day && item.period === p.period
-                          );
-                          return (
-                            <TableCell key={`${day}-${p.period}`}>
-                              {entry ? (
-                                <Paper
-                                  elevation={3}
-                                  sx={{
-                                    height: "110px",
-                                    width:"150px",
-                                    backgroundColor: entry.isTeacherPresent ? "#e0f7fa" : "#ffcdd2",
-                                    p: 0.3,
-                                    borderRadius: 1,
-                                  }}
-                                >
-                                  <Typography variant="subtitle2">
-                                    <LocalLibraryIcon /> {entry.subjectName}
-                                  </Typography >
-                                  <Typography variant="body2" >
-                                    <PersonIcon sx={{fontSize:"20px"}}/> {entry.teacherName}
-                                  </Typography>
-                                  <Typography variant="caption">
-                                    <AccessTimeIcon /> {entry.timeSlot}
-                                  </Typography>
-                                </Paper>
-                              ) : (
-                                <Typography variant="body2" color="textSecondary" align="center">
-                                  -
-                                </Typography>
-                              )}
-                            </TableCell>
-                          );
-                        })}
+                        {periods.map((p) => (
+                          <TableCell
+                            key={p.period}
+                            align="center"
+                            sx={{
+                              color: "white",
+                              fontWeight: "bold",
+                              minWidth: "120px",
+                            }}
+                          >
+                            Period {p.period}
+                          </TableCell>
+                        ))}
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHead>
+
+                    <TableBody>
+                      {days.map((day) => (
+                        <TableRow key={day}>
+                          <TableCell sx={{ fontWeight: "bold" }}>
+                            {day}
+                          </TableCell>
+                          {periods.map((p) => {
+                            const entry = timetable.find(
+                              (item) =>
+                                item.dayOfWeek === day &&
+                                item.period === p.period
+                            );
+                            return (
+                              <TableCell key={`${day}-${p.period}`}>
+                                {entry ? (
+                                  <Paper
+                                    elevation={3}
+                                    sx={{
+                                      height: "100px",
+                                      backgroundColor: entry.isTeacherPresent
+                                        ? "#0fdbf6ff"
+                                        : "whitesmoke",
+                                      p: 0.5,
+                                      borderRadius: 3,
+                                      border: "1px solid black",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      justifyContent: "space-evenly",
+                                    }}
+                                  >
+                                    <Typography variant="subtitle2" noWrap>
+                                      <LocalLibraryIcon fontSize="small" />{" "}
+                                      {entry.subjectName}
+                                    </Typography>
+                                    <Typography variant="body2" noWrap>
+                                      <PersonIcon fontSize="small" />{" "}
+                                      {entry.teacherName}
+                                    </Typography>
+                                    <Typography variant="caption" noWrap>
+                                      <AccessTimeIcon fontSize="small" />{" "}
+                                      {entry.timeSlot}
+                                    </Typography>
+                                  </Paper>
+                                ) : (
+                                  <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                    align="center"
+                                  >
+                                    -
+                                  </Typography>
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
               </Paper>
             </Grid>
           )}
@@ -285,7 +295,21 @@ const TeacherDasTable = () => {
         </Snackbar>
       </Container>
     </Box>
+    </>
   );
 };
 
 export default TeacherDasTable;
+
+
+
+
+
+
+
+
+
+
+
+
+
