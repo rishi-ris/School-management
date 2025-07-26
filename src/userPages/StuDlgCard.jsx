@@ -75,7 +75,8 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       .replace(/([A-Z])/g, " $1")
       .replace(/^./, (c) => c.toUpperCase());
 
-  const handleSubmit = () => {
+  // ✅ Made async
+  const handleSubmit = async () => {
     let newErrors = {};
     let missingFields = [];
 
@@ -203,16 +204,11 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       },
     };
 
-    // ✅ Save student with try-catch to check if save is successful
-    try {
-      onSave(transformedStudent);
+    // ✅ Wait for save result
+    const success = await onSave(transformedStudent);
 
-      toast.success("✅ Student details submitted successfully!", {
-        autoClose: 4000,
-        position: "top-center",
-      });
-
-      // ✅ Clear only if save success
+    if (success) {
+      // ✅ Only clear form on success
       setCommonData({});
       setPersonalData({});
       setFamilyData({});
@@ -221,12 +217,6 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       setSelectedClass({});
       setSelectedRole({});
       setErrors({});
-    } catch (err) {
-      console.error("Save failed:", err);
-      toast.error("❌ Failed to save student. Please try again.", {
-        autoClose: 4000,
-        position: "top-center",
-      });
     }
   };
 
