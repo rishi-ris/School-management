@@ -1,8 +1,22 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container, Typography, Grid, Button, Dialog, DialogTitle,
-  DialogContent, DialogActions, Paper, Snackbar, Alert, Table,
-  TableHead, TableRow, TableCell, TableBody, Box,
+  Container,
+  Typography,
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Paper,
+  Snackbar,
+  Alert,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Box,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
@@ -29,13 +43,26 @@ const TeacherTimeTablePage = () => {
     { period: 8, startTime: "", endTime: "", subjectId: "", teacherId: "" },
   ]);
   const [timetable, setTimetable] = useState([]);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
-  const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const days = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+  ];
 
   useEffect(() => {
     Network.getAllUsersByRoleId(3).then(setTeachers).catch(console.error);
-    Network.getAllClasses().then((res) => setSelectedClass(res[0])).catch(console.error);
+    Network.getAllClasses()
+      .then((res) => setSelectedClass(res[0]))
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -80,26 +107,49 @@ const TeacherTimeTablePage = () => {
     };
     Network.addTimeTable(payload)
       .then(() => {
-        setSnackbar({ open: true, message: "Timetable added successfully!", severity: "success" });
+        setSnackbar({
+          open: true,
+          message: "Timetable added successfully!",
+          severity: "success",
+        });
         handleClose();
         setDayOfWeek("");
-        setPeriods(periods.map(p => ({ ...p, startTime: "", endTime: "", subjectId: "", teacherId: "" })));
+        setPeriods(
+          periods.map((p) => ({
+            ...p,
+            startTime: "",
+            endTime: "",
+            subjectId: "",
+            teacherId: "",
+          }))
+        );
       })
       .catch(() =>
-        setSnackbar({ open: true, message: "Failed to add timetable.", severity: "error" })
+        setSnackbar({
+          open: true,
+          message: "Failed to add timetable.",
+          severity: "error",
+        })
       );
   };
 
   return (
     <Box>
       <Sidekick />
-      <Container maxWidth={false} sx={{ mt: 13, ml: 10 }}>
-        <Typography variant="h4" gutterBottom>Teacher Timetable</Typography>
+      <Container maxWidth={false} sx={{ mt: 10 }}>
+        <Typography variant="h4" gutterBottom>
+          Teacher Timetable
+        </Typography>
 
         <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-          <Button variant="contained" onClick={handleOpen}>Add Timetable</Button>
-          <Grid item xs={12} sm={6} sx={{ width: '280px' }}>
-            <ClassDropDown onSelect={handleTimetableClassChange} selectedClass={selectedClass} />
+          <Button variant="contained" onClick={handleOpen}>
+            Add Timetable
+          </Button>
+          <Grid item xs={12} sm={6} sx={{ width: "280px" }}>
+            <ClassDropDown
+              onSelect={handleTimetableClassChange}
+              selectedClass={selectedClass}
+            />
           </Grid>
         </Box>
 
@@ -119,67 +169,114 @@ const TeacherTimeTablePage = () => {
           handlePeriodChange={handlePeriodChange}
         />
 
-        <Grid container direction="column" spacing={3} sx={{ mt: 1 ,  }}>
+        <Grid container direction="column" spacing={3} sx={{ mt: 1 }}>
           {selectedClass && timetable.length > 0 && (
             <Grid item xs={12}>
-              <Paper elevation={4} sx={{ overflowX: "auto", width: '100%', }}>
-                <Typography variant="h5" gutterBottom textAlign="center" sx={{ m: 2 }}>
+              <Paper
+                elevation={4}
+                sx={{
+                  overflowX: "auto",
+                  width: "100%",
+                  p: 1,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  textAlign="center"
+                  sx={{ m: 2, fontWeight: "bold" }}
+                >
                   Timetable for Class {selectedClass?.classId}
                 </Typography>
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: "#1976d2" }}>
-                      <TableCell sx={{ color: "white", fontWeight: "bold" }}>Day</TableCell>
-                      {periods.map((p) => (
-                        <TableCell key={p.period} align="center" sx={{ color: "white", fontWeight: "bold" }}>
-                          Period {p.period}
+
+                <Box sx={{ minWidth: "600px" }}>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: "#1976d2" }}>
+                        <TableCell
+                          sx={{
+                            color: "white",
+                            fontWeight: "bold",
+                            minWidth: "80px",
+                          }}
+                        >
+                          Day
                         </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {days.map((day) => (
-                      <TableRow key={day}>
-                        <TableCell sx={{ fontWeight: "bold" }}>{day}</TableCell>
-                        {periods.map((p) => {
-                          const entry = timetable.find(
-                            (item) => item.dayOfWeek === day && item.period === p.period
-                          );
-                          return (
-                            <TableCell key={`${day}-${p.period}`}>
-                              {entry ? (
-                                <Paper
-                                  elevation={3}
-                                  sx={{
-                                    height: "100px",
-                                    width: "110%",
-                                    backgroundColor: entry.isTeacherPresent ? "#e0f7fa" : "#ffcdd2",
-                                    p: 0.3,
-                                    borderRadius: 1,
-                                  }}
-                                >
-                                  <Typography variant="subtitle2">
-                                    <LocalLibraryIcon /> {entry.subjectName}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    <PersonIcon /> {entry.teacherName}
-                                  </Typography>
-                                  <Typography variant="caption">
-                                    <AccessTimeIcon /> {entry.timeSlot}
-                                  </Typography>
-                                </Paper>
-                              ) : (
-                                <Typography variant="body2" color="textSecondary" align="center">
-                                  -
-                                </Typography>
-                              )}
-                            </TableCell>
-                          );
-                        })}
+                        {periods.map((p) => (
+                          <TableCell
+                            key={p.period}
+                            align="center"
+                            sx={{
+                              color: "white",
+                              fontWeight: "bold",
+                              minWidth: "120px",
+                            }}
+                          >
+                            Period {p.period}
+                          </TableCell>
+                        ))}
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHead>
+
+                    <TableBody>
+                      {days.map((day) => (
+                        <TableRow key={day}>
+                          <TableCell sx={{ fontWeight: "bold" }}>
+                            {day}
+                          </TableCell>
+                          {periods.map((p) => {
+                            const entry = timetable.find(
+                              (item) =>
+                                item.dayOfWeek === day &&
+                                item.period === p.period
+                            );
+                            return (
+                              <TableCell key={`${day}-${p.period}`}>
+                                {entry ? (
+                                  <Paper
+                                    elevation={3}
+                                    sx={{
+                                      height: "100px",
+                                      backgroundColor: entry.isTeacherPresent
+                                        ? "#0fdbf6ff"
+                                        : "whitesmoke",
+                                      p: 0.5,
+                                      borderRadius: 3,
+                                      border: "1px solid black",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      justifyContent: "space-evenly",
+                                    }}
+                                  >
+                                    <Typography variant="subtitle2" noWrap>
+                                      <LocalLibraryIcon fontSize="small" />{" "}
+                                      {entry.subjectName}
+                                    </Typography>
+                                    <Typography variant="body2" noWrap>
+                                      <PersonIcon fontSize="small" />{" "}
+                                      {entry.teacherName}
+                                    </Typography>
+                                    <Typography variant="caption" noWrap>
+                                      <AccessTimeIcon fontSize="small" />{" "}
+                                      {entry.timeSlot}
+                                    </Typography>
+                                  </Paper>
+                                ) : (
+                                  <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                    align="center"
+                                  >
+                                    -
+                                  </Typography>
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
               </Paper>
             </Grid>
           )}

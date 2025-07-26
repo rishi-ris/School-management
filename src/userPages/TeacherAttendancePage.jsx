@@ -90,11 +90,11 @@ const TeacherAttendancePage = () => {
         <Box
           sx={{
             width: {
-              xs: "100%",   // Mobile
+              xs: "100%", // Mobile
               sm: "90%",
               md: "70%",
               lg: "60%",
-              xl: "50%",    // Large screens
+              xl: "50%", // Large screens
             },
           }}
         >
@@ -104,7 +104,7 @@ const TeacherAttendancePage = () => {
 
           <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
             <Grid container justifyContent="center" spacing={2} sx={{ mb: 2 }}>
-              <Grid item xs={12} sm={8}>
+              <Grid item xs={12} sm={8} width={200}>
                 <RoleDropdown onSelect={onRolesSelect} />
               </Grid>
             </Grid>
@@ -126,60 +126,64 @@ const TeacherAttendancePage = () => {
                         {teacher.firstName} {teacher.lastName}
                       </Typography>
                     </Grid>
-                  <Grid item xs={12} sm={6}>
-  <Box
-    display="flex"
-    justifyContent="flex-start"
-    alignItems="center"
-    fullWidth
-    sx={{ pl: { xs: 0, sm: 22 } }}     // Padding to align with name
-  >
-    <RadioGroup
-      row
-      value={attendance[teacher.id]}
-      onChange={(e) => handleAttendanceChange(teacher.id, e.target.value)}
-    >
-      <FormControlLabel
-        value="present"
-        control={
-          <Radio
-            sx={{
-              color: "green",
-              "&.Mui-checked": {
-                color: "green",
-              },
-            }}
-          />
-        }
-        label={
-          <Typography sx={{ color: "green", fontWeight: 600 }}>
-            Present
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        value="absent"
-        control={
-          <Radio
-            sx={{
-              color: "red",
-              "&.Mui-checked": {
-                color: "red",
-              },
-            }}
-          />
-        }
-        label={
-          <Typography sx={{ color: "red", fontWeight: 600 }}>
-            Absent
-          </Typography>
-        }
-      />
-    </RadioGroup>
-  </Box>
-</Grid>
-
-
+                    <Grid item xs={12} sm={6}>
+                      <Box
+                        display="flex"
+                        justifyContent="flex-start"
+                        alignItems="center"
+                        fullWidth
+                        sx={{ pl: { xs: 0, sm: 22 } }} // Padding to align with name
+                      >
+                        <RadioGroup
+                          row
+                          value={attendance[teacher.id]}
+                          onChange={(e) =>
+                            handleAttendanceChange(teacher.id, e.target.value)
+                          }
+                        >
+                          <FormControlLabel
+                            value="present"
+                            control={
+                              <Radio
+                                sx={{
+                                  color: "green",
+                                  "&.Mui-checked": {
+                                    color: "green",
+                                  },
+                                }}
+                              />
+                            }
+                            label={
+                              <Typography
+                                sx={{ color: "green", fontWeight: 600 }}
+                              >
+                                Present
+                              </Typography>
+                            }
+                          />
+                          <FormControlLabel
+                            value="absent"
+                            control={
+                              <Radio
+                                sx={{
+                                  color: "red",
+                                  "&.Mui-checked": {
+                                    color: "red",
+                                  },
+                                }}
+                              />
+                            }
+                            label={
+                              <Typography
+                                sx={{ color: "red", fontWeight: 600 }}
+                              >
+                                Absent
+                              </Typography>
+                            }
+                          />
+                        </RadioGroup>
+                      </Box>
+                    </Grid>
                   </Grid>
                 ))}
 
