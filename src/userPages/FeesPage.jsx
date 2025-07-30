@@ -58,7 +58,7 @@ const FeesPage = () => {
       sx={{
         width: "100%",
         height: "100vh",
-        mt: 8.1,
+        mt: 8,
         p: 0,
         background: "#f9f9f9",
         display: "flex",

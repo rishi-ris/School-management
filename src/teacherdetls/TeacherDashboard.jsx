@@ -32,6 +32,7 @@ import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
 import TeacherDasboardAttendance from "./TeacherDasboardAttendance";
 import TeacherDashboardside from "./TeacherDasboardside";
+import LoadingPage from "../CommonFile/LoadingPage";
 
 const StyledCard = styled(Card)(({ bgcolor }) => ({
   backgroundColor: bgcolor,
@@ -114,7 +115,7 @@ const TeacherDasboard = () => {
       .catch((e) => console.error("Failed to load dashboard stats", e));
   }, []);
 
-  if (!stats) return <Typography>Loading dashboard...</Typography>;
+  if (!stats) return <Typography><LoadingPage/></Typography>;
 
   return (
     <Box>

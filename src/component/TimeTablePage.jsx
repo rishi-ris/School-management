@@ -237,7 +237,7 @@ const TeacherTimeTablePage = () => {
                                     sx={{
                                       height: "100px",
                                       backgroundColor: entry.isTeacherPresent
-                                        ? "#0fdbf6ff"
+                                        ? "#93e0eaff"
                                         : "whitesmoke",
                                       p: 0.5,
                                       borderRadius: 3,

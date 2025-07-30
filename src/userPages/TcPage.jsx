@@ -12,6 +12,7 @@ import {
 
 // Common reusable content from external file
 import UseCommonText from "../CommonFile/UseCommonText";
+import LoadingPage from "../CommonFile/LoadingPage"; // Loading component
 import Network from "../Application/Network"; // API handler
 
 const TcPage = () => {
@@ -32,7 +33,7 @@ const TcPage = () => {
       .catch((error) => console.error("Error fetching student details", error));
   }, [id]);
 
-  if (!student) return <Typography>Loading...</Typography>; // Show loading until data fetch completes
+  if (!student) return <Typography><LoadingPage /></Typography>; // Show loading until data fetch completes
 
   return (
     <Paper

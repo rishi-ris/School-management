@@ -36,7 +36,7 @@ const SubjectManager = () => {
   const [passingInternalMarks, setPassingInternalMarks] = useState("");
 
   useEffect(() => {
-    fetchSubjects();
+    // fetchSubjects();
   }, []);
 
   const fetchSubjects = async () => {
@@ -202,7 +202,7 @@ const SubjectManager = () => {
                 backgroundColor: "#f5f5f5", // light hover background
                 borderRadius: "8px", // optional rounded corners
                 cursor: "pointer", // show pointer cursor
-                 transform: "scale(1.03)",
+                transform: "scale(1.03)",
               },
             }}
           >

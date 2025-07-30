@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import AddStuButton from "./AddStuButton";
 import StuTable from "./StuTable";
 import StuDlgCard from "./StuDlgCard";
@@ -9,6 +13,7 @@ import StudentFeesDlg from "./StudentFeesDlg";
 import Sidekick from "../component/Sidekick";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ClassDropDown from "../component/ClassDropDown";
 
 const StudentPage = () => {
   const [students, setStudents] = useState([]);
@@ -22,14 +27,18 @@ const StudentPage = () => {
   const [openFeesDetails, setOpenFeesDetails] = useState(false);
   const [feesDetails, setFeesDetails] = useState(null);
   const [formErrors, setFormErrors] = useState(null);
+  const [selectedClassId, setSelectedClassId] = useState(null);
+  const [classError, setClassError] = useState(true); // 🔴 Start with error visible
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (classId) => {
     try {
+      if (!classId) return; // 🛑 Skip if no class selected
+
       setLoading(true);
-      const response = await Network.getAllPendingFeesStudents();
+      const response = await Network.getAllStudentsByClassId(classId);
       setStudents(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error("⚠️ Error fetching students:", error);
+      console.error("⚠ Error fetching students:", error);
       toast.error("❌ Error fetching students.");
     } finally {
       setLoading(false);
@@ -44,7 +53,7 @@ const StudentPage = () => {
       setNewStudentId(studentId);
       setDialogOpen(true);
     } catch (err) {
-      console.error("⚠️ Error loading student:", err);
+      console.error("⚠ Error loading student:", err);
       toast.error("❌ Failed to load student details.");
     } finally {
       setLoading(false);
@@ -56,7 +65,7 @@ const StudentPage = () => {
       setOpenFeesDetails(true);
       setFeesDetails(stuFeesDetails);
     } catch (err) {
-      console.error("⚠️ Error loading student fees details:", err);
+      console.error("⚠ Error loading student fees details:", err);
       toast.error("❌ Failed to load student fees details.");
     } finally {
       setLoading(false);
@@ -72,18 +81,13 @@ const StudentPage = () => {
       setEditingStudent(studentId || null);
       setNewStudentId(studentId);
     } catch (err) {
-      console.error("⚠️ Error loading student documents:", err);
+      console.error("⚠ Error loading student documents:", err);
       toast.error("❌ Failed to load student documents.");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  // ✅ UPDATED handleSave to return true/false
   const handleSave = async (flatData) => {
     try {
       setLoading(true);
@@ -93,13 +97,12 @@ const StudentPage = () => {
         ? await Network.updateStudent(flatData)
         : await Network.createStudent(flatData);
 
-      alert("✅ Student saved successfully!");
       toast.success("✅ Student saved successfully!", {
         autoClose: 4000,
         position: "top-center",
       });
 
-      await fetchStudents();
+      await fetchStudents(selectedClassId);
 
       setDialogOpen(false);
       setSelectedStudent(null);
@@ -107,7 +110,7 @@ const StudentPage = () => {
       setNewStudentId(null);
       setFormErrors(null);
 
-      return true; // ✅ Save was successful
+      return true;
     } catch (error) {
       let errors = null;
       if (error?.response?.data?.errors) {
@@ -125,13 +128,12 @@ const StudentPage = () => {
           ? errors
           : Object.values(errors).flat().join(", ");
 
-   console.log("*****hellooo*****",errorMessage )
       toast.error("❌ " + errorMessage, {
         autoClose: 5000,
         position: "top-center",
       });
 
-      return false; // ❌ Save failed
+      return false;
     } finally {
       setLoading(false);
     }
@@ -152,7 +154,7 @@ const StudentPage = () => {
         alignItems="center"
         maxWidth={1200}
         mx="auto"
-        mt={8}
+        mt={7}
         p={2}
         border="2px solid #191818ff"
         borderRadius={2}
@@ -193,8 +195,29 @@ const StudentPage = () => {
         />
       </Box>
 
+      {/* ✅ Class Filter Dropdown with Error */}
+      <Box mt={3} sx={{ width: "220px", ml: 5 }} mx="auto">
+        <ClassDropDown
+          selectedClassId={selectedClassId}
+          onSelect={(cls) => {
+            if (cls?.classId) {
+              setSelectedClassId(cls.classId);
+              setClassError(false); // ✅ Hide error
+              fetchStudents(cls.classId);
+            } else {
+              setClassError(true); // 🔴 Show error
+            }
+          }}
+        />
+        {classError && (
+          <Typography color="error" variant="body2" mt={1} ml={1}>
+            Class is required
+          </Typography>
+        )}
+      </Box>
+
       {loading ? (
-        <Box display="flex" justifyContent="center" mt={5}>
+        <Box display="flex" justifyContent="center" mt={2}>
           <CircularProgress size={40} />
         </Box>
       ) : (
@@ -217,7 +240,7 @@ const StudentPage = () => {
           setEditingStudent(null);
           setFormErrors(null);
         }}
-        onSave={handleSave} // ✅ now returns true/false
+        onSave={handleSave}
         student={editingStudent}
         formErrors={formErrors}
       />

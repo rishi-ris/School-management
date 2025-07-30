@@ -26,26 +26,31 @@ import { AuthContext } from "../auth/AuthProvider";
 
 // ✅ Drawer items
 const drawerItems = [
-  {
-    label: "Profile",
+    {
+    label: "Dashboard",
     icon: <GridViewOutlinedIcon />,
     path: "/home",
   },
   {
-    label: "FeesPanel",
-    icon: <CurrencyRupeeOutlinedIcon />,
-    path: "/studentfeespanel",
+    label: "Profile",
+    icon: <GridViewOutlinedIcon />,
+    path: "/studentProfile",
   },
+  // {
+  //   label: "FeesPanel",
+  //   icon: <CurrencyRupeeOutlinedIcon />,
+  //   path: "/studentfeespanel",
+  // },
   {
     label: "Marksheet",
     icon: <DescriptionIcon />,
     path: "/studentMarksheet", // We'll pass studentId dynamically
   },
-  {
-    label: "Result",
-    icon: <AssignmentOutlinedIcon />,
-    path: "/result",
-  },
+  // {
+  //   label: "Result",
+  //   icon: <AssignmentOutlinedIcon />,
+  //   path: "/result",
+  // },
 ];
 
 const StudentDashboard = () => {

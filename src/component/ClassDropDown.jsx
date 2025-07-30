@@ -9,7 +9,7 @@ const ClassDropDown = ({ onSelect, selectedClassId }) => {
   useEffect(() => {
     Network.getAllClasses()
       .then((response) => setAllClasses(response.data))
-      .catch((err) => console.error('⚠️ Error fetching classes', err));
+      .catch((err) => console.error('⚠ Error fetching classes', err));
   }, []);
 
   // ✅ Trigger selection on edit
@@ -30,7 +30,7 @@ const ClassDropDown = ({ onSelect, selectedClassId }) => {
     const selectedClassObj = allClasses.find(cls => cls.classId === selectedId);
     console.log("Selected class:", selectedClassObj);
     if (selectedClassObj) {
-      onSelect(selectedClassObj); // Trigger on user change
+      onSelect(selectedClassObj);
     }
   };
 

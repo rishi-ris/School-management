@@ -11,11 +11,12 @@ import {
   Divider,
   Grid,
 } from "@mui/material";
-import StudentDashboard from "./StudentDashboard";
+// import StudentDashboard from "./StudentDashboard";
 import UseCommonText from "../CommonFile/UseCommonText";
 import LoadingPage from "../CommonFile/LoadingPage";
 import Network from "../Application/Network";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Sidekick from "../component/Sidekick";
 
 const StudentMarksheet = () => {
   const location = useLocation();
@@ -66,7 +67,8 @@ const StudentMarksheet = () => {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <StudentDashboard />
+      {/* <StudentDashboard /> */}
+      <Sidekick/>
 
       <Paper
         elevation={3}

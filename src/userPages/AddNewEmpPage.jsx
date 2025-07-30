@@ -191,6 +191,9 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     { name: "gender", label: "Gender", select: true, options: genders },
     { name: "firstName", label: "First Name" },
     { name: "lastName", label: "Last Name" },
+    { name: "email", label: "Email" },
+    { name: "qualification", label: "Qualification" },
+    { name: "experience", label: "Experience" },
     { name: "contactNumber", label: "Contact Number" },
     { name: "dOB", label: "D O B", type: "date" },
     { name: "address", label: "Address" },
@@ -220,13 +223,19 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   <Grid container spacing={2}>
     {/* Role Dropdown */}
     <Grid item xs={12} sm={6} sx={{width:'230px'}}>
-      <RoleDropdown onSelect={onRolesSelect} selectedRole={form.roleId} />
+     <RoleDropdown
+  onSelect={onRolesSelect}
+  selectedRoleId={form.roleId}
+  excludeRoleIds={[4]} // 👈 Student role excluded
+/>
+
       {errors.roleId && (
         <span style={{ color: "red", fontSize: "12px" }}>
           {errors.roleId}
         </span>
       )}
     </Grid>
+    
 
     {/* All Form Fields */}
     {formFields.map(({ name, label, select, options, type }) => {

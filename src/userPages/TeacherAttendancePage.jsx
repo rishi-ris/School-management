@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -13,15 +13,14 @@ import {
 } from "@mui/material";
 
 import Network from "../Application/Network";
-import RoleDropdown from "../component/RoleDropdown";
 import Sidekick from "../component/Sidekick";
 
 const TeacherAttendancePage = () => {
   const [teachers, setTeachers] = useState([]);
   const [attendance, setAttendance] = useState({});
-  const [selectedRoleId, setSelectedRoleId] = useState("");
 
   const todayDate = new Date().toISOString().split("T")[0];
+  const teacherRoleId = "3"; // Replace with actual Teacher role ID
 
   const handleAttendanceChange = (teacherId, status) => {
     setAttendance((prev) => ({
@@ -44,11 +43,8 @@ const TeacherAttendancePage = () => {
       .catch(() => alert("Error submitting attendance"));
   };
 
-  const onRolesSelect = (roleObj) => {
-    const roleId = roleObj.roleId;
-    setSelectedRoleId(roleId);
-
-    Network.getAllUsersByRoleId(roleId)
+  const loadTeachers = () => {
+    Network.getAllUsersByRoleId(teacherRoleId)
       .then((res) => {
         setTeachers(res);
 
@@ -74,6 +70,11 @@ const TeacherAttendancePage = () => {
       });
   };
 
+  // Auto-load teachers on component mount
+  useEffect(() => {
+    loadTeachers();
+  }, []);
+
   return (
     <Box sx={{ backgroundColor: "#f9f9f9", minHeight: "100vh", pb: 4 }}>
       <Sidekick />
@@ -90,11 +91,11 @@ const TeacherAttendancePage = () => {
         <Box
           sx={{
             width: {
-              xs: "100%", // Mobile
+              xs: "100%",
               sm: "90%",
               md: "70%",
               lg: "60%",
-              xl: "50%", // Large screens
+              xl: "50%",
             },
           }}
         >
@@ -103,12 +104,6 @@ const TeacherAttendancePage = () => {
           </Typography>
 
           <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
-            <Grid container justifyContent="center" spacing={2} sx={{ mb: 2 }}>
-              <Grid item xs={12} sm={8} width={200}>
-                <RoleDropdown onSelect={onRolesSelect} />
-              </Grid>
-            </Grid>
-
             <Divider sx={{ mb: 3 }} />
 
             {teachers.length > 0 ? (
@@ -119,7 +114,7 @@ const TeacherAttendancePage = () => {
                     spacing={2}
                     key={teacher.id}
                     alignItems="center"
-                    sx={{ mb: 2, px: 1 }}
+                    sx={{ mb: 2 }}
                   >
                     <Grid item xs={12} sm={6}>
                       <Typography fontWeight={500}>
@@ -127,62 +122,52 @@ const TeacherAttendancePage = () => {
                       </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Box
-                        display="flex"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        fullWidth
-                        sx={{ pl: { xs: 0, sm: 22 } }} // Padding to align with name
+                      <RadioGroup
+                        row
+                        value={attendance[teacher.id]}
+                        onChange={(e) =>
+                          handleAttendanceChange(teacher.id, e.target.value)
+                        }
                       >
-                        <RadioGroup
-                          row
-                          value={attendance[teacher.id]}
-                          onChange={(e) =>
-                            handleAttendanceChange(teacher.id, e.target.value)
-                          }
-                        >
-                          <FormControlLabel
-                            value="present"
-                            control={
-                              <Radio
-                                sx={{
+                        <FormControlLabel
+                          value="present"
+                          control={
+                            <Radio
+                              sx={{
+                                color: "green",
+                                "&.Mui-checked": {
                                   color: "green",
-                                  "&.Mui-checked": {
-                                    color: "green",
-                                  },
-                                }}
-                              />
-                            }
-                            label={
-                              <Typography
-                                sx={{ color: "green", fontWeight: 600 }}
-                              >
-                                Present
-                              </Typography>
-                            }
-                          />
-                          <FormControlLabel
-                            value="absent"
-                            control={
-                              <Radio
-                                sx={{
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Typography
+                              sx={{ color: "green", fontWeight: 600 }}
+                            >
+                              Present
+                            </Typography>
+                          }
+                        />
+                        <FormControlLabel
+                          value="absent"
+                          control={
+                            <Radio
+                              sx={{
+                                color: "red",
+                                "&.Mui-checked": {
                                   color: "red",
-                                  "&.Mui-checked": {
-                                    color: "red",
-                                  },
-                                }}
-                              />
-                            }
-                            label={
-                              <Typography
-                                sx={{ color: "red", fontWeight: 600 }}
-                              >
-                                Absent
-                              </Typography>
-                            }
-                          />
-                        </RadioGroup>
-                      </Box>
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Typography sx={{ color: "red", fontWeight: 600 }}>
+                              Absent
+                            </Typography>
+                          }
+                        />
+                      </RadioGroup>
                     </Grid>
                   </Grid>
                 ))}
@@ -205,7 +190,7 @@ const TeacherAttendancePage = () => {
               </>
             ) : (
               <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-                Please select a role to load teachers.
+                Loading teachers...
               </Typography>
             )}
           </Paper>

@@ -37,58 +37,74 @@ import TeacherDasTablePage from "./teacherdetls/TeacherDastable";
 import TeacherDasStudent from "./teacherdetls/TeacherDasStudent";
 import BdayStudents from "./Carddata/bdayStudents";
 import TeacherBirthday from "./Carddata/BdayTeacher";
-
+import AdminStuMarksheet from "./CommonFile/AdminStuMarksheet";
+import StudentPageDashboard from "./StudentInformation/StudentPageDashboard";
+import TeacherProfile from "./userPages/TeacherProfile";
 function App() {
   return (
     <>
       <Routers>
-         <AuthProvider>
-        <Routes>
-         
-          <Route path="/" element={<SchoolFrontPage />} />
-          <Route path="/logify" element={<Logify />} />
-          <Route path="/signUp" element={<SignUpPage />} />
-          <Route path="/studentUser" element={<StudentPage />} />
-          <Route path="/adminUser" element={<AdminUsers />} />
-          <Route path="/teachersUser" element={<TeachersUser />} />
-          <Route path="/parentsusers" element={<ParentsUsers />} />
-          <Route path="/fees" element={<FeesPage />} />
-          {/* <Route path="/tcPage" element={<TcPage />} /> */}
-          <Route path="/tcPage/:id" element={<TcPage />} />
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<SchoolFrontPage />} />
+            <Route path="/logify" element={<Logify />} />
+            <Route path="/signUp" element={<SignUpPage />} />
+            <Route path="/studentUser" element={<StudentPage />} />
+            <Route path="/adminUser" element={<AdminUsers />} />
+            <Route path="/teachersUser" element={<TeachersUser />} />
+            <Route path="/parentsusers" element={<ParentsUsers />} />
+            <Route path="/fees" element={<FeesPage />} />
+            {/* <Route path="/tcPage" element={<TcPage />} /> */}
+            <Route path="/tcPage/:id" element={<TcPage />} />
 
-          <Route path="/newEmployee" element={<AddNewEmpPage />} />
-          <Route path="/timetable" element={<TimeTablePage />} />
-          <Route path="/subjectManager" element={<SubjectManager />} />
-          <Route path="/marksEntryPage" element={<MarksEntryPage />} />
-          <Route path="/teacherAttendancePage" element={<TeacherAttendancePage />} />
-          <Route path="/paymentReceipt" element={<PaymentReceipt />} />
+            <Route path="/newEmployee" element={<AddNewEmpPage />} />
+            <Route path="/timetable" element={<TimeTablePage />} />
+            <Route path="/subjectManager" element={<SubjectManager />} />
+            <Route path="/marksEntryPage" element={<MarksEntryPage />} />
+            <Route
+              path="/teacherAttendancePage"
+              element={<TeacherAttendancePage />}
+            />
+            <Route path="/paymentReceipt" element={<PaymentReceipt />} />
 
-          {/* Student Dashboard Routes */}
-          <Route path="/studentinfo" element={<StudentDashboard />} />
-          <Route path="/home" element={<EnrollmentCard />} />
-          <Route path="/studentMarksheet" element={<StudentMarksheet />} />
+            {/* Student Dashboard Routes */}
+            <Route path="/studentinfo" element={<StudentPageDashboard />} />
+            <Route path="/studentProfile" element={<EnrollmentCard />} />
+            <Route path="/studentMarksheet" element={<StudentMarksheet />} />
+            <Route path="/AdminStuMarksheet" element={<AdminStuMarksheet />} />
+            <Route path="/home" element={<StudentPageDashboard />} />
 
-          {/* Teacher Dashboard Routes */}
-          <Route path="/TeacherDasboard" element={<TeacherDasboard />} />
-          <Route path="/TeacherDasboardsike" element={<TeacherDashboardside />} />
-          <Route path="/TeacherSubjectManager" element={<TeacherSubjectManager />} />
-          <Route path="/teacherDasboradAttendance" element={<TeacherDasboardAttendance />} />
-          <Route path="/teacherMarksEntryPage" element={<TeacherMarksEntry />} />
-          <Route path="/TeacherDasTable" element ={<TeacherDasTablePage/>}/>
-          <Route path="/TeacherDasStudent" element={<TeacherDasStudent/>}/>
+            {/* Teacher Dashboard Routes */}
+            <Route path="/TeacherDasboard" element={<TeacherDasboard />} />
+            <Route
+              path="/TeacherDasboardsike"
+              element={<TeacherDashboardside />}
+            />
+            <Route
+              path="/TeacherSubjectManager"
+              element={<TeacherSubjectManager />}
+            />
+            <Route
+              path="/teacherDasboradAttendance"
+              element={<TeacherDasboardAttendance />}
+            />
+            <Route
+              path="/teacherMarksEntryPage"
+              element={<TeacherMarksEntry />}
+            />
+            <Route path="/TeacherDasTable" element={<TeacherDasTablePage />} />
+            <Route path="/TeacherDasStudent" element={<TeacherDasStudent />} />
+            <Route path="/TeacherProfile/:id" element={<TeacherProfile />} />
 
+            {/* card data Route */}
+            <Route path="/TotalFeecard" element={<TotalFeecard />} />
+            <Route path="/BdayStudent" element={<BdayStudents />} />
+            <Route path="/TeacherBirthday" element={<TeacherBirthday />} />
 
-           {/* card data Route */}
-            <Route path="/TotalFeecard" element={<TotalFeecard/>}/>
-            <Route path="/BdayStudent" element={<BdayStudents/>}/>
-            <Route path="/TeacherBirthday" element={<TeacherBirthday/>}/>
- 
-
-          {/* Fallback Route */}
-          <Route path="*" element={<h1>404 Not Found</h1>} />
-         
-        </Routes>
-         </AuthProvider>
+            {/* Fallback Route */}
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+          </Routes>
+        </AuthProvider>
       </Routers>
     </>
   );

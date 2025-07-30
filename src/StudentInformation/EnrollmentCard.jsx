@@ -5,7 +5,7 @@ import StudentInfoTabs from "./StudentInfoTabs";
 import StudentDashboard from "./StudentDashboard";
 import Network from "../Application/Network";
 import { AuthContext } from "../auth/AuthProvider";
-
+import LoadingPage from "../CommonFile/LoadingPage";
 const EnrollmentCard = () => {
   const [data, setData] = useState(null); 
      const { user } = useContext(AuthContext);
@@ -22,7 +22,7 @@ const EnrollmentCard = () => {
       });
   }, []);
 
-  if (!data) return <Typography>Loading...</Typography>;
+  if (!data) return <Typography><LoadingPage/></Typography>;
 
   return (
     <Box

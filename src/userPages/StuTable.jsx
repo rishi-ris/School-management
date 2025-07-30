@@ -11,7 +11,7 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
   const gotoTCpage = (id) => navigate(`/tcPage/${id}`);
 const gotoMarksheetPage = (id) => {
   console.log("Navigating to marksheet for student ID:", id);
-  navigate("/studentMarksheet", { state: { studentId: id } });
+  navigate("/AdminStuMarksheet", { state: { studentId: id } });
 }
 
   if (!Array.isArray(students) || students.length === 0) {

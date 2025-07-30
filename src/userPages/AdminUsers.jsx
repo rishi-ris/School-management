@@ -30,6 +30,7 @@ import {
 } from "@mui/icons-material";
 import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
+import LoadingPage from "../CommonFile/LoadingPage";
 
 const StyledCard = styled(Card)(({ bgcolor }) => ({
   backgroundColor: bgcolor,
@@ -146,7 +147,7 @@ const AdminUsers = () => {
       .catch((e) => console.error("Failed to load dashboard stats", e));
   }, []);
 
-  if (!stats) return <Typography>Loading dashboard...</Typography>;
+  if (!stats) return <Typography><LoadingPage/></Typography>;
 
   return (
     <Box>
