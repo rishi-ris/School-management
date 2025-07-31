@@ -15,7 +15,7 @@ const StudentPageDashboard = () => {
           top: '55%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          opacity: 0.07,
+          opacity: 0.15,
           zIndex: 0,
           pointerEvents: 'none',
           userSelect: 'none',

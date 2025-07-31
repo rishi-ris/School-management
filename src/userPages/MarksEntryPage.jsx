@@ -133,18 +133,46 @@ const MarksEntryPage = () => {
     <Box>
       <Sidekick />
 
-      <Container maxWidth="lg" sx={{mt: "80px"}}>
-        
+      <Container maxWidth="lg" sx={{ mt: "80px" }}>
         <Typography variant="h4" gutterBottom mt={2}>
           Enter Student Marks
         </Typography>
 
         <Paper elevation={3} sx={{ p: 3, width: "65%" }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={3} sx={{ width: "150px" }}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{
+                width: "150px",
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  backgroundColor: "#f5f5f5", // light hover background
+                  borderRadius: "8px", // optional rounded corners
+                  cursor: "pointer", // show pointer cursor
+                  transform: "scale(1.03)",
+                },
+              }}
+            >
               <ClassDropDown onSelect={handleClassSelect} />
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  backgroundColor: "#f5f5f5", // light hover background
+                  borderRadius: "8px", // optional rounded corners
+                  cursor: "pointer", // show pointer cursor
+                  transform: "scale(1.03)",
+                },
+              }}
+            >
               <Select
                 fullWidth
                 value={selectedStudent}
@@ -162,7 +190,21 @@ const MarksEntryPage = () => {
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  backgroundColor: "#f5f5f5", // light hover background
+                  borderRadius: "8px", // optional rounded corners
+                  cursor: "pointer", // show pointer cursor
+                  transform: "scale(1.03)",
+                },
+              }}
+            >
               <Select
                 fullWidth
                 value={selectedYear}
@@ -179,7 +221,20 @@ const MarksEntryPage = () => {
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  backgroundColor: "#f5f5f5", // light hover background
+                  borderRadius: "8px", // optional rounded corners
+                  cursor: "pointer", // show pointer cursor
+                },
+              }}
+            >
               <TextField
                 label="Roll Number"
                 fullWidth
@@ -206,7 +261,16 @@ const MarksEntryPage = () => {
                     </Typography>
 
                     <Grid container spacing={2}>
-                      <Grid item xs={6}>
+                      <Grid
+                        item
+                        xs={6}
+                        sx={{
+                          transition: "all 0.3s ease-in-out",
+                          "&:hover": {
+                            backgroundColor: "#f5f5f5",
+                          },
+                        }}
+                      >
                         <TextField
                           label="Total Theory Marks"
                           type="number"
@@ -215,7 +279,16 @@ const MarksEntryPage = () => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid
+                        item
+                        xs={6}
+                        sx={{
+                          transition: "all 0.3s ease-in-out",
+                          "&:hover": {
+                            backgroundColor: "#f5f5f5",
+                          },
+                        }}
+                      >
                         <TextField
                           label="Passing Theory Marks"
                           type="number"
@@ -224,7 +297,19 @@ const MarksEntryPage = () => {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid
+                        item
+                        xs={12}
+                        sx={{
+                          transition: "all 0.3s ease-in-out",
+                          "&:hover": {
+                            backgroundColor: "#f5f5f5", // light hover background
+                            borderRadius: "8px", // optional rounded corners
+                            cursor: "pointer", // show pointer cursor
+                            transform: "scale(1.03)",
+                          },
+                        }}
+                      >
                         <TextField
                           label="Obtained Theory Marks"
                           type="number"
@@ -256,7 +341,16 @@ const MarksEntryPage = () => {
 
                     {sub.hasInternal && (
                       <Grid container spacing={2} mt={1}>
-                        <Grid item xs={6}>
+                        <Grid
+                          item
+                          xs={6}
+                          sx={{
+                            transition: "all 0.3s ease-in-out",
+                            "&:hover": {
+                              backgroundColor: "#f5f5f5",
+                            },
+                          }}
+                        >
                           <TextField
                             label="Total Internal Marks"
                             type="number"
@@ -265,7 +359,16 @@ const MarksEntryPage = () => {
                             disabled
                           />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid
+                          item
+                          xs={6}
+                          sx={{
+                            transition: "all 0.3s ease-in-out",
+                            "&:hover": {
+                              backgroundColor: "#f5f5f5",
+                            },
+                          }}
+                        >
                           <TextField
                             label="Passing Internal Marks"
                             type="number"
@@ -274,7 +377,19 @@ const MarksEntryPage = () => {
                             disabled
                           />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid
+                          item
+                          xs={12}
+                          sx={{
+                            transition: "all 0.3s ease-in-out",
+                            "&:hover": {
+                              backgroundColor: "#f5f5f5", // light hover background
+                              borderRadius: "8px", // optional rounded corners
+                              cursor: "pointer", // show pointer cursor
+                              transform: "scale(1.03)",
+                            },
+                          }}
+                        >
                           <TextField
                             label="Obtained Internal Marks"
                             type="number"
@@ -322,7 +437,7 @@ const MarksEntryPage = () => {
                 subjectMarks.length === 0 ||
                 isAnyInvalid
               }
-              sx={{backgroundColor: "var(--button-bg-color)",}}
+              sx={{ backgroundColor: "var(--button-bg-color)" }}
             >
               Submit Marks
             </Button>

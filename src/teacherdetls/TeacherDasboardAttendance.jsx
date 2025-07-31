@@ -107,10 +107,18 @@ const TeacherDasboardAttendance = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell><strong>ID</strong></TableCell>
-                      <TableCell><strong>Name</strong></TableCell>
-                      <TableCell><strong>Contact</strong></TableCell>
-                      <TableCell><strong>Attendance</strong></TableCell>
+                      <TableCell>
+                        <strong>ID</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Name</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Contact</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Attendance</strong>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -152,7 +160,12 @@ const TeacherDasboardAttendance = () => {
                 color="primary"
                 fullWidth
                 onClick={handleSubmit}
-                sx={{ mt: 2 }}
+                sx={{
+                  mt: 2,
+                  "&:hover": {
+                    transform: "scale(1.03)", // optional subtle zoom effect
+                  },
+                }}
               >
                 Submit Attendance
               </Button>

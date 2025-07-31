@@ -14,8 +14,6 @@ import Network from "../Application/Network";
 import Sidekick from "../component/Sidekick";
 import { useTheme, useMediaQuery } from "@mui/material";
 
-
-
 const initialFormState = {
   username: "",
   password: "",
@@ -120,70 +118,68 @@ const AddNewEmpPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  
-// 👇 Inside your component
-const theme = useTheme();
-const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // 👇 Inside your component
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleSubmit = async () => {
-  if (!validate()) return;
+    if (!validate()) return;
 
-  const payload = {
-    username: form.username,
-    password: form.password,
-    role: {
-      roleId: form.roleId?.roleId || form.roleId,
-    },
-    gender: form.gender,
-    firstName: form.firstName,
-    lastName: form.lastName,
-    contactNumber: form.contactNumber,
-    dOB: formatDate(form.dOB),
-    address: form.address,
-    city: form.city,
-    state: form.state,
-    pinCode: form.pinCode,
-    country: form.country,
-    status: form.status,
-    createdBy: "system",
-  };
+    const payload = {
+      username: form.username,
+      password: form.password,
+      role: {
+        roleId: form.roleId?.roleId || form.roleId,
+      },
+      gender: form.gender,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      contactNumber: form.contactNumber,
+      dOB: formatDate(form.dOB),
+      address: form.address,
+      city: form.city,
+      state: form.state,
+      pinCode: form.pinCode,
+      country: form.country,
+      status: form.status,
+      createdBy: "system",
+    };
 
-  try {
-    const response = await Network.addNewUser(payload);
+    try {
+      const response = await Network.addNewUser(payload);
 
-    if (response.status === 200 || response.status === 201) {
+      if (response.status === 200 || response.status === 201) {
+        setSnackbar({
+          open: true,
+          message: "User created successfully!",
+          severity: "success",
+        });
+        setForm(initialFormState);
+        setErrors({});
+      } else {
+        const errorMessage = response.data?.message || "Failed to create user.";
+        setSnackbar({
+          open: true,
+          message: errorMessage,
+          severity: "error",
+        });
+      }
+    } catch (error) {
+      // 🔥 This part changed
+      const backendError = error?.response?.data?.errors?.unique_constraint;
+      const apiMessage =
+        backendError ||
+        error?.response?.data?.message ||
+        error.message ||
+        "API Error occurred.";
+
       setSnackbar({
         open: true,
-        message: "User created successfully!",
-        severity: "success",
-      });
-      setForm(initialFormState);
-      setErrors({});
-    } else {
-      const errorMessage = response.data?.message || "Failed to create user.";
-      setSnackbar({
-        open: true,
-        message: errorMessage,
+        message: apiMessage,
         severity: "error",
       });
     }
-  } catch (error) {
-    // 🔥 This part changed
-    const backendError = error?.response?.data?.errors?.unique_constraint;
-    const apiMessage =
-      backendError ||
-      error?.response?.data?.message ||
-      error.message ||
-      "API Error occurred.";
-
-    setSnackbar({
-      open: true,
-      message: apiMessage,
-      severity: "error",
-    });
-  }
-};
-
+  };
 
   const formFields = [
     { name: "username", label: "Username" },
@@ -207,105 +203,125 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
       <Sidekick />
-     <Box
-  sx={{
-    width: { xs: "95%", sm: "90%", md: "80%", lg: "70%" },
-    margin: "auto",
-    
-    mt: { xs: 8, md: 18 },
-    p: { xs: 2, sm: 3 },
-    borderRadius: 2,
-    boxShadow: 8,
-    backgroundColor: "#eeebebff",
-    animation: `${fadeInUp} 0.8s ease-out`,
-  }}
->
-  <Grid container spacing={2}>
-    {/* Role Dropdown */}
-    <Grid item xs={12} sm={6} sx={{width:'230px'}}>
-     <RoleDropdown
-  onSelect={onRolesSelect}
-  selectedRoleId={form.roleId}
-  excludeRoleIds={[4]} // 👈 Student role excluded
-/>
-
-      {errors.roleId && (
-        <span style={{ color: "red", fontSize: "12px" }}>
-          {errors.roleId}
-        </span>
-      )}
-    </Grid>
-    
-
-    {/* All Form Fields */}
-    {formFields.map(({ name, label, select, options, type }) => {
-      const isDateField = type === "date";
-      const today = new Date().toISOString().split("T")[0];
-
-      return (
-        <Grid item xs={12} sm={6} key={name} sx={{width:'230px'}}>
-          <TextField
-            sx={{ width: "100%" }}
-            fullWidth
-            label={label}
-            name={name}
-            type={isDateField ? "date" : type || "text"}
-            value={form[name]}
-            onChange={handleChange}
-            InputLabelProps={isDateField ? { shrink: true } : {}}
-            select={!!select}
-            error={Boolean(errors[name])}
-            helperText={errors[name]}
-            inputProps={isDateField ? { max: today } : {}}
-          >
-            {select &&
-              options.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-          </TextField>
-        </Grid>
-      );
-    })}
-
-    {/* Submit Button */}
-    <Grid item xs={12} sx={{ textAlign: "center" }}>
-      <Button
-        variant="contained"
-        onClick={handleSubmit}
+      <Box
         sx={{
-          backgroundColor: "var(--button-bg-color)",
-          mb: "10px",
-          height: "50px",
-          width: { xs: "100%", sm: "200px" },
-          fontWeight: "bold",
-          textTransform: "none",
-          "&:hover": {
-            transform: "scale(1.03)",
-          },
+          width: { xs: "95%", sm: "90%", md: "80%", lg: "70%" },
+          margin: "auto",
+
+          mt: { xs: 8, md: 18 },
+          p: { xs: 2, sm: 3 },
+          borderRadius: 2,
+          boxShadow: 8,
+          backgroundColor: "#eeebebff",
+          animation: `${fadeInUp} 0.8s ease-out`,
         }}
       >
-        Add Employee
-      </Button>
-    </Grid>
-  </Grid>
+        <Grid container spacing={2}>
+          {/* Role Dropdown */}
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{
+              width: "230px",
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",
+              },
+            }}
+          >
+            <RoleDropdown
+              onSelect={onRolesSelect}
+              selectedRoleId={form.roleId}
+              excludeRoleIds={[4]} // 👈 Student role excluded
+            />
 
- 
-   {/* Snackbar */}
- <Snackbar
-  open={snackbar.open}
-  autoHideDuration={3000}
-  onClose={() => setSnackbar({ ...snackbar, open: false })}
-  anchorOrigin={{
-    vertical: isMobile ? "center" : "top",  // 👈 mobile = center, else top
-    horizontal: "center",
-  }}
->
-  <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
-</Snackbar>
-</Box>
+            {errors.roleId && (
+              <span style={{ color: "red", fontSize: "12px" }}>
+                {errors.roleId}
+              </span>
+            )}
+          </Grid>
 
+          {/* All Form Fields */}
+          {formFields.map(({ name, label, select, options, type }) => {
+            const isDateField = type === "date";
+            const today = new Date().toISOString().split("T")[0];
+
+            return (
+              <Grid item xs={12} sm={6} key={name} sx={{ width: "230px" }}>
+                <TextField
+                  sx={{
+                    width: "100%",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                      backgroundColor: "#f5f5f5", // light hover background
+                      borderRadius: "8px", // optional rounded corners
+                      cursor: "pointer", // show pointer cursor
+                      transform: "scale(1.03)",
+                    },
+                  }}
+                  fullWidth
+                  label={label}
+                  name={name}
+                  type={isDateField ? "date" : type || "text"}
+                  value={form[name]}
+                  onChange={handleChange}
+                  InputLabelProps={isDateField ? { shrink: true } : {}}
+                  select={!!select}
+                  error={Boolean(errors[name])}
+                  helperText={errors[name]}
+                  inputProps={isDateField ? { max: today } : {}}
+                >
+                  {select &&
+                    options.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+            );
+          })}
+
+          {/* Submit Button */}
+          <Grid item xs={12} sx={{ textAlign: "center" }}>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{
+                backgroundColor: "var(--button-bg-color)",
+                mb: "10px",
+                height: "50px",
+                width: { xs: "100%", sm: "200px" },
+                fontWeight: "bold",
+                textTransform: "none",
+                "&:hover": {
+                  transform: "scale(1.03)",
+                },
+              }}
+            >
+              Add Employee
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* Snackbar */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{
+            vertical: isMobile ? "center" : "top", // 👈 mobile = center, else top
+            horizontal: "center",
+          }}
+        >
+          <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+        </Snackbar>
+      </Box>
     </>
   );
 };

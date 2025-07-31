@@ -12,25 +12,45 @@ import {
 } from "@mui/material";
 
 const classOptions = [
-  "1st", "2nd", "3rd", "4th", "5th",
-  "6th", "7th", "8th", "9th", "10th",
+  "1st",
+  "2nd",
+  "3rd",
+  "4th",
+  "5th",
+  "6th",
+  "7th",
+  "8th",
+  "9th",
+  "10th",
 ];
 
 const studentNames = ["Rashi", "Rishi", "Vishal", "Shainu", "Prachi"];
 
 const numericFields = [
-  "fatherPhone", "motherPhone", "guardianPhone",
-  "fatherAadharNum", "motherAadharNum", "guardianAadharNum",
+  "fatherPhone",
+  "motherPhone",
+  "guardianPhone",
+  "fatherAadharNum",
+  "motherAadharNum",
+  "guardianAadharNum",
 ];
 
 const textOnlyFields = [
-  "fatherName", "fatherEducation", "fatherOccupation",
-  "motherName", "motherEducation", "motherOccupation",
-  "guardianName", "guardianEducation", "guardianOccupation",
+  "fatherName",
+  "fatherEducation",
+  "fatherOccupation",
+  "motherName",
+  "motherEducation",
+  "motherOccupation",
+  "guardianName",
+  "guardianEducation",
+  "guardianOccupation",
 ];
 
 const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
-  const [showSiblingFields, setShowSiblingFields] = useState(data.isSibling || false);
+  const [showSiblingFields, setShowSiblingFields] = useState(
+    data.isSibling || false
+  );
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -92,7 +112,9 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
       <TextField
         fullWidth
         variant="outlined"
-        label={field.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
+        label={field
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (str) => str.toUpperCase())}
         name={field}
         value={data[field] || ""}
         onChange={handleInputChange}
@@ -100,7 +122,20 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
         helperText={errors[`family_${field}`] || ""}
         inputProps={{
           inputMode: numericFields.includes(field) ? "numeric" : "text",
-          maxLength: field.includes("Aadhar") ? 12 : field.includes("Phone") ? 10 : 50,
+          maxLength: field.includes("Aadhar")
+            ? 12
+            : field.includes("Phone")
+            ? 10
+            : 50,
+        }}
+        sx={{
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            backgroundColor: "#f5f5f5", // light hover background
+            borderRadius: "8px", // optional rounded corners
+            cursor: "pointer", // show pointer cursor
+            transform: "scale(1.03)",
+          },
         }}
       />
     </Grid>
@@ -108,39 +143,58 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
 
   return (
     <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 2 }}>
-      <Typography variant="h6" gutterBottom>Family Details</Typography>
+      <Typography variant="h6" gutterBottom>
+        Family Details
+      </Typography>
       <Divider sx={{ mb: 3 }} />
 
       {/* Father Section */}
       <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
-        <Typography variant="subtitle1" fontWeight={600} gutterBottom>Father Details</Typography>
+        <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+          Father Details
+        </Typography>
         <Grid container spacing={3}>
           {[
-            "fatherName", "fatherPhone","fatherOccupation", "fatherEmail",
-            "fatherAadharNum", "fatherEducation", 
+            "fatherName",
+            "fatherPhone",
+            "fatherOccupation",
+            "fatherEmail",
+            "fatherAadharNum",
+            "fatherEducation",
           ].map(renderTextField)}
         </Grid>
       </Paper>
 
       {/* Mother Section */}
       <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
-        <Typography variant="subtitle1" fontWeight={600} gutterBottom>Mother Details</Typography>
+        <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+          Mother Details
+        </Typography>
         <Grid container spacing={3}>
           {[
-            "motherName", "motherPhone",  "motherOccupation",
+            "motherName",
+            "motherPhone",
+            "motherOccupation",
             "motherEmail",
-            "motherAadharNum", "motherEducation", 
+            "motherAadharNum",
+            "motherEducation",
           ].map(renderTextField)}
         </Grid>
       </Paper>
 
       {/* Guardian Section */}
       <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
-        <Typography variant="subtitle1" fontWeight={600} gutterBottom>Guardian Details</Typography>
+        <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+          Guardian Details
+        </Typography>
         <Grid container spacing={3}>
           {[
-            "guardianName", "guardianPhone", "guardianEmail",
-            "guardianAadharNum", "guardianEducation", "guardianOccupation",
+            "guardianName",
+            "guardianPhone",
+            "guardianEmail",
+            "guardianAadharNum",
+            "guardianEducation",
+            "guardianOccupation",
           ].map(renderTextField)}
         </Grid>
       </Paper>
@@ -171,10 +225,21 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
                 name="siblingClass"
                 value={data.siblingClass || ""}
                 onChange={handleInputChange}
-                sx={{ width: 200 }}
+                sx={{
+                  width: 200,
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: "#f5f5f5", // light hover background
+                    borderRadius: "8px", // optional rounded corners
+                    cursor: "pointer", // show pointer cursor
+                    transform: "scale(1.03)",
+                  },
+                }}
               >
                 {classOptions.map((cls) => (
-                  <MenuItem key={cls} value={cls}>{cls}</MenuItem>
+                  <MenuItem key={cls} value={cls}>
+                    {cls}
+                  </MenuItem>
                 ))}
               </TextField>
 
@@ -185,10 +250,21 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
                 name="siblingName"
                 value={data.siblingName || ""}
                 onChange={handleInputChange}
-                sx={{ width: 200 }}
+                sx={{
+                  width: 200,
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: "#f5f5f5", // light hover background
+                    borderRadius: "8px", // optional rounded corners
+                    cursor: "pointer", // show pointer cursor
+                    transform: "scale(1.03)",
+                  },
+                }}
               >
                 {studentNames.map((name) => (
-                  <MenuItem key={name} value={name}>{name}</MenuItem>
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
                 ))}
               </TextField>
             </Box>

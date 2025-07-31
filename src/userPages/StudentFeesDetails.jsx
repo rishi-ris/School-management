@@ -7,6 +7,7 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Tooltip ,
   Paper,
   Button,
   Snackbar,
@@ -189,7 +190,7 @@ const StudentFeesDetails = ({ student }) => {
                 <TableRow>
                   <TableCell><strong>Due</strong></TableCell>
                   <TableCell
-                    sx={{ color: due > 0 ? "red" : "green", fontWeight: 600 }}
+                    sx={{ color: due > 0 ? "red" : "red", fontWeight: 600 }}
                   >
                     ₹{normalizedStudent.dueFees}
                   </TableCell>
@@ -211,21 +212,31 @@ const StudentFeesDetails = ({ student }) => {
 
           {/* Pay Button */}
           <Box textAlign="right" mt={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handlePayClick}
-              disabled={due > 0}
-              sx={{
-                borderRadius: 2,
-                fontWeight: 600,
-                px: 4,
-                py: 1,
-                backgroundColor: "var(--button-bg-color)",
-              }}
-            >
-              Pay Fees
-            </Button>
+            <Tooltip title={normalizedStudent.dueFees <= 0 ? "Fees fully paid" : ""}>
+  <span>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={handlePayClick}
+      disabled={normalizedStudent.dueFees <= 0}
+      sx={{
+        borderRadius: 2,
+        fontWeight: 600,
+        px: 4,
+        py: 1,
+        backgroundColor: "var(--button-bg-color)",
+          transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.03)",
+                },                
+                
+      }}
+    >
+      Pay Fees
+    </Button>
+  </span>
+</Tooltip>
+
           </Box>
         </Box>
       </Paper>

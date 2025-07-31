@@ -142,10 +142,36 @@ const TeacherTimeTablePage = () => {
         </Typography>
 
         <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-          <Button variant="contained" onClick={handleOpen}>
+          <Button
+            variant="contained"
+            onClick={handleOpen}
+            sx={{
+              backgroundColor: "var(--button-bg-color)",
+              height: "55px",
+              fontWeight: "bold",
+              textTransform: "none",
+              "&:hover": {
+                transform: "scale(1.03)", // optional subtle zoom effect
+              },
+            }}
+          >
             Add Timetable
           </Button>
-          <Grid item xs={12} sm={6} sx={{ width: "280px" }}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{
+              width: "280px",
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",
+              },
+            }}
+          >
             <ClassDropDown
               onSelect={handleTimetableClassChange}
               selectedClass={selectedClass}

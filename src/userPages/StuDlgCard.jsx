@@ -28,19 +28,44 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const dialogContentRef = useRef(null);
 
   const requiredCommonFields = [
-    "username", "password", "gender", "rollNumber", "scholarNumber",
-    "firstName", "lastName", "contactNumber", "dob", "address", "city",
-    "state", "pinCode", "country", "status", "feesDiscount", "totalFees"
+    "username",
+    "password",
+    "gender",
+    "rollNumber",
+    "scholarNumber",
+    "firstName",
+    "lastName",
+    "contactNumber",
+    "dob",
+    "address",
+    "city",
+    "state",
+    "pinCode",
+    "country",
+    "status",
+    "feesDiscount",
+    "totalFees",
   ];
 
   const requiredPersonalFields = [
-    "caste", "religion", "nationality", "motherToungue", "apaarId",
-    "registrationNumber", "enrollmentNumber", "prevEduBoard", "prevSchool"
+    "caste",
+    "religion",
+    "nationality",
+    "motherToungue",
+    "apaarId",
+    "registrationNumber",
+    "enrollmentNumber",
+    "prevEduBoard",
+    "prevSchool",
   ];
 
   const requiredFamilyFields = [
-    "fatherName", "fatherOccupation", "fatherPhone",
-    "motherName", "motherOccupation", "motherPhone"
+    "fatherName",
+    "fatherOccupation",
+    "fatherPhone",
+    "motherName",
+    "motherOccupation",
+    "motherPhone",
   ];
 
   useEffect(() => {
@@ -106,7 +131,9 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       const phone = familyData[field];
       const key = `family_${field}`;
       if (phone && !/^[6-9]\d{9}$/.test(phone)) {
-        newErrors[key] = `${beautify(key)} must start with 6-9 and be 10 digits`;
+        newErrors[key] = `${beautify(
+          key
+        )} must start with 6-9 and be 10 digits`;
         missingFields.push(beautify(key));
       }
     });
@@ -233,7 +260,13 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth scroll="paper">
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      scroll="paper"
+    >
       <DialogTitle>
         <Typography
           width={180}
@@ -289,7 +322,13 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
         <Button
           onClick={handleSubmit}
           variant="contained"
-          sx={{ backgroundColor: "var(--button-bg-color)" }}
+          sx={{
+            backgroundColor: "var(--button-bg-color)",
+            transition: "all 0.3s ease-in-out",
+            "&:hover": {
+              transform: "scale(1.03)", // optional subtle zoom effect
+            },
+          }}
         >
           Save
         </Button>

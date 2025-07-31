@@ -26,11 +26,11 @@ import { AuthContext } from "../auth/AuthProvider";
 
 // ✅ Drawer items
 const drawerItems = [
-    {
-    label: "Dashboard",
-    icon: <GridViewOutlinedIcon />,
-    path: "/home",
-  },
+  //   {
+  //   label: "Dashboard",
+  //   icon: <GridViewOutlinedIcon />,
+  //   path: "/home",
+  // },
   {
     label: "Profile",
     icon: <GridViewOutlinedIcon />,

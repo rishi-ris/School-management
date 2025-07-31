@@ -12,7 +12,10 @@ import { useNavigate } from "react-router-dom";
 import UseCommonText from "../CommonFile/UseCommonText";
 const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
   const navigate = useNavigate();
-  console.log("🔍 StudentFeesReceipt component rendered with student:", student);
+  console.log(
+    "🔍 StudentFeesReceipt component rendered with student:",
+    student
+  );
 
   const handlePrint = () => {
     navigate("/paymentReceipt", {
@@ -26,13 +29,12 @@ const StudentFeesReceipt = ({ student, method, onClose, showPrint }) => {
         amountPaid: student.fees,
         paymentMode: method,
         dateTime: new Date().toLocaleString(),
-      }
-    }
-      );
+      },
+    });
   };
-const headerText = UseCommonText ("--headerText");
-const addressText = UseCommonText ("--addressText");
-const contactNumber = UseCommonText ("--contactNumber");
+  const headerText = UseCommonText("--headerText");
+  const addressText = UseCommonText("--addressText");
+  const contactNumber = UseCommonText("--contactNumber");
   return (
     <>
       <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth>
@@ -62,22 +64,22 @@ const contactNumber = UseCommonText ("--contactNumber");
             textAlign="center"
             py={2}
             sx={{
-             backgroundColor: "var(--header-bg-color)",
+              backgroundColor: "var(--header-bg-color)",
               borderTopLeftRadius: 4,
               borderTopRightRadius: 4,
             }}
           >
-             <Typography
-      variant="h5"
-      sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
-    >
-      {headerText}
-    </Typography>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "bold", color: "white", letterSpacing: 1 }}
+            >
+              {headerText}
+            </Typography>
             <Typography
               variant="subtitle2"
               sx={{ color: "#e3f2fd", fontWeight: 500, letterSpacing: 1 }}
             >
-             {addressText}
+              {addressText}
             </Typography>
             <Typography
               variant="body2"
@@ -102,7 +104,7 @@ const contactNumber = UseCommonText ("--contactNumber");
               ml: 2,
               pl: 1,
               color: "white",
-           backgroundColor: "var(--header-bg-color)",
+              backgroundColor: "var(--header-bg-color)",
             }}
           >
             Payment Recipt
@@ -147,13 +149,43 @@ const contactNumber = UseCommonText ("--contactNumber");
 
             {/* Close/Print Buttons */}
             <Box textAlign="center" mt={3} className="no-print">
-              <Button variant="contained" color="primary" onClick={onClose} sx={{ mr: 2, backgroundColor: "var(--button-bg-color)", }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onClose}
+                sx={{
+                
+                  mr: 2,
+                  backgroundColor: "var(--button-bg-color)",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                      fontWeight: '550',
+                    transform: "scale(1.03)", // optional subtle zoom effect
+                  },
+                }}
+              >
                 Close Receipt
               </Button>
               {showPrint && (
-                <Button variant="outlined" color="secondary" onClick={handlePrint}>
-                  Print Receipt
-                </Button>
+                <Button
+  variant="outlined"
+  color="secondary"
+  onClick={handlePrint}
+  sx={{
+    fontWeight: '500',
+    borderRadius: 2,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#f50057', // secondary color dark
+      color: '#fff',
+      fontWeight: 'bold',
+      borderColor: '#f50057',
+    },
+  }}
+>
+  Print Receipt
+</Button>
+
               )}
             </Box>
           </Box>

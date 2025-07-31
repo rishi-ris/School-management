@@ -21,7 +21,7 @@ const TeachersUser = () => {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
 
-  const teacherRoleId = "3"; 
+  const teacherRoleId = "3";
 
   const handleViewProfile = (id) => {
     alert(`Viewing profile of teacher ID: ${id}`);
@@ -32,7 +32,6 @@ const TeachersUser = () => {
     Network.getAllUsersByRoleId(teacherRoleId)
       .then((res) => {
         setTeachers(res);
-     
       })
       .catch((err) => {
         console.error("Error loading teachers:", err);
@@ -57,11 +56,9 @@ const TeachersUser = () => {
           marginTop: "50px",
         }}
       >
-        
-
         <Divider />
 
-        <Table sx={{mt: 3  }}>
+        <Table sx={{ mt: 3 }}>
           <TableHead sx={{ backgroundColor: "var(--header-bg-color)" }}>
             <TableRow>
               <TableCell sx={{ color: "white" }}>Name</TableCell>
@@ -74,25 +71,30 @@ const TeachersUser = () => {
               teachers.map((teacher) => (
                 <TableRow key={teacher.id}>
                   <TableCell>{`${teacher.firstName || ""} ${
-                    teacher.lastName || "" }`}</TableCell>
+                    teacher.lastName || ""
+                  }`}</TableCell>
                   <TableCell>
                     {teacher.phone || teacher.contactNumber || "-"}
                   </TableCell>
                   <TableCell>
-       <Button
-  variant="contained"
-  color="primary"
-  size="small"
-  sx={{
-    m: 0.5,
-    backgroundColor: "var(--button-bg-color)",
-  }}
-   onClick={() => navigate(`/TeacherProfile/${teacher.id}`)}
->
-  View Profile
-</Button>
-
-
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      sx={{
+                        m: 0.5,
+                        backgroundColor: "var(--button-bg-color)",
+                      
+                        fontWeight: "bold",
+                        textTransform: "none",
+                        "&:hover": {
+                          transform: "scale(1.03)", // optional subtle zoom effect
+                        },
+                      }}
+                      onClick={() => navigate(`/TeacherProfile/${teacher.id}`)}
+                    >
+                      View Profile
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))

@@ -164,7 +164,19 @@ const StuCommonDtlDlg = ({
       <Divider sx={{ mb: 2 }} />
 
       <Grid container spacing={2}>
-        <Grid item sx={{ width: "200px" }}>
+        <Grid
+          item
+          sx={{
+            width: "200px",
+            transition: "all 0.3s ease-in-out",
+            "&:hover": {
+              backgroundColor: "#f5f5f5", // light hover background
+              borderRadius: "8px", // optional rounded corners
+              cursor: "pointer", // show pointer cursor
+              transform: "scale(1.03)",
+            },
+          }}
+        >
           <ClassDropDown
             selectedClassId={data?.classId || ""}
             onSelect={handleClassSelect}
@@ -178,7 +190,12 @@ const StuCommonDtlDlg = ({
         </Grid>
 
         {requiredCommonFields.map((field) => (
-          <Grid item key={field}>
+          <Grid item key={field} sx={{transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",}}}>
             {field === "gender" ? (
               <TextField
                 select

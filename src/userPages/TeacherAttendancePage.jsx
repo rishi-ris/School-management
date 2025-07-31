@@ -182,7 +182,10 @@ const TeacherAttendancePage = () => {
                     backgroundColor: "var(--button-bg-color)",
                     fontWeight: 600,
                     fontSize: "1rem",
-                    ":hover": { backgroundColor: "#2e7d32" },
+                    ":hover": {
+                      transform: "scale(1.03)",
+                      backgroundColor: "#2e7d32",
+                    },
                   }}
                 >
                   Submit Attendance

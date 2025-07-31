@@ -185,6 +185,7 @@ const SubjectManager = () => {
                 height: "55px",
                 fontWeight: "bold",
                 textTransform: "none",
+                 transition: "all 0.3s ease-in-out",
                 "&:hover": {
                   transform: "scale(1.03)", // optional subtle zoom effect
                 },

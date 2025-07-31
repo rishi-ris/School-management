@@ -107,10 +107,31 @@ const FeesPage = () => {
             label="Roll Number"
             value={roll}
             onChange={handleRollChange}
+            sx={{
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",
+              },
+            }}
           />
 
           {/* 🎓 Class Dropdown */}
-          <ClassDropDown onSelect={handleClassSelect} />
+          <Box
+            sx={{
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",
+              },
+            }}
+          >
+            <ClassDropDown onSelect={handleClassSelect} />
+          </Box>
 
           {/* 🔍 Search Button */}
           <Button
@@ -120,8 +141,10 @@ const FeesPage = () => {
               mt: 2,
               fontWeight: "bold",
               backgroundColor: "var(--button-bg-color)",
+              transition: "all 0.3s ease-in-out",
               "&:hover": {
                 backgroundColor: "var(--buttonHover-bg-color)",
+                transform: "scale(1.03)",
               },
             }}
             onClick={handleSubmit}

@@ -51,7 +51,8 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
     } else if (textOnlyFields.includes(name)) {
       const textOnly = value.replace(/[^a-zA-Z\s]/g, "");
       if (!textOnly.trim()) {
-        newErrors[name] = "This field is required and must contain only letters";
+        newErrors[name] =
+          "This field is required and must contain only letters";
       } else {
         delete newErrors[name];
       }
@@ -105,7 +106,18 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
 
       <Grid container spacing={2}>
         {/* Caste Dropdown */}
-        <Grid item>
+        <Grid
+          item
+          sx={{
+            transition: "all 0.3s ease-in-out",
+            "&:hover": {
+              backgroundColor: "#f5f5f5", // light hover background
+              borderRadius: "8px", // optional rounded corners
+              cursor: "pointer", // show pointer cursor
+              transform: "scale(1.03)",
+            },
+          }}
+        >
           <TextField
             select
             variant="outlined"
@@ -127,7 +139,19 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
 
         {/* All Form Fields */}
         {fields.map(({ name, label }) => (
-          <Grid item key={name}>
+          <Grid
+            item
+            key={name}
+            sx={{
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",
+              },
+            }}
+          >
             <TextField
               variant="outlined"
               label={label}
@@ -146,7 +170,18 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
         ))}
 
         {/* Medical History Dropdown */}
-        <Grid item>
+        <Grid
+          item
+          sx={{
+            transition: "all 0.3s ease-in-out",
+            "&:hover": {
+              backgroundColor: "#f5f5f5", // light hover background
+              borderRadius: "8px", // optional rounded corners
+              cursor: "pointer", // show pointer cursor
+              transform: "scale(1.03)",
+            },
+          }}
+        >
           <TextField
             select
             variant="outlined"
@@ -168,7 +203,12 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
 
         {/* Disability Type Field (conditional) */}
         {data.isDisable && (
-          <Grid item>
+          <Grid item sx={{transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",}}}>
             <TextField
               variant="outlined"
               label="Disability Type"

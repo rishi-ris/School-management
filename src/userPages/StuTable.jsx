@@ -1,7 +1,15 @@
 import React from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Box, Button, Typography
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box,
+  Button,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -9,18 +17,21 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
   const navigate = useNavigate();
   // const gotoTCpage = () => navigate("/tcPage");
   const gotoTCpage = (id) => navigate(`/tcPage/${id}`);
-const gotoMarksheetPage = (id) => {
-  console.log("Navigating to marksheet for student ID:", id);
-  navigate("/AdminStuMarksheet", { state: { studentId: id } });
-}
+  const gotoMarksheetPage = (id) => {
+    console.log("Navigating to marksheet for student ID:", id);
+    navigate("/AdminStuMarksheet", { state: { studentId: id } });
+  };
 
   if (!Array.isArray(students) || students.length === 0) {
-    return <Typography>No students found.</Typography>;
+    return <Typography sx={{ ml: 9.3 }}>No students found.</Typography>;
   }
 
   return (
     <Box display="flex" justifyContent="center" mt={2}>
-      <TableContainer component={Paper} sx={{ maxWidth: 1250, width: "100%", boxShadow: 3 }}>
+      <TableContainer
+        component={Paper}
+        sx={{ maxWidth: 1250, width: "100%", boxShadow: 3 }}
+      >
         <Table>
           <TableHead sx={{ backgroundColor: "#2c2a3d" }}>
             <TableRow>
@@ -45,13 +56,20 @@ const gotoMarksheetPage = (id) => {
                     size="small"
                     color="success"
                     onClick={() => onEdit(student.studentId)} // Assuming onDetails is passed as a prop
-                    sx={{ mx: 1,backgroundColor: "var(--button-bg-color)", }}
+                    sx={{
+                      mx: 1,
+                      backgroundColor: "var(--button-bg-color)",
+                      transition: "all 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.03)", // optional subtle zoom effect
+                      },
+                    }}
                   >
                     Details
                   </Button>
                   <Button
                     // onClick={gotoTCpage}
-                     onClick={() => gotoTCpage(student.studentId)} 
+                    onClick={() => gotoTCpage(student.studentId)}
                     variant="outlined"
                     size="small"
                     color="info"
@@ -65,13 +83,19 @@ const gotoMarksheetPage = (id) => {
                     color="success"
                     disabled={student.dueFees < 0}
                     onClick={() => payFees(student)}
-                    sx={{backgroundColor: "var(--button-bg-color)",}}
+                    sx={{
+                      backgroundColor: "var(--button-bg-color)",
+                      transition: "all 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.03)", // optional subtle zoom effect
+                      },
+                    }}
                   >
                     Pay Fees
                   </Button>
                   <Button
                     // onClick={gotoTCpage}
-                     onClick={() => gotoMarksheetPage(student.studentId)} 
+                    onClick={() => gotoMarksheetPage(student.studentId)}
                     variant="outlined"
                     size="small"
                     color="info"
@@ -86,7 +110,13 @@ const gotoMarksheetPage = (id) => {
                     size="small"
                     color="success"
                     onClick={() => documentsDetails(student.studentId)}
-                    sx={{backgroundColor: "var(--button-bg-color)",}}
+                    sx={{
+                      backgroundColor: "var(--button-bg-color)",
+                      transition: "all 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.03)", // optional subtle zoom effect
+                      },
+                    }}
                   >
                     Document
                   </Button>

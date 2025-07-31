@@ -113,7 +113,13 @@ const StudentPaymentDlg = ({
           inputProps={{ min: 1, max: due }}
           error={!!error}
           helperText={error}
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#f5f5f5", // light hover background
+                borderRadius: "8px", // optional rounded corners
+                cursor: "pointer", // show pointer cursor
+                transform: "scale(1.03)",
+              }, }}
         />
 
         {/* Remaining Fee */}

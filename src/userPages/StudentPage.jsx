@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import AddStuButton from "./AddStuButton";
 import StuTable from "./StuTable";
 import StuDlgCard from "./StuDlgCard";
@@ -196,7 +192,22 @@ const StudentPage = () => {
       </Box>
 
       {/* ✅ Class Filter Dropdown with Error */}
-      <Box mt={3} sx={{ width: "220px", ml: 5 }} mx="auto">
+      <Box
+        mt={3}
+         
+        mx="auto"
+      >
+        <Box  sx={{
+          width: "220px",
+          ml: 9.3,
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            backgroundColor: "#f5f5f5", // light hover background
+            borderRadius: "8px", // optional rounded corners
+            cursor: "pointer", // show pointer cursor
+            transform: "scale(1.03)",
+          },
+        }}>
         <ClassDropDown
           selectedClassId={selectedClassId}
           onSelect={(cls) => {
@@ -209,8 +220,9 @@ const StudentPage = () => {
             }
           }}
         />
+        </Box>
         {classError && (
-          <Typography color="error" variant="body2" mt={1} ml={1}>
+          <Typography color="error" variant="body2" mt={1} ml={9.3}>
             Class is required
           </Typography>
         )}
@@ -221,7 +233,7 @@ const StudentPage = () => {
           <CircularProgress size={40} />
         </Box>
       ) : (
-        <Box mt={4}>
+        <Box mt={3}>
           <StuTable
             students={students}
             onEdit={handleDetails}
