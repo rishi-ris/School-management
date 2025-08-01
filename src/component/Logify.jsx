@@ -13,7 +13,6 @@ import LoginIcon from "@mui/icons-material/Login";
 import Network from "../Application/Network";
 import RoleDropdown from "./RoleDropdown";
 import { AuthContext } from "../auth/AuthProvider";
-import UseCommonText from "../CommonFile/UseCommonText";
 
 const Logify = () => {
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ const Logify = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [onRolesSelectChange, setOnRolesSelectChange] = useState("");
-  const headerText = UseCommonText("--headerText");
 
   const onRolesSelect = (roleId) => {
     setOnRolesSelectChange(roleId.roleId);
@@ -63,6 +61,9 @@ const Logify = () => {
         login(response); // Set context
         switch (onRolesSelectChange) {
           case 1:
+            navigate("/SchoolDetailsForm");
+            break;
+            case 2:
             navigate("/adminUser");
             break;
           case 3:
@@ -97,27 +98,8 @@ const Logify = () => {
           height: 75,
           backgroundColor: "var(--header-bg-color)",
           boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.3)",
-          display: "flex",
-          alignItems: "center",
-          // justifyContent: "center",
         }}
-      >
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          color="white"
-          sx={{
-            // flexGrow: 1,
-            textAlign: { xs: "center", sm: "left" },
-            ml: { xs: 0, sm: 5 },
-            letterSpacing: 1,
-            fontSize: { xs: "5.1rem", sm: "2.0rem" },
-          }}
-        >
-          {headerText}
-        </Typography>
-        
-      </Box>
+      />
 
       {/* Login Form */}
       <Container
@@ -134,19 +116,7 @@ const Logify = () => {
           <Typography variant="h5" align="center" gutterBottom>
             Login to Your Account
           </Typography>
-          <Box
-            sx={{
-              transition: "all 0.3s ease-in-out",
-              "&:hover": {
-                backgroundColor: "#f5f5f5", // light hover background
-                borderRadius: "8px", // optional rounded corners
-                cursor: "pointer", // show pointer cursor
-                transform: "scale(1.03)",
-              },
-            }}
-          >
-            <RoleDropdown onSelect={onRolesSelect} />
-          </Box>
+          <RoleDropdown onSelect={onRolesSelect} />
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
             <TextField
               fullWidth
@@ -154,15 +124,6 @@ const Logify = () => {
               label="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              sx={{
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  backgroundColor: "#f5f5f5", // light hover background
-                  borderRadius: "8px", // optional rounded corners
-                  cursor: "pointer", // show pointer cursor
-                  transform: "scale(1.03)",
-                },
-              }}
             />
             <TextField
               fullWidth
@@ -171,15 +132,6 @@ const Logify = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              sx={{
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  backgroundColor: "#f5f5f5", // light hover background
-                  borderRadius: "8px", // optional rounded corners
-                  cursor: "pointer", // show pointer cursor
-                  transform: "scale(1.03)",
-                },
-              }}
             />
             <Box display="flex" justifyContent="flex-end" mt={1}>
               <Link href="#" underline="hover">
@@ -196,10 +148,6 @@ const Logify = () => {
                 py: 1.5,
                 borderRadius: 3,
                 backgroundColor: "var(--button-bg-color)",
-                textTransform: "none",
-                "&:hover": {
-                  transform: "scale(1.03)",
-                },
               }}
             >
               Login

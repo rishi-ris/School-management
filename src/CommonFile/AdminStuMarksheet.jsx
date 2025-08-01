@@ -26,18 +26,21 @@ const StudentMarksheet = () => {
   const contactNumber = UseCommonText("--contactNumber");
   const schoolBoardAddress = UseCommonText("--schoolBoardAddress");
   const [data, setData] = useState(null);
+ const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     Network.getStudentMarksheet(studentId)
       .then((res) => {
         setData(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load marksheet0:", err);
+         setIsLoading(false);
       });
   }, []);
 
-  if (!data) return <Typography><LoadingPage /></Typography>;
+  if (isLoading) return <Typography><LoadingPage /></Typography>;
 
   const { student, overallPass, subjectResults } = data;
 

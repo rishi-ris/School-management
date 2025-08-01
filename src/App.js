@@ -40,6 +40,8 @@ import TeacherBirthday from "./Carddata/BdayTeacher";
 import AdminStuMarksheet from "./CommonFile/AdminStuMarksheet";
 import StudentPageDashboard from "./StudentInformation/StudentPageDashboard";
 import TeacherProfile from "./userPages/TeacherProfile";
+import AddClassPage from "./userPages/AddClassPage";
+import SchoolDetailsForm from "./SuperAdmin/SchoolDetailForm";
 function App() {
   return (
     <>
@@ -61,6 +63,7 @@ function App() {
             <Route path="/timetable" element={<TimeTablePage />} />
             <Route path="/subjectManager" element={<SubjectManager />} />
             <Route path="/marksEntryPage" element={<MarksEntryPage />} />
+            <Route path="/addclassPage" element={<AddClassPage/>} />
             <Route
               path="/teacherAttendancePage"
               element={<TeacherAttendancePage />}
@@ -73,6 +76,7 @@ function App() {
             <Route path="/studentMarksheet" element={<StudentMarksheet />} />
             <Route path="/AdminStuMarksheet" element={<AdminStuMarksheet />} />
             <Route path="/home" element={<StudentPageDashboard />} />
+            <Route path="/SchoolDetailsForm" element={<SchoolDetailsForm/>}/>
 
             {/* Teacher Dashboard Routes */}
             <Route path="/TeacherDasboard" element={<TeacherDasboard />} />

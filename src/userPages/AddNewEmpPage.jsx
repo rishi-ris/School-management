@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Grid,
   TextField,
@@ -13,6 +13,7 @@ import RoleDropdown from "../component/RoleDropdown";
 import Network from "../Application/Network";
 import Sidekick from "../component/Sidekick";
 import { useTheme, useMediaQuery } from "@mui/material";
+import { AuthContext } from "../auth/AuthProvider";
 
 const initialFormState = {
   username: "",
@@ -42,7 +43,11 @@ const fadeInUp = keyframes`
   }
 `;
 
-const AddNewEmpPage = () => {
+const AddNewEmpPage = (schoolResponse) => {
+  const {user} = useContext(AuthContext);
+  console.log('user', user.data.data.id);
+  console.log('*schoolResponse*', schoolResponse.schoolRespose
+);
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
@@ -137,12 +142,13 @@ const AddNewEmpPage = () => {
       contactNumber: form.contactNumber,
       dOB: formatDate(form.dOB),
       address: form.address,
+      schoolId: schoolResponse.schoolRespose.id ? schoolResponse.schoolRespose.id : user.data.data.schoolId, //Please add from user response
       city: form.city,
       state: form.state,
       pinCode: form.pinCode,
       country: form.country,
       status: form.status,
-      createdBy: "system",
+      createdBy: user.data.data.id,
     };
 
     try {

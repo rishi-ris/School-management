@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   AppBar,
@@ -26,6 +27,8 @@ import {
   LogoutOutlined as LogoutOutlinedIcon,
   GridViewOutlined as GridViewOutlinedIcon,
   CurrencyRupeeOutlined as CurrencyRupeeOutlinedIcon,
+   
+  ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 
 // Drawer Items
@@ -75,6 +78,11 @@ const drawerItems = [
     icon: <CalendarMonthOutlinedIcon />,
     path: "/timetable",
   },
+    {
+    label: "Add Class",
+    icon: <CalendarMonthOutlinedIcon />,
+    path: "/addclassPage",
+  },
   // Uncomment to enable more items
   // {
   //   label: "teacherdetls",
@@ -102,7 +110,8 @@ const Sidekick = () => {
         position="fixed"
         sx={{ backgroundColor: "var(--header-bg-color)" }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{flexDirection: "row", display: "flex", alignItems: "center"}}>
           <IconButton
             edge="start"
             color="inherit"
@@ -114,7 +123,12 @@ const Sidekick = () => {
           <Typography variant="h6" fontWeight={600}>
             Admin Panel
           </Typography>
+          </Box>
+           <IconButton onClick={() => navigate(-1)}>
+        <ArrowBackIcon />
+      </IconButton>
         </Toolbar>
+        
       </AppBar>
 
       {/* Drawer */}

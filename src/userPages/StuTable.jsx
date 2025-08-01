@@ -27,7 +27,7 @@ const StuTable = ({ students, onEdit, documentsDetails, payFees }) => {
   }
 
   return (
-    <Box display="flex" justifyContent="center" mt={2}>
+    <Box display="flex" justifyContent="center"  mt={2}>
       <TableContainer
         component={Paper}
         sx={{ maxWidth: 1250, width: "100%", boxShadow: 3 }}

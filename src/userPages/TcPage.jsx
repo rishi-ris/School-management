@@ -14,9 +14,11 @@ import {
 import UseCommonText from "../CommonFile/UseCommonText";
 import LoadingPage from "../CommonFile/LoadingPage"; // Loading component
 import Network from "../Application/Network"; // API handler
+import Sidekick from "../component/Sidekick";
 
 const TcPage = () => {
   const [student, setStudent] = useState(null); // Student data state
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams(); // Extract student ID from URL
 
   // Fetch common text content from reusable source
@@ -29,13 +31,18 @@ const TcPage = () => {
   // Fetch student details when component mounts
   useEffect(() => {
     Network.getStudentDetails(id)
-      .then((data) => setStudent(data))
+      .then((data) => {
+        setStudent(data);
+        setIsLoading(false);
+      })
       .catch((error) => console.error("Error fetching student details", error));
   }, [id]);
 
-  if (!student) return <Typography><LoadingPage /></Typography>; // Show loading until data fetch completes
+  if (isLoading) return <Typography><LoadingPage /></Typography>; // Show loading until data fetch completes
 
   return (
+    <Box>
+      <Sidekick/>
     <Paper
       elevation={6}
       sx={{
@@ -172,6 +179,7 @@ const TcPage = () => {
         </Grid>
       </Grid>
     </Paper>
+    </Box>
   );
 };
 

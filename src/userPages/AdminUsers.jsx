@@ -45,13 +45,12 @@ const StyledCard = styled(Card)(({ bgcolor }) => ({
   transition: "transform 0.4s ease, box-shadow 0.4s ease",
   transformStyle: "preserve-3d",
   "&:hover": {
-    transform: "rotateX(3deg) rotateY(3deg) scale(1.03)", 
-    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.3)",           
-    backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.1))",
+    transform: "rotateX(3deg) rotateY(3deg) scale(1.03)",
+    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.3)",
+    backgroundImage:
+      "linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.1))",
   },
 }));
-
-
 
 const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
   return (
@@ -74,50 +73,70 @@ const Dashboard = ({ stats, navigate }) => {
       label: "Today's Fees Collected",
       bgcolor: "#26a69a",
       icon: <Payment />,
-      onClick: () => navigate("/fees-collected", { state: stats.totalFeesCollectedToday.transactions })
+      onClick: () =>
+        navigate("/fees-collected", {
+          state: stats.totalFeesCollectedToday.transactions,
+        }),
     },
     {
       count: stats.totalPendingFees.amount,
       label: "Pending Fees",
       bgcolor: "#fbc02d",
       icon: <Payment />,
-      onClick: () => navigate("/TotalFeecard", { state: stats.totalPendingFees})
+      onClick: () =>
+        navigate("/TotalFeecard", {
+          state: stats.totalPendingFees,
+        }),
     },
     {
       count: stats.totalStudents.count,
       label: "Total Students",
       bgcolor: "#ef5350",
       icon: <School />,
-      onClick: () => navigate("/students", { state: stats.totalStudents.ids })
+      onClick: () =>
+        navigate("/students", {
+          state: stats.totalStudents.ids,
+        }),
     },
     {
       count: stats.totalTeachers.count,
       label: "Total Teachers",
       bgcolor: "#1e88e5",
       icon: <Group />,
-      onClick: () => navigate("/teachers", { state: stats.totalTeachers.ids })
+      onClick: () =>
+        navigate("/teachers", {
+          state: stats.totalTeachers.ids,
+        }),
     },
     {
       count: stats.todaysAbsentTeachers.count,
       label: "Today's Absent Teachers",
       bgcolor: "#43a047",
       icon: <CalendarToday />,
-      onClick: () => navigate("/absent-teachers", { state: stats.todaysAbsentTeachers.ids })
+      onClick: () =>
+        navigate("/absent-teachers", {
+          state: stats.todaysAbsentTeachers.ids,
+        }),
     },
     {
       count: stats.studentBirthdaysToday.count,
       label: "Student Birthdays",
       bgcolor: "#ab47bc",
       icon: <CalendarToday />,
-      onClick: () => navigate("/BdayStudent", { state: stats.studentBirthdaysToday})
+      onClick: () =>
+        navigate("/BdayStudent", {
+          state: stats.studentBirthdaysToday,
+        }),
     },
-     
     {
-     count: stats.teacherBirthdaysToday.count,
+      count: stats.teacherBirthdaysToday.count,
       label: "Teacher Birthdays",
       bgcolor: "#7e57c2",
       icon: <CalendarToday />,
-      onClick: () => navigate("/TeacherBirthday", { state: stats.teacherBirthdaysToday})
+      onClick: () =>
+        navigate("/TeacherBirthday", {
+          state: stats.teacherBirthdaysToday,
+        }),
     },
   ];
 
@@ -126,9 +145,9 @@ const Dashboard = ({ stats, navigate }) => {
       <Typography variant="h5" mb={3} fontWeight="bold">
         Admin Dashboard
       </Typography>
-      <Grid container spacing={2} >
+      <Grid container spacing={2}>
         {cardData.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index} >
+          <Grid item xs={12} sm={6} md={4} key={index}>
             <DashboardCard {...item} />
           </Grid>
         ))}
@@ -138,21 +157,37 @@ const Dashboard = ({ stats, navigate }) => {
 };
 
 const AdminUsers = () => {
+  // const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
     Network.getDashboardStats()
-      .then(setStats)
-      .catch((e) => console.error("Failed to load dashboard stats", e));
+      .then((data) => {
+        setStats(data);
+        // setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error("Failed to load dashboard stats", e);
+        // setIsLoading(false);
+      });
   }, []);
 
-  if (!stats) return <Typography><LoadingPage/></Typography>;
+  if (!stats)
+    return (
+      <Typography>
+        <LoadingPage />
+      </Typography>
+    );
+
+  if (!stats) {
+    return <Box sx={{ backgroundColor: "black", height: "100vh" }} />;
+  }
 
   return (
     <Box>
       <Sidekick />
-      <Box p={2} sx={{marginTop: "50px"}}>
+      <Box p={2} sx={{ marginTop: "50px" }}>
         <Dashboard stats={stats} navigate={navigate} />
       </Box>
     </Box>

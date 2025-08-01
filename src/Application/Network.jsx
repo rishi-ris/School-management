@@ -424,5 +424,30 @@ export default class Network {
       throw error;
     }
   }
-
+static async getAllSchools() {
+  try {
+    const response = await axios.get(Endpoints.getAllSchools, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching schools:", error);
+    throw error;
+  }
+}
+static async createSchool(data) {
+    try {
+      const response = await axios.post(
+        Endpoints.schoolcreate,  // example: "/schools/createSchool"
+        data,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("⚠ Error creating school:", error);
+      throw error;
+    }
+  }
 }
