@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -21,6 +21,7 @@ import MultiSelClassDropD from "../component/MultiSelClassDropD";
 import Network from "../Application/Network";
 import Sidekick from "../component/Sidekick";
 import ClassDropDown from "../component/ClassDropDown";
+import { AuthContext } from "../auth/AuthProvider";
 
 const SubjectManager = () => {
   const [open, setOpen] = useState(false);
@@ -34,14 +35,16 @@ const SubjectManager = () => {
   const [hasInternal, setHasInternal] = useState(false);
   const [totalInternalMarks, setTotalInternalMarks] = useState("");
   const [passingInternalMarks, setPassingInternalMarks] = useState("");
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
-    // fetchSubjects();
+    console.log('***user****', user.data.data.schoolId)
+    fetchSubjects();
   }, []);
 
   const fetchSubjects = async () => {
     try {
-      const response = await Network.getAllSubjects();
+      const response = await Network.schoolAllSubject(user.data.data.schoolId)
       if (Array.isArray(response.data)) {
         const formatted = response.data.map((subj) => ({
           title: subj.title,
@@ -125,6 +128,7 @@ const SubjectManager = () => {
       passingInternalMarks: hasInternal
         ? parseInt(passingInternalMarks || 0)
         : 0,
+        schoolId: user.data.data.schoolId
     };
 
     try {
@@ -145,7 +149,7 @@ const SubjectManager = () => {
     setSubjects([]);
     if (!classId) return;
     try {
-      const response = await Network.getAllSubjectsByClassId(classId.classId);
+      const response = await Network.getAllSubjectsByClassId(classId.classId, user.data.data.schoolId);
       if (Array.isArray(response.data)) {
         const formatted = response.data.map((subj) => ({
           title: subj.title,

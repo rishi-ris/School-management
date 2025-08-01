@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -31,6 +31,7 @@ import {
 import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
 import LoadingPage from "../CommonFile/LoadingPage";
+import { AuthContext } from "../auth/AuthProvider";
 
 const StyledCard = styled(Card)(({ bgcolor }) => ({
   backgroundColor: bgcolor,
@@ -67,7 +68,8 @@ const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
 };
 
 const Dashboard = ({ stats, navigate }) => {
-  const cardData = [
+  
+  const cardData = stats ? [
     {
       count: stats.totalFeesCollectedToday.amount,
       label: "Today's Fees Collected",
@@ -138,7 +140,7 @@ const Dashboard = ({ stats, navigate }) => {
           state: stats.teacherBirthdaysToday,
         }),
     },
-  ];
+  ] : [];
 
   return (
     <Container sx={{ py: 4 }}>
@@ -157,30 +159,31 @@ const Dashboard = ({ stats, navigate }) => {
 };
 
 const AdminUsers = () => {
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const {user} = useContext(AuthContext);
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    Network.getDashboardStats()
+    Network.getDashboardStats(user.data.data.schoolId)
       .then((data) => {
         setStats(data);
-        // setIsLoading(false);
+        setIsLoading(false);
       })
       .catch((e) => {
         console.error("Failed to load dashboard stats", e);
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   }, []);
 
-  if (!stats)
+  if (isLoading)
     return (
       <Typography>
         <LoadingPage />
       </Typography>
     );
 
-  if (!stats) {
+  if (isLoading) {
     return <Box sx={{ backgroundColor: "black", height: "100vh" }} />;
   }
 

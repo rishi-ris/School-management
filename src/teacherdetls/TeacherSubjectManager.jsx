@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -21,6 +21,7 @@ import MultiSelClassDropD from "../component/MultiSelClassDropD";
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
 import TeacherDashboardside from "./TeacherDasboardside";
+import { AuthContext } from "../auth/AuthProvider";
 
 const TeacherSubjectManager = () => {
   const [open, setOpen] = useState(false);
@@ -34,6 +35,7 @@ const TeacherSubjectManager = () => {
   const [hasInternal, setHasInternal] = useState(false);
   const [totalInternalMarks, setTotalInternalMarks] = useState("");
   const [passingInternalMarks, setPassingInternalMarks] = useState("");
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     fetchSubjects();
@@ -145,7 +147,7 @@ const TeacherSubjectManager = () => {
     setSubjects([]);
     if (!classId) return;
     try {
-      const response = await Network.getAllSubjectsByClassId(classId.classId);
+      const response = await Network.getAllSubjectsByClassId(classId.classId, user.data.data.schoolId);
       if (Array.isArray(response.data)) {
         const formatted = response.data.map((subj) => ({
           title: subj.title,

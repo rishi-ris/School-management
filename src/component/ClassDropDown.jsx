@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import Network from '../Application/Network';
+import { AuthContext } from '../auth/AuthProvider';
 
 const ClassDropDown = ({ onSelect, selectedClassId }) => {
+  const {user} = useContext(AuthContext);
   const [allClasses, setAllClasses] = useState([]);
   const [localSelectedId, setLocalSelectedId] = useState('');
 
   useEffect(() => {
-    Network.getAllClasses()
+    Network.getAllClasses(user.data.data.schoolId)
       .then((response) => setAllClasses(response.data))
       .catch((err) => console.error('⚠ Error fetching classes', err));
   }, []);

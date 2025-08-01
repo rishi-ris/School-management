@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -14,6 +14,7 @@ import StuCommonDtlDlg from "./StuCommonDtlDlg";
 import StuPersonalDltDlg from "./StuPersonalDltDlg";
 import StuFamilyDltDlg from "./StuFamilyDltDlg";
 import StuDocDlg from "./StuDocDlg";
+import { AuthContext } from "../auth/AuthProvider";
 
 const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const [commonData, setCommonData] = useState({});
@@ -24,6 +25,7 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
   const [selectedClass, setSelectedClass] = useState({});
   const [selectedRole, setSelectedRole] = useState({});
   const [errors, setErrors] = useState({});
+  const { user } = useContext(AuthContext);
 
   const dialogContentRef = useRef(null);
 
@@ -193,7 +195,10 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
       role: {
         roleId: selectedRole?.roleId,
       },
-      createdBy: "admin",
+      school: {
+        schoolId: user.data.data.schoolId,
+      },
+      createdBy: user.data.data.id,
       createdAt: getTimestamp(),
       updatedAt: getTimestamp(),
       fees: [
@@ -207,25 +212,26 @@ const StuDlgCard = ({ open, onClose, onSave, student }) => {
           status: "partial",
           createdAt: getTimestamp(),
           updatedAt: getTimestamp(),
+          createdBy: user.data.data.id,
         },
       ],
       family: [
         {
           ...familyData,
-          createdBy: "admin",
+          createdBy: user.data.data.id,
         },
       ],
       documents: [
         {
           ...documents,
-          createdBy: "admin",
+          createdBy: user.data.data.id,
           createdAt: getTimestamp(),
           updatedAt: getTimestamp(),
         },
       ],
       photos: {
         ...photos,
-        createdBy: "admin",
+        createdBy: user.data.data.id,
         createdAt: getTimestamp(),
         updatedAt: getTimestamp(),
       },

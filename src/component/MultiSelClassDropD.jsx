@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Box,
   Button,
@@ -11,14 +11,16 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Network from '../Application/Network';
+import { AuthContext } from '../auth/AuthProvider';
  
 const MultiSelClassDropD = ({ onSelect, selectedClassIds = [] }) => {
   const [allClasses, setAllClasses] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [tempSelectedIds, setTempSelectedIds] = useState([]);
+  const {user} = useContext(AuthContext);
  
   useEffect(() => {
-    Network.getAllClasses()
+    Network.getAllClasses(user.data.data.schoolId)
       .then((res) => {
         if (Array.isArray(res.data)) {
           setAllClasses(res.data);

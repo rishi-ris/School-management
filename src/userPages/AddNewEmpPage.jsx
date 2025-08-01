@@ -45,9 +45,6 @@ const fadeInUp = keyframes`
 
 const AddNewEmpPage = (schoolResponse) => {
   const {user} = useContext(AuthContext);
-  console.log('user', user.data.data.id);
-  console.log('*schoolResponse*', schoolResponse.schoolRespose
-);
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
@@ -142,7 +139,7 @@ const AddNewEmpPage = (schoolResponse) => {
       contactNumber: form.contactNumber,
       dOB: formatDate(form.dOB),
       address: form.address,
-      schoolId: schoolResponse.schoolRespose.id ? schoolResponse.schoolRespose.id : user.data.data.schoolId, //Please add from user response
+      schoolId: schoolResponse && schoolResponse.schoolRespose && schoolResponse.schoolRespose.id ? schoolResponse.schoolRespose.id : user.data.data.schoolId, //Please add from user response
       city: form.city,
       state: form.state,
       pinCode: form.pinCode,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -11,15 +11,16 @@ import {
 import { useParams } from "react-router-dom";
 import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
+import { AuthContext } from "../auth/AuthProvider";
 
 const TeacherProfile = () => {
   const { id } = useParams();       // URL se teacher id
   const [teacher, setTeacher] = useState(null);
-
+  const {user} = useContext(AuthContext);
   const teacherRoleId = "3"; // Fixed role for teachers
 
   useEffect(() => {
-    Network.getAllUsersByRoleId(teacherRoleId)
+    Network.getAllUsersByRoleId(teacherRoleId, user.data.data.schoolId)
       .then((res) => {
         if (Array.isArray(res)) {
           const selected = res.find((t) => String(t.id) === String(id));

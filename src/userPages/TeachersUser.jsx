@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Table,
   TableBody,
@@ -16,10 +16,12 @@ import { useNavigate } from "react-router-dom";
 import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
 import { Fade } from "@mui/material";
+import { AuthContext } from "../auth/AuthProvider";
 
 const TeachersUser = () => {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
+  const {user} = useContext(AuthContext);
 
   const teacherRoleId = "3";
 
@@ -29,7 +31,7 @@ const TeachersUser = () => {
   };
 
   const fetchTeachers = () => {
-    Network.getAllUsersByRoleId(teacherRoleId)
+    Network.getAllUsersByRoleId(teacherRoleId, user.data.data.schoolId)
       .then((res) => {
         setTeachers(res);
       })

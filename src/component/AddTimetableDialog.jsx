@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClassDropDown from "../component/ClassDropDown";
 import Network from "../Application/Network"; // ⬅️ use your existing API setup
+import { AuthContext } from "../auth/AuthProvider";
 
 const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
 
@@ -34,15 +35,13 @@ const AddTimetableDialog = ({
   handlePeriodChange,
 }) => {
   const [subjects, setSubjects] = useState([]);
+  const {user} = useContext(AuthContext)
 
   useEffect(() => {
+    
     if (open) {
-      Network.getAllSubjects()
-        .then((res) => setSubjects(res?.data || []))
-        .catch((err) => {
-          console.error("Error fetching subjects:", err);
-          setSubjects([]);
-        });
+      
+        console.log('***selectedClass*******', selectedClass)
     }
   }, [open]);
 
@@ -83,7 +82,16 @@ const AddTimetableDialog = ({
 
     onSubmit();
   };
-
+const handleSelectDiaClass = async (cls) => {
+  console.log('***cls****', cls);
+  setSelectedClass(cls)
+  Network.getAllSubjectsByClassId(cls.classId, user.data.data.schoolId)
+        .then((res) => setSubjects(res?.data || []))
+        .catch((err) => {
+          console.error("Error fetching subjects:", err);
+          setSubjects([]);
+        });
+}
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -125,7 +133,7 @@ const AddTimetableDialog = ({
           >
             <Grid item xs={12} sm={6} width={200}>
               <ClassDropDown
-                onSelect={setSelectedClass}
+                onSelect={handleSelectDiaClass}
                 selectedClass={selectedClass?.classId}
               />
             </Grid>
@@ -188,7 +196,7 @@ const AddTimetableDialog = ({
                 <FormControl fullWidth required>
                   <InputLabel>Subject</InputLabel>
                   <Select
-                    value={p.subjectId || ""}
+                    value={subjects || ""}
                     onChange={(e) =>
                       handlePeriodChange(index, "subjectId", e.target.value)
                     }

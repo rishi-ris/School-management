@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   Typography,
@@ -14,10 +14,12 @@ import {
 
 import Network from "../Application/Network";
 import Sidekick from "../component/Sidekick";
+import { AuthContext } from "../auth/AuthProvider";
 
 const TeacherAttendancePage = () => {
   const [teachers, setTeachers] = useState([]);
   const [attendance, setAttendance] = useState({});
+  const {user} = useContext(AuthContext);
 
   const todayDate = new Date().toISOString().split("T")[0];
   const teacherRoleId = "3"; // Replace with actual Teacher role ID
@@ -33,6 +35,7 @@ const TeacherAttendancePage = () => {
     const payload = teachers.map((teacher) => ({
       teacherId: teacher.id,
       date: todayDate,
+      schoolId: user.data.data.schoolId,
       isPresent: attendance[teacher.id] === "present",
     }));
 
@@ -44,7 +47,7 @@ const TeacherAttendancePage = () => {
   };
 
   const loadTeachers = () => {
-    Network.getAllUsersByRoleId(teacherRoleId)
+    Network.getAllUsersByRoleId(teacherRoleId, user.data.data.schoolId)
       .then((res) => {
         setTeachers(res);
 

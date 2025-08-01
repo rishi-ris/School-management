@@ -117,9 +117,9 @@ export default class Network {
   }
 
   //get All classes
-  static async getAllClasses() {
+  static async getAllClasses(schoolId) {
     try {
-      const response = await axios.get(Endpoints.getAllClasses, {
+      const response = await axios.get( `${Endpoints.getAllClasses}/${schoolId}`, {
         headers: { "Content-Type": "application/json" },
       });
 
@@ -294,10 +294,10 @@ export default class Network {
       throw error;
     }
   }
-  static async getAllSubjectsByClassId(classId) {
+  static async getAllSubjectsByClassId(classId, schoolId) {
     try {
       const response = await axios.get(
-        `${Endpoints.getAllSubjectsByClassId}/${classId}`,
+        `${Endpoints.getAllSubjectsBySchool}/${schoolId}/class/${classId}`,
         { headers: { "Content-Type": "application/json" } }
       );
       return response;
@@ -306,6 +306,20 @@ export default class Network {
       throw error;
     }
   }
+
+  static async schoolAllSubject(schoolId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.schoolAllSubject}/${schoolId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠️ Get subjects by class ID error:", error);
+      throw error;
+    }
+  }
+
   static async submitMarks(payload) {
     try {
       const response = await axios.post(`${Endpoints.submitMarks}`, payload, {
@@ -317,10 +331,10 @@ export default class Network {
       throw error;
     }
   }
-  static async getAllDetailsByClass(classId) {
+  static async getAllDetailsByClass(classId, schoolId) {
     try {
       const response = await axios.get(
-        `${Endpoints.getAllDetailsByClass}/${classId}/details`,
+        `${Endpoints.getAllDetailsByClass}/${classId}/details?schoolId=${schoolId}`,
         { headers: { "Content-Type": "application/json" } }
       );
       return response.data;
@@ -329,10 +343,10 @@ export default class Network {
       throw error;
     }
   }
-  static async getAllUsersByRoleId(roleId) {
+  static async getAllUsersByRoleId(roleId, schoolId) {
     try {
       const response = await axios.get(
-        `${Endpoints.getAllUsersByRole}/${roleId}/with-attendance`,
+        `${Endpoints.getSchoolUsers}/${roleId}/schoolId/${schoolId}/with-attendance`,
         { headers: { "Content-Type": "application/json" } }
       );
       return response.data;
@@ -365,12 +379,13 @@ export default class Network {
       throw error;
     }
   }
-  static async getTimeTableByClass(classId) {
-    const today = new Date().toISOString().split("T")[0];
+  static async getTimeTableByClass(classId, schoolId, dayOfWeek) {
+    
     try {
       const response = await axios.get(
-        `${Endpoints.getTimeTableByClass}/${classId}?date=${today}`,
-        { headers: { "Content-Type": "application/json" } }
+        `${Endpoints.getTimeTableByClass}/${classId}`,
+        { headers: { "Content-Type": "application/json" },
+       params: { schoolId, dayOfWeek } }
       );
       return response.data;
     } catch (error) {
@@ -378,10 +393,11 @@ export default class Network {
       throw error;
     }
   }
-  static async getDashboardStats() {
+  static async getDashboardStats(schoolId) {
     try {
       const response = await axios.get(Endpoints.getDashboardStats, {
         headers: { "Content-Type": "application/json" },
+         params: { schoolId: schoolId }
       });
       return response.data;
     } catch (error) {

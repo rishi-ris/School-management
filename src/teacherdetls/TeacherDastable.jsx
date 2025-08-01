@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   Typography,
@@ -24,6 +24,7 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
 import TeacherDasboardside from "../teacherdetls/TeacherDasboardside";
+import { AuthContext } from "../auth/AuthProvider";
 // import AddTimetableDialog from "../component/AddTimetableDialog"; // 👉 dialog moved to separate file
 
 const TeacherDasTable = () => {
@@ -32,6 +33,7 @@ const TeacherDasTable = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
   const [dayOfWeek, setDayOfWeek] = useState("");
+  const {user} = useContext(AuthContext);
   const [periods, setPeriods] = useState([
     { period: 1, startTime: "", endTime: "", subjectId: "", teacherId: "" },
     { period: 2, startTime: "", endTime: "", subjectId: "", teacherId: "" },
@@ -59,7 +61,7 @@ const TeacherDasTable = () => {
   ];
 
   useEffect(() => {
-    Network.getAllUsersByRoleId(3).then(setTeachers).catch(console.error);
+    Network.getAllUsersByRoleId(3, user.data.data.schoolId).then(setTeachers).catch(console.error);
     Network.getAllClasses()
       .then((res) => setSelectedClass(res[0]))
       .catch(console.error);
@@ -67,7 +69,7 @@ const TeacherDasTable = () => {
 
   useEffect(() => {
     if (selectedClass?.classId) {
-      Network.getAllSubjectsByClassId(selectedClass.classId)
+      Network.getAllSubjectsByClassId(selectedClass.classId, user.data.data.schoolId)
         .then((res) => setSubjects(Array.isArray(res.data) ? res.data : res))
         .catch(() => setSubjects([]));
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Container,
   MenuItem,
@@ -16,6 +16,7 @@ import {
 import Network from "../Application/Network";
 import ClassDropDown from "../component/ClassDropDown";
 import TeacherDashboardside from "./TeacherDasboardside";
+import { AuthContext } from "../auth/AuthProvider";
 
 const TeacherMarksEntry = () => {
   const [students, setStudents] = useState([]);
@@ -30,10 +31,11 @@ const TeacherMarksEntry = () => {
   const [selectedYear, setSelectedYear] = useState("");
   const [rollNumber, setRollNumber] = useState("");
   const [subjectMarks, setSubjectMarks] = useState([]);
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     if (selectedClassId) {
-      Network.getAllDetailsByClass(selectedClassId)
+      Network.getAllDetailsByClass(selectedClassId, user.data.data.schoolId)
         .then((res) => {
           setStudents(res.students);
           setSubjects(res.subjects);
