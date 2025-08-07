@@ -65,7 +65,7 @@ const TotalFeecard = () => {
   return (
     <>
       <Sidekick />
-      <Box p={4}>
+      <Box p={4} marginTop={"50px"}>
         <Typography variant="h4" gutterBottom align="center">
           Student Fee Status
         </Typography>

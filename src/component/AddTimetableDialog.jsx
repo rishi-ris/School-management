@@ -16,10 +16,17 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClassDropDown from "../component/ClassDropDown";
-import Network from "../Application/Network"; // ⬅️ use your existing API setup
+import Network from "../Application/Network"; // ⬅ use your existing API setup
 import { AuthContext } from "../auth/AuthProvider";
 
-const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+const days = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+];
 
 const AddTimetableDialog = ({
   open,
@@ -35,13 +42,11 @@ const AddTimetableDialog = ({
   handlePeriodChange,
 }) => {
   const [subjects, setSubjects] = useState([]);
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    
     if (open) {
-      
-        console.log('***selectedClass*******', selectedClass)
+      console.log("selectedClass", selectedClass);
     }
   }, [open]);
 
@@ -82,16 +87,16 @@ const AddTimetableDialog = ({
 
     onSubmit();
   };
-const handleSelectDiaClass = async (cls) => {
-  console.log('***cls****', cls);
-  setSelectedClass(cls)
-  Network.getAllSubjectsByClassId(cls.classId, user.data.data.schoolId)
-        .then((res) => setSubjects(res?.data || []))
-        .catch((err) => {
-          console.error("Error fetching subjects:", err);
-          setSubjects([]);
-        });
-}
+  const handleSelectDiaClass = async (cls) => {
+    console.log("cls*", cls);
+    setSelectedClass(cls);
+    Network.getAllSubjectsByClassId(cls.classId, user.data.data.schoolId)
+      .then((res) => setSubjects(res?.data || []))
+      .catch((err) => {
+        console.error("Error fetching subjects:", err);
+        setSubjects([]);
+      });
+  };
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -196,7 +201,7 @@ const handleSelectDiaClass = async (cls) => {
                 <FormControl fullWidth required>
                   <InputLabel>Subject</InputLabel>
                   <Select
-                    value={subjects || ""}
+                    value={p.subjectId || ""}
                     onChange={(e) =>
                       handlePeriodChange(index, "subjectId", e.target.value)
                     }

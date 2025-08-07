@@ -47,6 +47,10 @@ const textOnlyFields = [
   "guardianOccupation",
 ];
 
+const emailFields = ["fatherEmail", "motherEmail", "guardianEmail"];
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
   const [showSiblingFields, setShowSiblingFields] = useState(
     data.isSibling || false
@@ -101,6 +105,21 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
       onChange({ [name]: textOnly });
     }
 
+    // Email Validation
+    else if (emailFields.includes(name)) {
+      if (!emailRegex.test(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          [`family_${name}`]: "Enter a valid email address",
+        }));
+      } else {
+        const newErrors = { ...errors };
+        delete newErrors[`family_${name}`];
+        setErrors(newErrors);
+      }
+      onChange({ [name]: value });
+    }
+
     // Default
     else {
       onChange({ [name]: val });
@@ -131,9 +150,9 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
         sx={{
           transition: "all 0.3s ease-in-out",
           "&:hover": {
-            backgroundColor: "#f5f5f5", // light hover background
-            borderRadius: "8px", // optional rounded corners
-            cursor: "pointer", // show pointer cursor
+            backgroundColor: "#f5f5f5",
+            borderRadius: "8px",
+            cursor: "pointer",
             transform: "scale(1.03)",
           },
         }}
@@ -229,9 +248,9 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
                   width: 200,
                   transition: "all 0.3s ease-in-out",
                   "&:hover": {
-                    backgroundColor: "#f5f5f5", // light hover background
-                    borderRadius: "8px", // optional rounded corners
-                    cursor: "pointer", // show pointer cursor
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "8px",
+                    cursor: "pointer",
                     transform: "scale(1.03)",
                   },
                 }}
@@ -254,9 +273,9 @@ const StuFamilyDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
                   width: 200,
                   transition: "all 0.3s ease-in-out",
                   "&:hover": {
-                    backgroundColor: "#f5f5f5", // light hover background
-                    borderRadius: "8px", // optional rounded corners
-                    cursor: "pointer", // show pointer cursor
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "8px",
+                    cursor: "pointer",
                     transform: "scale(1.03)",
                   },
                 }}

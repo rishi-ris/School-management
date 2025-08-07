@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -18,7 +18,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import Sidekick from "../component/Sidekick";
-import Network from "../Application/Network"; // ✅ Import Network
+import Network from "../Application/Network";
+import { AuthContext } from "../auth/AuthProvider";
+import ClassLevelDropdown from "../CommonFile/ClassLevelDropdown";
+import SectionDropdown from "../CommonFile/SectionDropdown";
 
 const AddClassPage = () => {
   const [className, setClassName] = useState("");
@@ -27,31 +30,52 @@ const AddClassPage = () => {
   const [schoolList, setSchoolList] = useState([]);
   const [classList, setClassList] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
+  const { user } = useContext(AuthContext);
   const [editData, setEditData] = useState({
     className: "",
     section: "",
     schoolId: "",
   });
 
-  // ✅ Get Schools from backend
+  // ✅ Load school list from backend
   useEffect(() => {
-    Network.getAllSchools()
-      .then((data) => setSchoolList([data])) // wrap in array if single object
+    Network.getAllSchools(user.data.data.schoolId)
+      .then((data) => {
+        const schools = Array.isArray(data) ? data : [data];
+        setSchoolList(schools);
+      })
       .catch((err) => console.error("Failed to load schools:", err));
   }, []);
 
+  // ✅ Add class function
   const handleAddClass = async () => {
-    if (className && section && schoolId) {
-      const newClass = { className, section, schoolId };
+    console.log("className:", className);
+    console.log("section:", section);
+    console.log("schoolId:", schoolId);
+
+    if (
+      className.trim() !== "" &&
+      section.trim() !== "" &&
+      schoolId.toString().trim() !== ""
+    ) {
+      const newClass = {
+        className: className.trim(),
+        section: section.trim(),
+        schoolId: Number(schoolId),
+      };
+
       try {
-        await Network.createClass(newClass); // ✅ API call
+        await Network.AddClasses(newClass);
         setClassList([...classList, newClass]);
         setClassName("");
         setSection("");
         setSchoolId("");
       } catch (error) {
+        console.error("❌ Failed to add class:", error);
         alert("❌ Failed to add class");
       }
+    } else {
+      alert("⚠ Please fill all fields");
     }
   };
 
@@ -81,27 +105,29 @@ const AddClassPage = () => {
           Add New Class
         </Typography>
 
-        <TextField
-          fullWidth
-          label="Class"
-          value={className}
-          onChange={(e) => setClassName(e.target.value)}
-          sx={{ mb: 2 }}
-        />
+        <Box sx={{ mb: 2 }}>
+          <ClassLevelDropdown
+            label="Class"
+            value={className}
+            onChange={(e) => setClassName(e.target.value)}
+            required
+          />
+        </Box>
 
-        <TextField
-          fullWidth
-          label="Section"
-          value={section}
-          onChange={(e) => setSection(e.target.value)}
-          sx={{ mb: 2 }}
-        />
+        <Box sx={{ mb: 2 }}>
+          <SectionDropdown
+            label="Section"
+            value={section}
+            onChange={(e) => setSection(e.target.value)}
+            required
+          />
+        </Box>
 
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>School Id</InputLabel>
+        <FormControl fullWidth sx={{ mb: 2 }} required>
+          <InputLabel>School</InputLabel>
           <Select
             value={schoolId}
-            label="School "
+            label="School"
             onChange={(e) => setSchoolId(e.target.value)}
           >
             {schoolList.map((school) => (
@@ -160,7 +186,7 @@ const AddClassPage = () => {
                       }
                     />
                     <FormControl size="small" sx={{ minWidth: 150 }}>
-                      <InputLabel>School </InputLabel>
+                      <InputLabel>School</InputLabel>
                       <Select
                         value={editData.schoolId}
                         label="School"

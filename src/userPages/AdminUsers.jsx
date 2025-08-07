@@ -56,10 +56,21 @@ const StyledCard = styled(Card)(({ bgcolor }) => ({
 const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
   return (
     <StyledCard bgcolor={bgcolor} onClick={onClick} sx={{ width: "30vh" }}>
-      <CardContent>
-        <Typography variant="h4" fontWeight="bold">
+      <CardContent sx={{ width: "100%" }}>
+        <Box
+          title={count}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
           {count}
-        </Typography>
+        </Box>
         <Typography variant="subtitle1">{label}</Typography>
         <Box mt={1}>{icon}</Box>
       </CardContent>
@@ -68,79 +79,80 @@ const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
 };
 
 const Dashboard = ({ stats, navigate }) => {
-  
-  const cardData = stats ? [
-    {
-      count: stats.totalFeesCollectedToday.amount,
-      label: "Today's Fees Collected",
-      bgcolor: "#26a69a",
-      icon: <Payment />,
-      onClick: () =>
-        navigate("/fees-collected", {
-          state: stats.totalFeesCollectedToday.transactions,
-        }),
-    },
-    {
-      count: stats.totalPendingFees.amount,
-      label: "Pending Fees",
-      bgcolor: "#fbc02d",
-      icon: <Payment />,
-      onClick: () =>
-        navigate("/TotalFeecard", {
-          state: stats.totalPendingFees,
-        }),
-    },
-    {
-      count: stats.totalStudents.count,
-      label: "Total Students",
-      bgcolor: "#ef5350",
-      icon: <School />,
-      onClick: () =>
-        navigate("/students", {
-          state: stats.totalStudents.ids,
-        }),
-    },
-    {
-      count: stats.totalTeachers.count,
-      label: "Total Teachers",
-      bgcolor: "#1e88e5",
-      icon: <Group />,
-      onClick: () =>
-        navigate("/teachers", {
-          state: stats.totalTeachers.ids,
-        }),
-    },
-    {
-      count: stats.todaysAbsentTeachers.count,
-      label: "Today's Absent Teachers",
-      bgcolor: "#43a047",
-      icon: <CalendarToday />,
-      onClick: () =>
-        navigate("/absent-teachers", {
-          state: stats.todaysAbsentTeachers.ids,
-        }),
-    },
-    {
-      count: stats.studentBirthdaysToday.count,
-      label: "Student Birthdays",
-      bgcolor: "#ab47bc",
-      icon: <CalendarToday />,
-      onClick: () =>
-        navigate("/BdayStudent", {
-          state: stats.studentBirthdaysToday,
-        }),
-    },
-    {
-      count: stats.teacherBirthdaysToday.count,
-      label: "Teacher Birthdays",
-      bgcolor: "#7e57c2",
-      icon: <CalendarToday />,
-      onClick: () =>
-        navigate("/TeacherBirthday", {
-          state: stats.teacherBirthdaysToday,
-        }),
-    },
-  ] : [];
+  const cardData = stats
+    ? [
+        {
+          count: stats.totalFeesCollectedToday.amount,
+          label: "Today's Fees Collected",
+          bgcolor: "#26a69a",
+          icon: <Payment />,
+          // onClick: () =>
+          //   navigate("/fees-collected", {
+          //     state: stats.totalFeesCollectedToday.transactions,
+          //   }),
+        },
+        {
+          count: stats.totalPendingFees.amount,
+          label: "Pending Fees",
+          bgcolor: "#fbc02d",
+          icon: <Payment />,
+          onClick: () =>
+            navigate("/TotalFeecard", {
+              state: stats.totalPendingFees,
+            }),
+        },
+        {
+          count: stats.totalStudents.count,
+          label: "Total Students",
+          bgcolor: "#ef5350",
+          icon: <School />,
+          // onClick: () =>
+          //   navigate("/students", {
+          //     state: stats.totalStudents.ids,
+          //   }),
+        },
+        {
+          count: stats.totalTeachers.count,
+          label: "Total Teachers",
+          bgcolor: "#1e88e5",
+          icon: <Group />,
+          // onClick: () =>
+          //   navigate("/teachers", {
+          //     state: stats.totalTeachers.ids,
+          //   }),
+        },
+        {
+          count: stats.todaysAbsentTeachers.count,
+          label: "Today's Absent Teachers",
+          bgcolor: "#43a047",
+          icon: <CalendarToday />,
+          // onClick: () =>
+          //   navigate("/absent-teachers", {
+          //     state: stats.todaysAbsentTeachers.ids,
+          //   }),
+        },
+        {
+          count: stats.studentBirthdaysToday.count,
+          label: "Student Birthdays",
+          bgcolor: "#ab47bc",
+          icon: <CalendarToday />,
+          onClick: () =>
+            navigate("/BdayStudent", {
+              state: stats.studentBirthdaysToday,
+            }),
+        },
+        {
+          count: stats.teacherBirthdaysToday.count,
+          label: "Teacher Birthdays",
+          bgcolor: "#7e57c2",
+          icon: <CalendarToday />,
+          onClick: () =>
+            navigate("/TeacherBirthday", {
+              state: stats.teacherBirthdaysToday,
+            }),
+        },
+      ]
+    : [];
 
   return (
     <Container sx={{ py: 4 }}>
@@ -161,7 +173,7 @@ const Dashboard = ({ stats, navigate }) => {
 const AdminUsers = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -182,10 +194,6 @@ const AdminUsers = () => {
         <LoadingPage />
       </Typography>
     );
-
-  if (isLoading) {
-    return <Box sx={{ backgroundColor: "black", height: "100vh" }} />;
-  }
 
   return (
     <Box>

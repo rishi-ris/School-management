@@ -7,7 +7,10 @@ import {
   Snackbar,
   Alert,
   Box,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { keyframes } from "@emotion/react";
 import RoleDropdown from "../component/RoleDropdown";
 import Network from "../Application/Network";
@@ -30,6 +33,9 @@ const initialFormState = {
   pinCode: "",
   country: "",
   status: "",
+  email: "",
+  qualification: "",
+  experience: "",
 };
 
 const fadeInUp = keyframes`
@@ -44,7 +50,7 @@ const fadeInUp = keyframes`
 `;
 
 const AddNewEmpPage = (schoolResponse) => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
@@ -52,9 +58,10 @@ const AddNewEmpPage = (schoolResponse) => {
     message: "",
     severity: "success",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const genders = ["male", "female"];
-  const statuses = ["active", "inactive"];
+  const genders = ["Male", "Female"];
+  const statuses = ["Active", "Inactive"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,11 +69,15 @@ const AddNewEmpPage = (schoolResponse) => {
     if (name === "contactNumber" && !/^\d{0,10}$/.test(value)) return;
     if (name === "pinCode" && !/^\d{0,6}$/.test(value)) return;
     if (
-      (name === "firstName" || name === "lastName") &&
+      (name === "firstName" ||
+        name === "lastName" ||
+        name === "city" ||
+        name === "state" ||
+        name === "country") &&
       /[^a-zA-Z\s]/.test(value)
     )
       return;
-    if (value.length > 20) return;
+    if (value.length > 50) return;
 
     setForm({ ...form, [name]: value });
     setErrors({ ...errors, [name]: "" });
@@ -112,15 +123,41 @@ const AddNewEmpPage = (schoolResponse) => {
       newErrors.lastName = "Only alphabets allowed";
     }
 
+    if (!/^[a-zA-Z\s]*$/.test(form.city)) {
+      newErrors.city = "Only alphabets allowed";
+    }
+
+    if (!/^[a-zA-Z\s]*$/.test(form.state)) {
+      newErrors.state = "Only alphabets allowed";
+    }
+
+    if (!/^[a-zA-Z\s]*$/.test(form.country)) {
+      newErrors.country = "Only alphabets allowed";
+    }
+
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(form.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
     if (!form.roleId) {
       newErrors.roleId = "Role is required";
+    }
+
+    if (form.dOB) {
+      const dob = new Date(form.dOB);
+      const today = new Date();
+      const minDOB = new Date();
+      minDOB.setFullYear(today.getFullYear() - 18);
+
+      if (dob > minDOB) {
+        newErrors.dOB = "Age must be at least 18 years";
+      }
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // 👇 Inside your component
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -139,12 +176,20 @@ const AddNewEmpPage = (schoolResponse) => {
       contactNumber: form.contactNumber,
       dOB: formatDate(form.dOB),
       address: form.address,
-      schoolId: schoolResponse && schoolResponse.schoolRespose && schoolResponse.schoolRespose.id ? schoolResponse.schoolRespose.id : user.data.data.schoolId, //Please add from user response
+      schoolId:
+        schoolResponse &&
+        schoolResponse.schoolRespose &&
+        schoolResponse.schoolRespose.id
+          ? schoolResponse.schoolRespose.id
+          : user.data.data.schoolId,
       city: form.city,
       state: form.state,
       pinCode: form.pinCode,
       country: form.country,
       status: form.status,
+      email: form.email,
+      qualification: form.qualification,
+      experience: form.experience,
       createdBy: user.data.data.id,
     };
 
@@ -160,7 +205,8 @@ const AddNewEmpPage = (schoolResponse) => {
         setForm(initialFormState);
         setErrors({});
       } else {
-        const errorMessage = response.data?.message || "Failed to create user.";
+        const errorMessage =
+          response.data?.message || "Failed to create user.";
         setSnackbar({
           open: true,
           message: errorMessage,
@@ -168,7 +214,6 @@ const AddNewEmpPage = (schoolResponse) => {
         });
       }
     } catch (error) {
-      // 🔥 This part changed
       const backendError = error?.response?.data?.errors?.unique_constraint;
       const apiMessage =
         backendError ||
@@ -184,9 +229,28 @@ const AddNewEmpPage = (schoolResponse) => {
     }
   };
 
+  const today = new Date();
+  const eighteenYearsAgo = new Date();
+  eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+  const maxDOB = eighteenYearsAgo.toISOString().split("T")[0];
+
   const formFields = [
     { name: "username", label: "Username" },
-    { name: "password", label: "Password", type: "password" },
+    {
+      name: "password",
+      label: "Password",
+      type: showPassword ? "text" : "password",
+      adornment: (
+        <InputAdornment position="end">
+          <IconButton
+            onClick={() => setShowPassword((prev) => !prev)}
+            edge="end"
+          >
+            {showPassword ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
+        </InputAdornment>
+      ),
+    },
     { name: "gender", label: "Gender", select: true, options: genders },
     { name: "firstName", label: "First Name" },
     { name: "lastName", label: "Last Name" },
@@ -210,7 +274,6 @@ const AddNewEmpPage = (schoolResponse) => {
         sx={{
           width: { xs: "95%", sm: "90%", md: "80%", lg: "70%" },
           margin: "auto",
-
           mt: { xs: 8, md: 18 },
           p: { xs: 2, sm: 3 },
           borderRadius: 2,
@@ -220,28 +283,12 @@ const AddNewEmpPage = (schoolResponse) => {
         }}
       >
         <Grid container spacing={2}>
-          {/* Role Dropdown */}
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            sx={{
-              width: "230px",
-              transition: "all 0.3s ease-in-out",
-              "&:hover": {
-                backgroundColor: "#f5f5f5", // light hover background
-                borderRadius: "8px", // optional rounded corners
-                cursor: "pointer", // show pointer cursor
-                transform: "scale(1.03)",
-              },
-            }}
-          >
+          <Grid item xs={12} sm={6} sx={{ width: "230px" }}>
             <RoleDropdown
               onSelect={onRolesSelect}
               selectedRoleId={form.roleId}
-              excludeRoleIds={[4]} // 👈 Student role excluded
+              excludeRoleIds={[4]}
             />
-
             {errors.roleId && (
               <span style={{ color: "red", fontSize: "12px" }}>
                 {errors.roleId}
@@ -249,11 +296,8 @@ const AddNewEmpPage = (schoolResponse) => {
             )}
           </Grid>
 
-          {/* All Form Fields */}
-          {formFields.map(({ name, label, select, options, type }) => {
+          {formFields.map(({ name, label, select, options, type, adornment }) => {
             const isDateField = type === "date";
-            const today = new Date().toISOString().split("T")[0];
-
             return (
               <Grid item xs={12} sm={6} key={name} sx={{ width: "230px" }}>
                 <TextField
@@ -261,9 +305,9 @@ const AddNewEmpPage = (schoolResponse) => {
                     width: "100%",
                     transition: "all 0.3s ease-in-out",
                     "&:hover": {
-                      backgroundColor: "#f5f5f5", // light hover background
-                      borderRadius: "8px", // optional rounded corners
-                      cursor: "pointer", // show pointer cursor
+                      backgroundColor: "#f5f5f5",
+                      borderRadius: "8px",
+                      cursor: "pointer",
                       transform: "scale(1.03)",
                     },
                   }}
@@ -277,7 +321,10 @@ const AddNewEmpPage = (schoolResponse) => {
                   select={!!select}
                   error={Boolean(errors[name])}
                   helperText={errors[name]}
-                  inputProps={isDateField ? { max: today } : {}}
+                  inputProps={isDateField ? { max: maxDOB } : {}}
+                  InputProps={{
+                    endAdornment: adornment || null,
+                  }}
                 >
                   {select &&
                     options.map((option) => (
@@ -290,7 +337,6 @@ const AddNewEmpPage = (schoolResponse) => {
             );
           })}
 
-          {/* Submit Button */}
           <Grid item xs={12} sx={{ textAlign: "center" }}>
             <Button
               variant="contained"
@@ -312,13 +358,12 @@ const AddNewEmpPage = (schoolResponse) => {
           </Grid>
         </Grid>
 
-        {/* Snackbar */}
         <Snackbar
           open={snackbar.open}
           autoHideDuration={3000}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{
-            vertical: isMobile ? "center" : "top", // 👈 mobile = center, else top
+            vertical: isMobile ? "center" : "top",
             horizontal: "center",
           }}
         >

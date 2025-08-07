@@ -1,10 +1,9 @@
-// import axios from "axios";
+// Fixed version of the Network class with correct string interpolation and no syntax errors
 
 import axios from "axios";
 import Endpoints from "./Endpoints";
 
 export default class Network {
-  // 👤 Admin/Teacher Login
   static async login(username, password) {
     try {
       const response = await axios.post(
@@ -14,12 +13,11 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ User login error:", error);
+      console.error("⚠ User login error:", error);
       throw error;
     }
   }
 
-  // 🎓 Student Login
   static async studentLogin(username, password) {
     try {
       const response = await axios.post(
@@ -29,11 +27,11 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Student login error:", error);
+      console.error("⚠ Student login error:", error);
       throw error;
     }
   }
-  //create student
+
   static async createStudent(studentData) {
     try {
       const response = await axios.post(Endpoints.createStudent, studentData, {
@@ -41,11 +39,11 @@ export default class Network {
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Create student error:", error);
+      console.error("⚠ Create student error:", error);
       throw error;
     }
   }
-  //update student
+
   static async updateStudent(studentData) {
     try {
       const response = await axios.put(
@@ -55,34 +53,31 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Update student error:", error);
+      console.error("⚠ Update student error:", error);
       throw error;
     }
   }
-  //get All Students
+
   static async getAllStudents() {
     try {
       const response = await axios.get(Endpoints.getAllStudents, {
         headers: { "Content-Type": "application/json" },
       });
-
       return response;
     } catch (error) {
-      console.error("⚠️ Student error:", error);
+      console.error("⚠ Student error:", error);
       throw error;
     }
   }
 
-  //get All Students
   static async getAllPendingFeesStudents() {
     try {
       const response = await axios.get(Endpoints.getAllPendingFeesStudents, {
         headers: { "Content-Type": "application/json" },
       });
-
       return response;
     } catch (error) {
-      console.error("⚠️ Student error:", error);
+      console.error("⚠ Student error:", error);
       throw error;
     }
   }
@@ -93,44 +88,38 @@ export default class Network {
         `${Endpoints.studentDetails}/${studentId}`,
         { headers: { "Content-Type": "application/json" } }
       );
-      return response;
+      return response.data;
     } catch (error) {
-      console.error("⚠️ Get student details error:", error);
+      console.error("⚠ Error fetching student details", error);
       throw error;
     }
   }
 
-  //get All roles
   static async getAllRoles() {
     try {
-      const response = await axios.get(
-        Endpoints.getAllRoles,
-
-        { headers: { "Content-Type": "application/json" } }
-      );
-      console.log("***RESPONSE***", response);
-      return response;
-    } catch (error) {
-      console.error("⚠️ Student error:", error);
-      throw error;
-    }
-  }
-
-  //get All classes
-  static async getAllClasses(schoolId) {
-    try {
-      const response = await axios.get( `${Endpoints.getAllClasses}/${schoolId}`, {
+      const response = await axios.get(Endpoints.getAllRoles, {
         headers: { "Content-Type": "application/json" },
       });
-
       return response;
     } catch (error) {
-      console.error("⚠️ Student error:", error);
+      console.error("⚠ Roles error:", error);
       throw error;
     }
   }
 
-  //create User
+  static async getAllClasses(schoolId) {
+    try {
+      const response = await axios.get(
+        `${Endpoints.getAllClasses}/${schoolId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠ Classes error:", error);
+      throw error;
+    }
+  }
+
   static async addNewUser(userData) {
     try {
       const response = await axios.post(Endpoints.createUser, userData, {
@@ -138,65 +127,60 @@ export default class Network {
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Create user error:", error);
+      console.error("⚠ Create user error:", error);
       throw error;
     }
   }
+
   static async deleteStudentDocument(studentId, docId) {
     try {
       const response = await axios.delete(
         `${Endpoints.uploadStudentDocs}${studentId}/delete/${docId}`,
         {
           headers: { "Content-Type": "application/json" },
-          data: { studentId }, // Include studentId in the request body
+          data: { studentId },
         }
       );
-      console.log("✅ Document deleted successfully:", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ Error deleting student document:", error);
       throw error;
     }
   }
+
   static async uploadStudentDocument(studentId, docType, file) {
-    console.log(`📂 Uploading ${docType} for student ${studentId}:`, file.name);
     const formData = new FormData();
-    formData.append("file", file); // MUST match @RequestParam("file")
-    formData.append("docType", docType); // Optional param
+    formData.append("file", file);
+    formData.append("docType", docType);
 
     try {
       const response = await axios.post(
-        `${Endpoints.uploadStudentDocs}/${studentId}/upload`, // << fix: use actual studentId
+        `${Endpoints.uploadStudentDocs}/${studentId}/upload`,
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: false, // Or true, if backend requires cookies
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log("✅ Upload Success:", response.data);
       return response.data;
     } catch (error) {
       console.error(`❌ Error uploading ${docType}:`, error);
       throw error;
     }
   }
+
   static async updateStudentDocument(studentId, docId, docType, file) {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("docType", docType);
 
-    const response = await axios.put(
-      `${Endpoints.uploadStudentDocs}/updateDocument/${docId}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return response.data;
+    try {
+      const response = await axios.put(
+        `${Endpoints.uploadStudentDocs}/updateDocument/${docId}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 
   static async getStudentDocuments(studentId) {
@@ -207,10 +191,11 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Get student documents error:", error);
+      console.error("⚠ Get student documents error:", error);
       throw error;
     }
   }
+
   static async getStudentPhotos(studentId) {
     try {
       const response = await axios.get(
@@ -219,24 +204,24 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Get student photos error:", error);
+      console.error("⚠ Get student photos error:", error);
       throw error;
     }
   }
+
   static async searchStudentFees({ rollNumber, className }) {
-    console.log("🔍 Searching fees for:", { rollNumber, className });
     try {
       const response = await axios.get(Endpoints.searchStudentFees, {
         params: { className, rollNumber },
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Search student fees error:", error);
+      console.error("⚠ Search student fees error:", error);
       throw error;
     }
   }
+
   static async saveStudentPayment(paymentPayload) {
-    console.log("💰 Saving student payment:", paymentPayload);
     try {
       const response = await axios.post(
         `${Endpoints.saveStudentPayment}/${paymentPayload.studentId}`,
@@ -249,6 +234,7 @@ export default class Network {
       throw error;
     }
   }
+
   static async addSubject(subjectData) {
     try {
       const response = await axios.post(Endpoints.addSubject, subjectData, {
@@ -256,10 +242,11 @@ export default class Network {
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Add subject error:", error);
+      console.error("⚠ Add subject error:", error);
       throw error;
     }
   }
+
   static async getAllSubjects() {
     try {
       const response = await axios.get(Endpoints.getAllSubjects, {
@@ -267,21 +254,11 @@ export default class Network {
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Get all subjects error:", error);
+      console.error("⚠ Get all subjects error:", error);
       throw error;
     }
   }
-  // static async StudentMarksheet() {
-  //   try {
-  //     const response = await axios.get(Endpoints.StudentMarksheet, {
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     return response;
-  //   } catch (error) {
-  //     console.error("Get all marksheet error:", error);
-  //     throw error;
-  //   }
-  // }
+
   static async getAllStudentsByClassId(classId) {
     try {
       const response = await axios.get(
@@ -290,10 +267,11 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Get students by class ID error:", error);
+      console.error("⚠ Get students by class ID error:", error);
       throw error;
     }
   }
+
   static async getAllSubjectsByClassId(classId, schoolId) {
     try {
       const response = await axios.get(
@@ -302,7 +280,7 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Get subjects by class ID error:", error);
+      console.error("⚠ Get subjects by class ID error:", error);
       throw error;
     }
   }
@@ -315,22 +293,23 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Get subjects by class ID error:", error);
+      console.error("⚠ Get all school subjects error:", error);
       throw error;
     }
   }
 
   static async submitMarks(payload) {
     try {
-      const response = await axios.post(`${Endpoints.submitMarks}`, payload, {
+      const response = await axios.post(Endpoints.submitMarks, payload, {
         headers: { "Content-Type": "application/json" },
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Submit marks error:", error);
+      console.error("⚠ Submit marks error:", error);
       throw error;
     }
   }
+
   static async getAllDetailsByClass(classId, schoolId) {
     try {
       const response = await axios.get(
@@ -339,10 +318,11 @@ export default class Network {
       );
       return response.data;
     } catch (error) {
-      console.error("⚠️ Get all details by class error:", error);
+      console.error("⚠ Get all details by class error:", error);
       throw error;
     }
   }
+
   static async getAllUsersByRoleId(roleId, schoolId) {
     try {
       const response = await axios.get(
@@ -351,10 +331,11 @@ export default class Network {
       );
       return response.data;
     } catch (error) {
-      console.error("⚠️ Get all users by role ID error:", error);
+      console.error("⚠ Get all users by role ID error:", error);
       throw error;
     }
   }
+
   static async submitTeacherAttendance(payload) {
     try {
       const response = await axios.post(
@@ -364,10 +345,11 @@ export default class Network {
       );
       return response;
     } catch (error) {
-      console.error("⚠️ Submit teacher attendance error:", error);
+      console.error("⚠ Submit teacher attendance error:", error);
       throw error;
     }
   }
+
   static async addTimeTable(payload) {
     try {
       const response = await axios.post(Endpoints.addTimeTable, payload, {
@@ -375,33 +357,36 @@ export default class Network {
       });
       return response;
     } catch (error) {
-      console.error("⚠️ Add timetable error:", error);
+      console.error("⚠ Add timetable error:", error);
       throw error;
     }
   }
+
   static async getTimeTableByClass(classId, schoolId, dayOfWeek) {
-    
     try {
       const response = await axios.get(
         `${Endpoints.getTimeTableByClass}/${classId}`,
-        { headers: { "Content-Type": "application/json" },
-       params: { schoolId, dayOfWeek } }
+        {
+          headers: { "Content-Type": "application/json" },
+          params: { schoolId, dayOfWeek },
+        }
       );
       return response.data;
     } catch (error) {
-      console.error("⚠️ Get timetable by class error:", error);
+      console.error("⚠ Get timetable by class error:", error);
       throw error;
     }
   }
+
   static async getDashboardStats(schoolId) {
     try {
       const response = await axios.get(Endpoints.getDashboardStats, {
         headers: { "Content-Type": "application/json" },
-         params: { schoolId: schoolId }
+        params: { schoolId },
       });
       return response.data;
     } catch (error) {
-      console.error("⚠️ Get dashboard stats error:", error);
+      console.error("⚠ Get dashboard stats error:", error);
       throw error;
     }
   }
@@ -410,26 +395,16 @@ export default class Network {
     try {
       const response = await axios.get(
         `${Endpoints.getAttendanceByTeacher}/${teacherId}/with-attendance`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      return response.data;
-    } catch (error) {}
-  }
-  static async getStudentDetails(studentId) {
-    try {
-      const response = await axios.get(
-        `${Endpoints.studentDetails}/${studentId}`,
         { headers: { "Content-Type": "application/json" } }
       );
       return response.data;
     } catch (error) {
-      console.error("⚠️ Error fetching student details", error);
+      console.error("⚠ Get attendance by teacher error:", error);
       throw error;
     }
   }
-   static async getStudentMarksheet(id) {
+
+  static async getStudentMarksheet(id) {
     try {
       const response = await axios.get(`${Endpoints.studentMarksheet}/${id}`, {
         headers: { "Content-Type": "application/json" },
@@ -440,30 +415,45 @@ export default class Network {
       throw error;
     }
   }
-static async getAllSchools() {
-  try {
-    const response = await axios.get(Endpoints.getAllSchools, {
-      headers: { "Content-Type": "application/json" },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("❌ Error fetching schools:", error);
-    throw error;
-  }
-}
-static async createSchool(data) {
+
+  static async getAllSchools(schoolId) {
     try {
-      const response = await axios.post(
-        Endpoints.schoolcreate,  // example: "/schools/createSchool"
-        data,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.get(`${Endpoints.getAllSchools}/${schoolId}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("❌ Error fetching schools:", error);
+      throw error;
+    }
+  }
+
+  static async createSchool(data) {
+    try {
+      const response = await axios.post(Endpoints.schoolcreate, data, {
+        headers: { "Content-Type": "application/json" },
+      });
       return response.data;
     } catch (error) {
       console.error("⚠ Error creating school:", error);
       throw error;
     }
   }
+
+  static async AddClasses(schoolId) {
+  try {
+    const response = await axios.post(
+      Endpoints.AddClasses,
+      schoolId,
+    
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error adding class:", error);
+    throw error;
+  }
+}
 }

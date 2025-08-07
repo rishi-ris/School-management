@@ -41,11 +41,21 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
 
     if (numericFields.includes(name)) {
       const numericOnly = value.replace(/[^0-9]/g, "");
-      if (!numericOnly.trim()) {
-        newErrors[name] = "This field is required and must be numeric";
+
+      if (name === "apaarId") {
+        if (numericOnly.length !== 12) {
+          newErrors[name] = "Apaar ID must be exactly 12 digits";
+        } else {
+          delete newErrors[name];
+        }
       } else {
-        delete newErrors[name];
+        if (!numericOnly.trim()) {
+          newErrors[name] = "This field is required and must be numeric";
+        } else {
+          delete newErrors[name];
+        }
       }
+
       setErrors(newErrors);
       onChange({ [name]: numericOnly });
     } else if (textOnlyFields.includes(name)) {
@@ -111,9 +121,9 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
           sx={{
             transition: "all 0.3s ease-in-out",
             "&:hover": {
-              backgroundColor: "#f5f5f5", // light hover background
-              borderRadius: "8px", // optional rounded corners
-              cursor: "pointer", // show pointer cursor
+              backgroundColor: "#f5f5f5",
+              borderRadius: "8px",
+              cursor: "pointer",
               transform: "scale(1.03)",
             },
           }}
@@ -145,9 +155,9 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
             sx={{
               transition: "all 0.3s ease-in-out",
               "&:hover": {
-                backgroundColor: "#f5f5f5", // light hover background
-                borderRadius: "8px", // optional rounded corners
-                cursor: "pointer", // show pointer cursor
+                backgroundColor: "#f5f5f5",
+                borderRadius: "8px",
+                cursor: "pointer",
                 transform: "scale(1.03)",
               },
             }}
@@ -162,7 +172,7 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
               helperText={errors[name] || ""}
               inputProps={{
                 inputMode: numericFields.includes(name) ? "numeric" : "text",
-                maxLength: 20,
+                maxLength: name === "apaarId" ? 12 : 20,
               }}
               sx={{ width: "200px" }}
             />
@@ -175,9 +185,9 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
           sx={{
             transition: "all 0.3s ease-in-out",
             "&:hover": {
-              backgroundColor: "#f5f5f5", // light hover background
-              borderRadius: "8px", // optional rounded corners
-              cursor: "pointer", // show pointer cursor
+              backgroundColor: "#f5f5f5",
+              borderRadius: "8px",
+              cursor: "pointer",
               transform: "scale(1.03)",
             },
           }}
@@ -203,12 +213,18 @@ const StuPersonalDltDlg = ({ data, onChange, errors = {}, setErrors }) => {
 
         {/* Disability Type Field (conditional) */}
         {data.isDisable && (
-          <Grid item sx={{transition: "all 0.3s ease-in-out",
+          <Grid
+            item
+            sx={{
+              transition: "all 0.3s ease-in-out",
               "&:hover": {
-                backgroundColor: "#f5f5f5", // light hover background
-                borderRadius: "8px", // optional rounded corners
-                cursor: "pointer", // show pointer cursor
-                transform: "scale(1.03)",}}}>
+                backgroundColor: "#f5f5f5",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transform: "scale(1.03)",
+              },
+            }}
+          >
             <TextField
               variant="outlined"
               label="Disability Type"

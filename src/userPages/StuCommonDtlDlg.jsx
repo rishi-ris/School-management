@@ -62,12 +62,15 @@ const StuCommonDtlDlg = ({
       cleanValue = cleanValue.slice(0, 20);
     }
 
-    // 🚫 Username should not contain spaces
     if (name === "username") {
-      cleanValue = value.replace(/\s/g, ""); // remove all spaces
+      cleanValue = value.replace(/\s/g, "");
     }
 
-    // 📞 Contact number validation
+    // ✅ Restrict firstName and lastName to alphabets only
+    if (name === "firstName" || name === "lastName") {
+      cleanValue = value.replace(/[^A-Za-z]/g, "");
+    }
+
     if (name === "contactNumber") {
       if (cleanValue.length !== 10) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 10 digits" }));
@@ -83,7 +86,6 @@ const StuCommonDtlDlg = ({
       }
     }
 
-    // 📮 Pin code validation
     if (name === "pinCode") {
       if (cleanValue.length !== 6) {
         setErrors?.((prev) => ({ ...prev, [name]: "Only use 6 digits" }));
@@ -94,7 +96,6 @@ const StuCommonDtlDlg = ({
       }
     }
 
-    // 💰 feesDiscount should not exceed totalFees
     if (name === "feesDiscount" || name === "totalFees") {
       const updatedFeesDiscount =
         name === "feesDiscount"
@@ -117,7 +118,6 @@ const StuCommonDtlDlg = ({
       }
     }
 
-    // ✅ Final update
     onChange({ [name]: cleanValue });
   };
 
@@ -170,9 +170,9 @@ const StuCommonDtlDlg = ({
             width: "200px",
             transition: "all 0.3s ease-in-out",
             "&:hover": {
-              backgroundColor: "#f5f5f5", // light hover background
-              borderRadius: "8px", // optional rounded corners
-              cursor: "pointer", // show pointer cursor
+              backgroundColor: "#f5f5f5",
+              borderRadius: "8px",
+              cursor: "pointer",
               transform: "scale(1.03)",
             },
           }}
@@ -190,12 +190,19 @@ const StuCommonDtlDlg = ({
         </Grid>
 
         {requiredCommonFields.map((field) => (
-          <Grid item key={field} sx={{transition: "all 0.3s ease-in-out",
+          <Grid
+            item
+            key={field}
+            sx={{
+              transition: "all 0.3s ease-in-out",
               "&:hover": {
-                backgroundColor: "#f5f5f5", // light hover background
-                borderRadius: "8px", // optional rounded corners
-                cursor: "pointer", // show pointer cursor
-                transform: "scale(1.03)",}}}>
+                backgroundColor: "#f5f5f5",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transform: "scale(1.03)",
+              },
+            }}
+          >
             {field === "gender" ? (
               <TextField
                 select
@@ -229,10 +236,14 @@ const StuCommonDtlDlg = ({
                 <DatePicker
                   label="Date of Birth"
                   format="DD/MM/YYYY"
-                  value={data?.dob ? dayjs(data.dob, "DD/MM/YYYY") : null}
+                  value={
+                    data?.dob && dayjs(data.dob, "DD/MM/YYYY").isValid()
+                      ? dayjs(data.dob, "DD/MM/YYYY")
+                      : null
+                  }
                   onChange={handleDOBChange}
-                  disableFuture // Disables selection of future dates via UI
-                  maxDate={dayjs()} // Also disables selecting beyond today
+                  disableFuture
+                  maxDate={dayjs()}
                   slotProps={{
                     textField: {
                       name: "dob",

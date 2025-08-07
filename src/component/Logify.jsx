@@ -8,8 +8,12 @@ import {
   Typography,
   Paper,
   Link,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Network from "../Application/Network";
 import RoleDropdown from "./RoleDropdown";
 import { AuthContext } from "../auth/AuthProvider";
@@ -19,6 +23,7 @@ const Logify = () => {
   const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [onRolesSelectChange, setOnRolesSelectChange] = useState("");
 
@@ -63,7 +68,7 @@ const Logify = () => {
           case 1:
             navigate("/SchoolDetailsForm");
             break;
-            case 2:
+          case 2:
             navigate("/adminUser");
             break;
           case 3:
@@ -85,7 +90,7 @@ const Logify = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setMessage("❌ Username and Password incorrect"); // ✅ Custom message here
+      setMessage("❌ Username and Password incorrect");
     }
   };
 
@@ -125,19 +130,34 @@ const Logify = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
+
             <TextField
               fullWidth
               margin="normal"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
+{/* 
             <Box display="flex" justifyContent="flex-end" mt={1}>
               <Link href="#" underline="hover">
                 Forgot password?
               </Link>
-            </Box>
+            </Box> */}
+
             <Button
               fullWidth
               type="submit"
@@ -152,6 +172,7 @@ const Logify = () => {
             >
               Login
             </Button>
+
             <Typography align="center" mt={2} color="error">
               {message}
             </Typography>
