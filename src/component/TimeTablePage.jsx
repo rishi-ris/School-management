@@ -142,17 +142,6 @@ const TeacherTimeTablePage = () => {
   };
 
   const handleSubmit = async () => {
-    for (let p of periods) {
-      if (p.startTime >= p.endTime) {
-        setSnackbar({
-          open: true,
-          message: ( `❌ Start time must be earlier than end time for Period ${p.period}`),
-          severity: "error",
-        });
-        return;
-      }
-    }
-
     const payload = {
       classId: selectedClass.classId,
       dayOfWeek,
@@ -345,3 +334,4 @@ const TeacherTimeTablePage = () => {
 };
 
 export default TeacherTimeTablePage;
+

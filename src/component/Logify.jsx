@@ -19,7 +19,7 @@ import RoleDropdown from "./RoleDropdown";
 import { AuthContext } from "../auth/AuthProvider";
 
 const Logify = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -59,7 +59,7 @@ const Logify = () => {
         default:
           setMessage("❌ Invalid role selected.");
           return;
-      }
+      } 
 
       if (response?.status === 200) {
         setMessage("✅ Login successful!");

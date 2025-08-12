@@ -60,11 +60,6 @@ const SchoolFrontPage = () => {
             <StyledInputBase placeholder="Search…" />
           </Search> */}
 
-          <IconButton color="inherit" sx={{ mr: 1 }}>
-            <Badge badgeContent={3} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
 
           {/* Login and Sign Up Buttons */}
           <Box display="flex" justifyContent="space-between" sx={{ gap: 1 }}>

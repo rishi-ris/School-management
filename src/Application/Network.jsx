@@ -310,10 +310,10 @@ export default class Network {
     }
   }
 
-  static async getAllDetailsByClass(classId, schoolId) {
+static async getAllDetailsByClass(classId, schoolId) {
     try {
       const response = await axios.get(
-        `${Endpoints.getAllDetailsByClass}/${classId}/details?schoolId=${schoolId}`,
+       ` ${Endpoints.getAllDetailsByClass}/${classId}/details?schoolId=${schoolId}`,
         { headers: { "Content-Type": "application/json" } }
       );
       return response.data;

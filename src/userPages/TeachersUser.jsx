@@ -8,27 +8,19 @@ import {
   TableRow,
   Paper,
   Box,
-  Button,
-  Typography,
   Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
-import { Fade } from "@mui/material";
 import { AuthContext } from "../auth/AuthProvider";
 
 const TeachersUser = () => {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const teacherRoleId = "3";
-
-  const handleViewProfile = (id) => {
-    alert(`Viewing profile of teacher ID: ${id}`);
-    // navigate(/teacher/profile/${id});
-  };
 
   const fetchTeachers = () => {
     Network.getAllUsersByRoleId(teacherRoleId, user.data.data.schoolId)
@@ -42,7 +34,7 @@ const TeachersUser = () => {
   };
 
   useEffect(() => {
-    fetchTeachers(); // ✅ Load on mount
+    fetchTeachers();
   }, []);
 
   return (
@@ -65,7 +57,6 @@ const TeachersUser = () => {
             <TableRow>
               <TableCell sx={{ color: "white" }}>Name</TableCell>
               <TableCell sx={{ color: "white" }}>Phone</TableCell>
-              <TableCell sx={{ color: "white" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -78,31 +69,11 @@ const TeachersUser = () => {
                   <TableCell>
                     {teacher.phone || teacher.contactNumber || "-"}
                   </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      sx={{
-                        m: 0.5,
-                        backgroundColor: "var(--button-bg-color)",
-                      
-                        fontWeight: "bold",
-                        textTransform: "none",
-                        "&:hover": {
-                          transform: "scale(1.03)", // optional subtle zoom effect
-                        },
-                      }}
-                      onClick={() => navigate(`/TeacherProfile/${teacher.id}`)}
-                    >
-                      View Profile
-                    </Button>
-                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={2} align="center">
                   No teacher data found.
                 </TableCell>
               </TableRow>

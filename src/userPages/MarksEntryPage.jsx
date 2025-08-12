@@ -26,6 +26,7 @@ const MarksEntryPage = () => {
   ]);
 
   const [selectedClassId, setSelectedClassId] = useState("");
+  const [schoolId, setSchoolId] = useState("");
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [rollNumber, setRollNumber] = useState("");
@@ -33,7 +34,7 @@ const MarksEntryPage = () => {
 
   useEffect(() => {
     if (selectedClassId) {
-      Network.getAllDetailsByClass(selectedClassId)
+      Network.getAllDetailsByClass(selectedClassId,schoolId)
         .then((res) => {
           setStudents(res.students);
           setSubjects(res.subjects);
@@ -46,6 +47,8 @@ const MarksEntryPage = () => {
   }, [selectedClassId]);
 
   const handleClassSelect = (cls) => {
+    console.log("Selected Class:", cls.schoolId);
+    setSchoolId(cls.schoolId)
     setSelectedClassId(cls.classId);
     setSelectedStudent("");
     setRollNumber("");
@@ -412,7 +415,7 @@ const MarksEntryPage = () => {
                               sub.obtainedInternalMarks !== "" &&
                               Number(sub.obtainedInternalMarks) >
                                 sub.totalInternalMarks
-                                ? `Marks cannot be more than ${sub.totalInternalMarks}`
+                                ?` Marks cannot be more than ${sub.totalInternalMarks}`
                                 : ""
                             }
                           />

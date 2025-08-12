@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
-
 import AddStuButton from "../userPages/AddStuButton";
 import StuTable from "../userPages/StuTable";
 import StuDlgCard from "../userPages/StuDlgCard";
 import Network from "../Application/Network";
 import StuDlgDocUpload from "../userPages/StuDlgDocUpload";
 import StudentFeesDlg from "../userPages/StudentFeesDlg";
-import Sidekick from "../component/Sidekick";
-import { ToastContainer } from "react-toastify"; // ✅ Toast import
-import "react-toastify/dist/ReactToastify.css"; // ✅ Toast CSS
-import TeacherDasboard from "./TeacherDashboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ClassDropDown from "../component/ClassDropDown";
 import TeacherDashboardside from "./TeacherDasboardside";
 
-const TeacherDasStudent = () => {
+const TeacherDasStudent  = () => {
   const [students, setStudents] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [documentDialogOpen, setDocumentDialogOpen] = useState(false);
@@ -24,14 +22,20 @@ const TeacherDasStudent = () => {
   const [studentDocuments, setStudentDocuments] = useState(null);
   const [openFeesDetails, setOpenFeesDetails] = useState(false);
   const [feesDetails, setFeesDetails] = useState(null);
+  const [formErrors, setFormErrors] = useState(null);
+  const [selectedClassId, setSelectedClassId] = useState(null);
+  const [classError, setClassError] = useState(true); // 🔴 Start with error visible
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (classId) => {
     try {
+      if (!classId) return; // 🛑 Skip if no class selected
+
       setLoading(true);
-      const response = await Network.getAllPendingFeesStudents();
+      const response = await Network.getAllStudentsByClassId(classId);
       setStudents(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error("⚠️ Error fetching students:", error);
+      console.error("⚠ Error fetching students:", error);
+      toast.error("❌ Error fetching students.");
     } finally {
       setLoading(false);
     }
@@ -41,14 +45,12 @@ const TeacherDasStudent = () => {
     try {
       setLoading(true);
       const response = await Network.getStudentDetails(studentId);
-      const fullStudent = response;
-
-      setEditingStudent(fullStudent);
+      setEditingStudent(response);
       setNewStudentId(studentId);
       setDialogOpen(true);
     } catch (err) {
-      console.error("⚠️ Error loading student:", err);
-      alert("Failed to load student details.");
+      console.error("⚠ Error loading student:", err);
+      toast.error("❌ Failed to load student details.");
     } finally {
       setLoading(false);
     }
@@ -59,8 +61,8 @@ const TeacherDasStudent = () => {
       setOpenFeesDetails(true);
       setFeesDetails(stuFeesDetails);
     } catch (err) {
-      console.error("⚠️ Error loading student fees details:", err);
-      alert("Failed to load student fees details.");
+      console.error("⚠ Error loading student fees details:", err);
+      toast.error("❌ Failed to load student fees details.");
     } finally {
       setLoading(false);
     }
@@ -71,36 +73,63 @@ const TeacherDasStudent = () => {
       setLoading(true);
       setDocumentDialogOpen(true);
       const response = await Network.getStudentDocuments(studentId);
-      const studentDocuments = response.data;
-      setStudentDocuments(studentDocuments);
-      setEditingStudent(studentId ? studentId : null);
+      setStudentDocuments(response.data);
+      setEditingStudent(studentId || null);
       setNewStudentId(studentId);
-      setDocumentDialogOpen(true);
     } catch (err) {
-      console.error("⚠️ Error loading student documents:", err);
-      alert("Failed to load student documents.");
+      console.error("⚠ Error loading student documents:", err);
+      toast.error("❌ Failed to load student documents.");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
   const handleSave = async (flatData) => {
     try {
       setLoading(true);
-      flatData?.studentPin
+      setFormErrors(null);
+
+      const response = flatData?.studentPin
         ? await Network.updateStudent(flatData)
         : await Network.createStudent(flatData);
-      alert("✅ Student saved!");
-      await fetchStudents();
+
+      toast.success("✅ Student saved successfully!", {
+        autoClose: 4000,
+        position: "top-center",
+      });
+
+      await fetchStudents(selectedClassId);
+
       setDialogOpen(false);
       setSelectedStudent(null);
+      setEditingStudent(null);
+      setNewStudentId(null);
+      setFormErrors(null);
+
+      return true;
     } catch (error) {
-      console.error("❌ Error saving student:", error);
-      alert("❌ Failed to save student.");
+      let errors = null;
+      if (error?.response?.data?.errors) {
+        errors = error.response.data.errors;
+      } else if (error.message) {
+        errors = { general: error.message };
+      } else {
+        errors = { general: "Unknown error occurred" };
+      }
+
+      setFormErrors(errors);
+
+      const errorMessage =
+        typeof errors === "string"
+          ? errors
+          : Object.values(errors).flat().join(", ");
+
+      toast.error("❌ " + errorMessage, {
+        autoClose: 5000,
+        position: "top-center",
+      });
+
+      return false;
     } finally {
       setLoading(false);
     }
@@ -113,17 +142,15 @@ const TeacherDasStudent = () => {
 
   return (
     <Box p={3}>
-      {/* Side Navigation or Info */}
-   <TeacherDashboardside/>
+    <TeacherDashboardside/>
 
-      {/* Header Bar with Title and Add Button */}
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         maxWidth={1200}
         mx="auto"
-        mt={8}
+        mt={7}
         p={2}
         border="2px solid #191818ff"
         borderRadius={2}
@@ -158,19 +185,55 @@ const TeacherDasStudent = () => {
         <AddStuButton
           onClick={() => {
             setSelectedStudent(null);
+            setEditingStudent(null);
             setDialogOpen(true);
           }}
         />
       </Box>
 
-      {/* Loading Spinner */}
+      {/* ✅ Class Filter Dropdown with Error */}
+      <Box
+        mt={3}
+         
+        mx="auto"
+      >
+        <Box  sx={{
+          width: "220px",
+          ml: 9.3,
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            backgroundColor: "#f5f5f5", // light hover background
+            borderRadius: "8px", // optional rounded corners
+            cursor: "pointer", // show pointer cursor
+            transform: "scale(1.03)",
+          },
+        }}>
+        <ClassDropDown
+          selectedClassId={selectedClassId}
+          onSelect={(cls) => {
+            if (cls?.classId) {
+              setSelectedClassId(cls.classId);
+              setClassError(false); // ✅ Hide error
+              fetchStudents(cls.classId);
+            } else {
+              setClassError(true); // 🔴 Show error
+            }
+          }}
+        />
+        </Box>
+        {classError && (
+          <Typography color="error" variant="body2" mt={1} ml={9.3}>
+            Class is required
+          </Typography>
+        )}
+      </Box>
+
       {loading ? (
-        <Box display="flex" justifyContent="center" mt={5}>
+        <Box display="flex" justifyContent="center" mt={2}>
           <CircularProgress size={40} />
         </Box>
       ) : (
-        // Student Table Component
-        <Box mt={4}>
+        <Box mt={3}>
           <StuTable
             students={students}
             onEdit={handleDetails}
@@ -180,7 +243,6 @@ const TeacherDasStudent = () => {
         </Box>
       )}
 
-      {/* Student Registration Dialog */}
       <StuDlgCard
         open={dialogOpen}
         onClose={() => {
@@ -188,12 +250,13 @@ const TeacherDasStudent = () => {
           setSelectedStudent(null);
           setNewStudentId(null);
           setEditingStudent(null);
+          setFormErrors(null);
         }}
         onSave={handleSave}
         student={editingStudent}
+        formErrors={formErrors}
       />
 
-      {/* Document Upload Dialog */}
       <StuDlgDocUpload
         open={documentDialogOpen}
         onClose={() => setDocumentDialogOpen(false)}
@@ -201,17 +264,15 @@ const TeacherDasStudent = () => {
         documents={studentDocuments}
       />
 
-      {/* Fees Details Dialog */}
       <StudentFeesDlg
         open={openFeesDetails}
         onClose={() => setOpenFeesDetails(false)}
         student={feesDetails}
       />
 
-      {/* Toast Notifications */}
       <ToastContainer
         position="top-center"
-        autoClose={100000}
+        autoClose={10000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -234,6 +295,5 @@ const TeacherDasStudent = () => {
     </Box>
   );
 };
-
-
 export default TeacherDasStudent;
+

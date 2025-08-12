@@ -31,7 +31,7 @@ const InfoItem = ({ label, value }) => (
 );
 
 const StudentInfoTabs = (props) => {
-  console.log("***props****", props.studentDetails);
+  console.log("props*", props.studentDetails);
   const [tabIndex, setTabIndex] = useState(0);
   const [studentDetails, setStudentDetails] = useState(props.studentDetails);
   const theme = useTheme();
@@ -92,7 +92,6 @@ const StudentInfoTabs = (props) => {
         <Tab label="Academic Info" />
         <Tab label="Documents" />
       </Tabs>
-
       {/* Personal Info Tab */}
       <TabPanel value={tabIndex} index={0}>
         <Grid container spacing={2}>
@@ -161,100 +160,100 @@ const StudentInfoTabs = (props) => {
           </Grid>
         </Grid>
       </TabPanel>
-
       {/* Placeholder Panels */}
       <TabPanel value={tabIndex} index={1}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Department" value="Science" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Job Title" value="Student Intern" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Experience" value="0 Years" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Working Shift" value="Morning" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Employee Type" value="Full-Time" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Joining Date" value="2022-06-01" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Reporting Manager" value="Mr. Sharma" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Work Location" value="School Campus" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Official Email" value="rishi@school.edu" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Previous School" value="Sunrise Public School" />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <InfoItem label="Employment Status" value="Active" />
-          </Grid>
-        </Grid>
-      </TabPanel>
+  <Grid item xs={12} md={4}>
+    <InfoItem
+      label="Student Photo"
+      value={
+        studentDetails?.photos?.studentPhoto || studentDetails?.documentsList?.some(doc => doc.docType === "studentPhoto")
+          ? "Submitted"
+          : "Not Submitted"
+      }
+    />
+  </Grid>
+  <Grid item xs={12} md={4}>
+    <InfoItem
+      label="Father Photo"
+      value={
+        studentDetails?.photos?.fatherPhoto || studentDetails?.documentsList?.some(doc => doc.docType === "fatherPhoto")
+          ? "Submitted"
+          : "Not Submitted"
+      }
+    />
+  </Grid>
+  <Grid item xs={12} md={4}>
+    <InfoItem
+      label="Mother Photo"
+      value={
+        studentDetails?.photos?.motherPhoto || studentDetails?.documentsList?.some(doc => doc.docType === "motherPhoto")
+          ? "Submitted"
+          : "Not Submitted"
+      }
+    />
+  </Grid>
+  <Grid item xs={12} md={4}>
+    <InfoItem
+      label="Guardian Photo"
+      value={
+        studentDetails?.photos?.guardianPhoto || studentDetails?.documentsList?.some(doc => doc.docType === "guardianPhoto")
+          ? "Submitted"
+          : "Not Submitted"
+      }
+    />
+  </Grid>
+</Grid>
 
+      </TabPanel>
+      
       <TabPanel value={tabIndex} index={2}>
-        <Box>
-          <Typography sx={{ fontWeight: "bold" }}>Previous School</Typography>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="School" value="School......." />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Board" value="MP Board" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Passing Year" value="2022" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Max. Marks" value="500" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Marks Obtained" value="314" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Percentage" value="62.80%" />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <InfoItem label="Roll No" value="00000604" />
-            </Grid>
-          </Grid>
-        </Box>
-      </TabPanel>
-
-      <TabPanel value={tabIndex} index={3}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <InfoItem label="Aadhaar Card" value="Submitted" />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <InfoItem label="Birth Certificate" value="Submitted" />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <InfoItem label="10th Marksheet" value="Submitted" />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <InfoItem label="12th Marksheet" value="Submitted" />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <InfoItem label="Caste Certificate" value="Not Submitted" />
-          </Grid>
           <Grid item xs={12} md={4}>
             <InfoItem label="Transfer Certificate" value="Submitted" />
           </Grid>
           <Grid item xs={12} md={4}>
-            <InfoItem label="Passport Size Photo" value="Submitted" />
+            <InfoItem label="Migration Certificate" value="Submitted" />
           </Grid>
           <Grid item xs={12} md={4}>
-            <InfoItem label="Signature" value="Submitted" />
+            <InfoItem label="Character Certificate" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Previous Marksheet" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Admission Form" value="Submitted" />
+          </Grid>
+        </Grid>
+      </TabPanel>
+      <TabPanel value={tabIndex} index={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Aadhar Card" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Pan Card" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Sssmid" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Caste Certificate" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Income Certificate" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Domicile Certificate" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Disability Certificate" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Ration Card" value="Submitted" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <InfoItem label="Passbook" value="Submitted" />
           </Grid>
         </Grid>
       </TabPanel>

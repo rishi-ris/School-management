@@ -13,6 +13,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Divider,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -37,7 +38,14 @@ const AddClassPage = () => {
     schoolId: "",
   });
 
-  // ✅ Load school list from backend
+  // ⬇ Reload पर localStorage से data लोड करो
+  useEffect(() => {
+    const saved = localStorage.getItem("classList");
+    if (saved) {
+      setClassList(JSON.parse(saved));
+    }
+  }, []);
+
   useEffect(() => {
     Network.getAllSchools(user.data.data.schoolId)
       .then((data) => {
@@ -47,12 +55,7 @@ const AddClassPage = () => {
       .catch((err) => console.error("Failed to load schools:", err));
   }, []);
 
-  // ✅ Add class function
   const handleAddClass = async () => {
-    console.log("className:", className);
-    console.log("section:", section);
-    console.log("schoolId:", schoolId);
-
     if (
       className.trim() !== "" &&
       section.trim() !== "" &&
@@ -63,10 +66,11 @@ const AddClassPage = () => {
         section: section.trim(),
         schoolId: Number(schoolId),
       };
-
       try {
         await Network.AddClasses(newClass);
-        setClassList([...classList, newClass]);
+        const updatedList = [...classList, newClass];
+        setClassList(updatedList);
+        localStorage.setItem("classList", JSON.stringify(updatedList)); // ⬅ save
         setClassName("");
         setSection("");
         setSchoolId("");
@@ -80,10 +84,11 @@ const AddClassPage = () => {
   };
 
   const handleDelete = (index) => {
-    const updated = [...classList];
-    updated.splice(index, 1);
-    setClassList(updated);
-  };
+  const updated = [...classList];
+  updated.splice(index, 1);
+  setClassList(updated);
+  localStorage.setItem("classList", JSON.stringify(updated)); // save after delete
+};
 
   const handleEdit = (index) => {
     setEditingIndex(index);
@@ -91,19 +96,34 @@ const AddClassPage = () => {
   };
 
   const handleSaveEdit = () => {
-    const updated = [...classList];
-    updated[editingIndex] = editData;
-    setClassList(updated);
-    setEditingIndex(null);
-  };
-
+  const updated = [...classList];
+  updated[editingIndex] = editData;
+  setClassList(updated);
+  localStorage.setItem("classList", JSON.stringify(updated)); // save after edit
+  setEditingIndex(null);
+};
   return (
-    <Box sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
+    <Box sx={{ p: { xs: 2, sm: 4 }, maxWidth: 700, mx: "auto" }}>
       <Sidekick />
-      <Paper sx={{ p: 3, boxShadow: 3, mt: 10 }}>
-        <Typography variant="h5" gutterBottom>
+
+      {/* Add Class Form */}
+      <Paper
+        sx={{
+          p: 4,
+          boxShadow: 4,
+          mt: 8,
+          borderRadius: 3,
+          background: "linear-gradient(135deg, #f5f7fa, #e4ebf0)",
+        }}
+      >
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ fontWeight: "bold", color: "#1976d2" }}
+        >
           Add New Class
         </Typography>
+        <Divider sx={{ mb: 3 }} />
 
         <Box sx={{ mb: 2 }}>
           <ClassLevelDropdown
@@ -138,29 +158,65 @@ const AddClassPage = () => {
           </Select>
         </FormControl>
 
-        <Button variant="contained" fullWidth onClick={handleAddClass}>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={handleAddClass}
+          sx={{ py: 1.2, fontSize: "1rem", fontWeight: "bold" }}
+        >
           Add Class
         </Button>
       </Paper>
 
+      {/* Class List */}
       {classList.length > 0 && (
-        <Paper sx={{ p: 3, mt: 4, boxShadow: 2 }}>
-          <Typography variant="h6">Class List:</Typography>
+        <Paper
+          sx={{
+            p: 3,
+            mt: 4,
+            boxShadow: 3,
+            borderRadius: 3,
+            background: "#fafafa",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ mb: 2, fontWeight: "bold", color: "#333" }}
+          >
+            Class List
+          </Typography>
           <List>
             {classList.map((item, index) => (
               <ListItem
                 key={index}
+                sx={{
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 2,
+                  mb: 1.5,
+                  backgroundColor: "#fff",
+                  boxShadow: 1,
+                }}
                 secondaryAction={
                   editingIndex === index ? (
-                    <IconButton edge="end" onClick={handleSaveEdit}>
+                    <IconButton
+                      edge="end"
+                      onClick={handleSaveEdit}
+                      color="success"
+                    >
                       <SaveIcon />
                     </IconButton>
                   ) : (
                     <>
-                      <IconButton onClick={() => handleEdit(index)}>
+                      <IconButton
+                        onClick={() => handleEdit(index)}
+                        color="primary"
+                      >
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => handleDelete(index)}>
+                      <IconButton
+                        onClick={() => handleDelete(index)}
+                        color="error"
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </>
@@ -207,7 +263,11 @@ const AddClassPage = () => {
                   </Box>
                 ) : (
                   <ListItemText
-                    primary={`Class: ${item.className} | Section: ${item.section} | School ID: ${item.schoolId}`}
+                    primaryTypographyProps={{ fontWeight: "bold" }}
+                    primary={`Class: ${item.className} | Section: ${item.section} | School: ${
+                      schoolList.find((s) => s.id === item.schoolId)
+                        ?.schoolName || "N/A"
+                    }`}
                   />
                 )}
               </ListItem>

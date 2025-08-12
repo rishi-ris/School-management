@@ -42,7 +42,7 @@ const TcPage = () => {
 
   return (
     <Box>
-      <Sidekick/>
+      {/* <Sidekick/> */}
     <Paper
       elevation={6}
       sx={{

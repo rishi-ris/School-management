@@ -85,7 +85,7 @@ const TeacherProfile = () => {
             <CardContent>
               <Divider sx={{ my: 2 }} />
               <Typography variant="body1">
-                <strong>Email:</strong> {teacher.email || "-"}
+                <strong>Email:</strong> {teacher.email|| "-"}
               </Typography>
               <Typography variant="body1">
                 <strong>Phone:</strong>{" "}

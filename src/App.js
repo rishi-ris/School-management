@@ -5,6 +5,7 @@ import { BrowserRouter as Routers, Routes, Route } from "react-router-dom";
 import Logify from "./component/Logify";
 import SchoolFrontPage from "./component/SchoolFrontPage";
 import SignUpPage from "./component/SignUpPage";
+
 import TimeTablePage from "./component/TimeTablePage";
 
 // Admin/User Pages
@@ -42,6 +43,8 @@ import StudentPageDashboard from "./StudentInformation/StudentPageDashboard";
 import TeacherProfile from "./userPages/TeacherProfile";
 import AddClassPage from "./userPages/AddClassPage";
 import SchoolDetailsForm from "./SuperAdmin/SchoolDetailForm";
+import TeacherBdayTeacher from "./teacherdetls/TeacherbdayTeacher";
+import TeacherStuBday from "./teacherdetls/TeacherStuBday";
 function App() {
   return (
     <>
@@ -104,6 +107,8 @@ function App() {
             <Route path="/TotalFeecard" element={<TotalFeecard />} />
             <Route path="/BdayStudent" element={<BdayStudents />} />
             <Route path="/TeacherBirthday" element={<TeacherBirthday />} />
+            <Route path="/TeacherBdayTeacher" element={<TeacherBdayTeacher/>}/>
+            <Route path ="/TeacherStuBday" element={<TeacherStuBday/>}/>
 
             {/* Fallback Route */}
             <Route path="*" element={<h1>404 Not Found</h1>} />
