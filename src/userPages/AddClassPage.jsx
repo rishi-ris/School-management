@@ -38,13 +38,7 @@ const AddClassPage = () => {
     schoolId: "",
   });
 
-  // ⬇ Reload पर localStorage से data लोड करो
-  useEffect(() => {
-    const saved = localStorage.getItem("classList");
-    if (saved) {
-      setClassList(JSON.parse(saved));
-    }
-  }, []);
+  
 
   useEffect(() => {
     Network.getAllSchools(user.data.data.schoolId)
@@ -54,6 +48,12 @@ const AddClassPage = () => {
       })
       .catch((err) => console.error("Failed to load schools:", err));
   }, []);
+
+  useEffect(() => {
+      Network.getAllClasses(user.data.data.schoolId)
+        .then((response) => setClassList(response.data))
+        .catch((err) => console.error('⚠ Error fetching classes', err));
+    }, []);
 
   const handleAddClass = async () => {
     if (
@@ -83,11 +83,11 @@ const AddClassPage = () => {
     }
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
   const updated = [...classList];
+  await Network.deleteClassById(updated[index].classId);
   updated.splice(index, 1);
   setClassList(updated);
-  localStorage.setItem("classList", JSON.stringify(updated)); // save after delete
 };
 
   const handleEdit = (index) => {

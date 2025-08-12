@@ -3,17 +3,20 @@ import React, { createContext, useState } from 'react';
 
 // Create context
 export const AuthContext = createContext();
-
-// Create provider component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // null when not logged in
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const login = (userData) => {
-    setUser(userData); // Save user data
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = () => {
-    setUser(null); // Clear user data
+    setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
@@ -22,3 +25,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

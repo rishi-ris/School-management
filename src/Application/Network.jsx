@@ -120,6 +120,19 @@ export default class Network {
     }
   }
 
+  static async deleteClassById(classId) {
+    try {
+      const response = await axios.delete(
+        `${Endpoints.deleteClassById}/${classId}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return response;
+    } catch (error) {
+      console.error("⚠ Classes error:", error);
+      throw error;
+    }
+  }
+
   static async addNewUser(userData) {
     try {
       const response = await axios.post(Endpoints.createUser, userData, {
