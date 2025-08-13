@@ -8,16 +8,12 @@ import {
   List,
   ListItem,
   ListItemText,
-  IconButton,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
   Divider,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SaveIcon from "@mui/icons-material/Save";
 import Sidekick from "../component/Sidekick";
 import Network from "../Application/Network";
 import { AuthContext } from "../auth/AuthProvider";
@@ -30,15 +26,7 @@ const AddClassPage = () => {
   const [schoolId, setSchoolId] = useState("");
   const [schoolList, setSchoolList] = useState([]);
   const [classList, setClassList] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
   const { user } = useContext(AuthContext);
-  const [editData, setEditData] = useState({
-    className: "",
-    section: "",
-    schoolId: "",
-  });
-
-  
 
   useEffect(() => {
     Network.getAllSchools(user.data.data.schoolId)
@@ -50,10 +38,10 @@ const AddClassPage = () => {
   }, []);
 
   useEffect(() => {
-      Network.getAllClasses(user.data.data.schoolId)
-        .then((response) => setClassList(response.data))
-        .catch((err) => console.error('⚠ Error fetching classes', err));
-    }, []);
+    Network.getAllClasses(user.data.data.schoolId)
+      .then((response) => setClassList(response.data))
+      .catch((err) => console.error("⚠ Error fetching classes", err));
+  }, []);
 
   const handleAddClass = async () => {
     if (
@@ -70,7 +58,7 @@ const AddClassPage = () => {
         await Network.AddClasses(newClass);
         const updatedList = [...classList, newClass];
         setClassList(updatedList);
-        localStorage.setItem("classList", JSON.stringify(updatedList)); // ⬅ save
+        localStorage.setItem("classList", JSON.stringify(updatedList));
         setClassName("");
         setSection("");
         setSchoolId("");
@@ -83,25 +71,6 @@ const AddClassPage = () => {
     }
   };
 
-  const handleDelete = async (index) => {
-  const updated = [...classList];
-  await Network.deleteClassById(updated[index].classId);
-  updated.splice(index, 1);
-  setClassList(updated);
-};
-
-  const handleEdit = (index) => {
-    setEditingIndex(index);
-    setEditData(classList[index]);
-  };
-
-  const handleSaveEdit = () => {
-  const updated = [...classList];
-  updated[editingIndex] = editData;
-  setClassList(updated);
-  localStorage.setItem("classList", JSON.stringify(updated)); // save after edit
-  setEditingIndex(null);
-};
   return (
     <Box sx={{ p: { xs: 2, sm: 4 }, maxWidth: 700, mx: "auto" }}>
       <Sidekick />
@@ -196,80 +165,15 @@ const AddClassPage = () => {
                   backgroundColor: "#fff",
                   boxShadow: 1,
                 }}
-                secondaryAction={
-                  editingIndex === index ? (
-                    <IconButton
-                      edge="end"
-                      onClick={handleSaveEdit}
-                      color="success"
-                    >
-                      <SaveIcon />
-                    </IconButton>
-                  ) : (
-                    <>
-                      <IconButton
-                        onClick={() => handleEdit(index)}
-                        color="primary"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDelete(index)}
-                        color="error"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </>
-                  )
-                }
               >
-                {editingIndex === index ? (
-                  <Box sx={{ display: "flex", gap: 1, width: "100%" }}>
-                    <TextField
-                      label="Class"
-                      size="small"
-                      value={editData.className}
-                      onChange={(e) =>
-                        setEditData({ ...editData, className: e.target.value })
-                      }
-                    />
-                    <TextField
-                      label="Section"
-                      size="small"
-                      value={editData.section}
-                      onChange={(e) =>
-                        setEditData({ ...editData, section: e.target.value })
-                      }
-                    />
-                    <FormControl size="small" sx={{ minWidth: 150 }}>
-                      <InputLabel>School</InputLabel>
-                      <Select
-                        value={editData.schoolId}
-                        label="School"
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            schoolId: e.target.value,
-                          })
-                        }
-                      >
-                        {schoolList.map((school) => (
-                          <MenuItem key={school.id} value={school.id}>
-                            {school.schoolName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                ) : (
-                  <ListItemText
-                    primaryTypographyProps={{ fontWeight: "bold" }}
-                    primary={`Class: ${item.className} | Section: ${item.section} | School: ${
-                      schoolList.find((s) => s.id === item.schoolId)
-                        ?.schoolName || "N/A"
-                    }`}
-                  />
-                )}
+              <ListItemText
+  sx={{ textAlign: "center", }} // <-- Added for center alignment
+  primaryTypographyProps={{ fontWeight: "bold" }}
+  primary={`Class: ${item.className} | Section: ${item.section} | School: ${
+    schoolList.find((s) => s.id === item.schoolId)?.schoolName || "N/A"
+  }`}
+/>
+
               </ListItem>
             ))}
           </List>
