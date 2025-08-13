@@ -10,37 +10,68 @@ import {
   Paper,
   Divider,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
-// import StudentDashboard from "./StudentDashboard";
 import UseCommonText from "../CommonFile/UseCommonText";
 import LoadingPage from "../CommonFile/LoadingPage";
 import Network from "../Application/Network";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sidekick from "../component/Sidekick";
 
 const StudentMarksheet = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const studentId = location.state?.studentId;
   const headerText = UseCommonText("--headerText");
   const emailText = UseCommonText("--emailText");
   const contactNumber = UseCommonText("--contactNumber");
   const schoolBoardAddress = UseCommonText("--schoolBoardAddress");
+
   const [data, setData] = useState(null);
- const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
     Network.getStudentMarksheet(studentId)
       .then((res) => {
-        setData(res.data);
+        if (!res.data) {
+          // If marksheet not found
+          setOpenPopup(true);
+        } else {
+          setData(res.data);
+        }
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Failed to load marksheet0:", err);
-         setIsLoading(false);
+        console.error("Failed to load marksheet:", err);
+        setOpenPopup(true);
+        setIsLoading(false);
       });
-  }, []);
+  }, [studentId]);
 
   if (isLoading) return <Typography><LoadingPage /></Typography>;
+
+  if (!data) {
+    return (
+      <Dialog open={openPopup} onClose={() => navigate(-1)}>
+        <DialogTitle>Marksheet Not Found</DialogTitle>
+        <DialogContent>
+          <Typography>
+            The marksheet for this student is not available.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => navigate(-1)} variant="contained" color="primary">
+            Go Back
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
 
   const { student, overallPass, subjectResults } = data;
 
@@ -70,9 +101,7 @@ const StudentMarksheet = () => {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      {/* <StudentDashboard /> */}
-      <Sidekick/>
-
+      <Sidekick />
       <Paper
         elevation={3}
         sx={{

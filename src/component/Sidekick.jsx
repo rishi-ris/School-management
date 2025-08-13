@@ -33,40 +33,16 @@ import {
 
 // Drawer Items
 const drawerItems = [
-  {
-    label: "Add Staff",
-    icon: <PersonAddAltOutlinedIcon />,
-    path: "/newEmployee",
-  },
+ 
   {
     label: "Dashboard",
     icon: <GridViewOutlinedIcon />,
     path: "/adminUser",
   },
-  {
-    label: "Fee Panel",
-    icon: <CurrencyRupeeOutlinedIcon />,
-    path: "/fees",
-  },
-  {
-    label: "Mark Sheet",
-    icon: <AssignmentOutlinedIcon />,
-    path: "/marksEntryPage",
-  },
-  {
-    label: "Students",
-    icon: <SchoolOutlinedIcon />,
-    path: "/StudentUser",
-  },
-  {
-    label: "Subjects",
-    icon: <MenuBookOutlinedIcon />,
-    path: "/subjectManager",
-  },
-  {
-    label: "Attendance",
-    icon: <EventAvailableOutlinedIcon />,
-    path: "/teacherAttendancePage",
+   {
+    label: "Add Staff",
+    icon: <PersonAddAltOutlinedIcon />,
+    path: "/newEmployee",
   },
   {
     label: "Teachers",
@@ -74,14 +50,44 @@ const drawerItems = [
     path: "/teachersUser",
   },
   {
+    label: "Attendance",
+    icon: <EventAvailableOutlinedIcon />,
+    path: "/teacherAttendancePage",
+  },
+
+  {
     label: "Timetable",
     icon: <CalendarMonthOutlinedIcon />,
     path: "/timetable",
   },
+  {
+    label: "Students",
+    icon: <SchoolOutlinedIcon />,
+    path: "/StudentUser",
+  },
+  {
+    label: "Mark Sheet",
+    icon: <AssignmentOutlinedIcon />,
+    path: "/marksEntryPage",
+  },
+  {
+    label: "Fee Panel",
+    icon: <CurrencyRupeeOutlinedIcon />,
+    path: "/fees",
+  },
+  
+  
+
+    
     {
     label: "Add Class",
     icon: <CalendarMonthOutlinedIcon />,
     path: "/addclassPage",
+  },
+    {
+    label: " Add Subjects",
+    icon: <MenuBookOutlinedIcon />,
+    path: "/subjectManager",
   },
   // Uncomment to enable more items
   // {

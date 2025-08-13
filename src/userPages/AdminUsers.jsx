@@ -60,13 +60,13 @@ const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
         <Box
           title={count}
           sx={{
+            m:1,
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
             fontSize: "2rem",
             fontWeight: "bold",
             textAlign: "center",
-            width: "100%",
           }}
         >
           {count}
@@ -78,10 +78,11 @@ const DashboardCard = ({ count, label, bgcolor, icon, onClick }) => {
   );
 };
 
+
 const Dashboard = ({ stats, navigate }) => {
   const cardData = stats
     ? [
-        {
+       {
           count: stats.totalFeesCollectedToday.amount,
           label: "Today's Fees Collected",
           bgcolor: "#26a69a",
@@ -161,7 +162,7 @@ const Dashboard = ({ stats, navigate }) => {
       </Typography>
       <Grid container spacing={2}>
         {cardData.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+          <Grid item xs={12} sm={6} md={4} key={index} >
             <DashboardCard {...item} />
           </Grid>
         ))}
